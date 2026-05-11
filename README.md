@@ -38,46 +38,14 @@ The platform allows users to browse available cars, make reservations, and manag
 
 ### Backend
 
-* Node.js
-* Express.js
+* SpringBoot
+* TomCat
 * JWT Authentication
 * REST API
 
 ### Database
 
-* MongoDB
-* Mongoose ODM
-
----
-
-# 🏗️ Project Architecture
-
-```
-car-rental-app/
-│
-├── client/                 # React Frontend
-│   ├── public/
-│   └── src/
-│       ├── components/
-│       ├── pages/
-│       ├── services/
-│       ├── App.js
-│       └── index.js
-│
-├── server/                 # Node.js Backend
-│   ├── config/
-│   ├── controllers/
-│   ├── models/
-│   ├── routes/
-│   ├── middleware/
-│   └── server.js
-│
-├── .env
-├── package.json
-└── README.md
-```
-
----
+* PostgreSQL
 
 # ⚙️ Installation
 
