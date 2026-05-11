@@ -1790,7 +1790,7 @@ return () => { cancelAnimationFrame(id); window.removeEventListener("resize", re
                 className="primary-btnDE"
                 style={{ padding: isMobile ? "12px 20px" : (selectedLang === "AR" ? "18px 60px" : "17px 56px"), fontSize: selectedLang === "AR" ? (isMobile ? 16 : 20) : (isMobile ? 14 : 18), width: isMobile ? "100%" : "auto", maxWidth: isMobile ? "320px" : "none", fontFamily: "'DM Sans','Syne',sans-serif", position: "relative", bottom: isMobile ? "-12px" : "6px" }}
               >
-                {t("hero.startFree", "Start For Free")} <ArrowRightIcon size={selectedLang === "AR" ? 20 : 19} />
+                {t("hero.startFree", "Start For Free")} <ArrowRightIcon size={selectedLang === "AR" ? 19 : 19} />
               </button>
               <button onClick={() => window.scrollBy({ top: 500, behavior: "smooth" })} className="secondary-btn" style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.2)", color: "#fff", padding: isMobile ? "12px 20px" : (selectedLang === "AR" ? "18px 40px" : "16px 36px"), fontSize: selectedLang === "AR" ? (isMobile ? 16 : 20) : (isMobile ? 14 : 18), width: isMobile ? "100%" : "auto", maxWidth: isMobile ? "320px" : "none", fontFamily: "'DM Sans','Syne',sans-serif", position: "relative", bottom: isMobile ? "-20px" : "6px" }}>
                 <CompassIcon size={selectedLang === "AR" ? 20 : 18} /> {t("hero.browseFleet", "Browse Fleet")}
