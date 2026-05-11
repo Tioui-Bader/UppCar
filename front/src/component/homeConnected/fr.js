@@ -32,7 +32,7 @@ export const FR = {
         h1Desktop: <>Le véhicule que vous voulez<br />Au moment où vous en avez besoin</>,
         h1Mobile: <>Le véhicule que vous voulez<br />Prêt à démarrer</>,
         phrases: [
-            "Des réservations plus intelligentes.",
+            "Réservations plus intelligentes.",
             "L'intelligence locative tout-en-un.",
             "Moteur de la mobilité moderne.",
             "De la réservation vers la croissance.",

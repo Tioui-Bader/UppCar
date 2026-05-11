@@ -2,6 +2,14 @@ import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { AR } from "./ar";
 import { FR } from "./fr";
+import heroBg from "../../asset/hero_pg.png";
+import lightBg from "../../asset/home_light_bg.png";
+import lightBg2 from "../../asset/image copy 2.png";
+import lightBg3 from "../../asset/image copy 3.png";
+import darkBg2 from "../../asset/image copy 4.png";
+import darkBg3 from "../../asset/image copy.png";
+import darkBg4 from "../../asset/image copy 5.png";
+import lightBg4 from "../../asset/image copy 6.png";
 const PHRASES = [
   "Smarter Rentals Start Here.",
   "All-in-One Rental Intelligence.",
@@ -14,16 +22,17 @@ html, body { transition: background 0.3s; overflow-x: hidden; width: 100%; max-w
 
 :root {
   --bg-color: #f0fdf4;
-  --text-main: #064e3b;
+  --text-main: #0f172a;
   --accent-color: #10b981;
-  --text-muted: #166534;
-  --nav-bg: rgba(255, 255, 255, 0.6);
-  --nav-border: rgba(6, 78, 59, 0.1);
-  --card-bg: rgba(255, 255, 255, 0.8);
-  --card-border: rgba(6, 78, 59, 0.1);
-  --grid-line: rgba(6, 78, 59, 0.05);
+  --text-muted: #475569;
+  --nav-bg: rgba(255, 255, 255, 0.85);
+  --nav-border: rgba(0, 0, 0, 0.08);
+  --card-bg: rgba(255, 255, 255, 0.95);
+  --card-border: rgba(0, 0, 0, 0.05);
+  --grid-line: rgba(16, 185, 129, 0.05);
   --accent-gradient: linear-gradient(135deg, #047857 0%, #10b981 50%, #0ea5e9 100%);
   --btn-text: #ffffff;
+  --text-mainee: #ffffffff;
 }
 
 [data-theme='dark'] {
@@ -36,8 +45,11 @@ html, body { transition: background 0.3s; overflow-x: hidden; width: 100%; max-w
   --card-bg: rgba(255, 255, 255, 0.03);
   --card-border: rgba(255, 255, 255, 0.07);
   --grid-line: rgba(255, 255, 255, 0.03);
-  --accent-gradient: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 50%, #ec4899 100%);
+  --accent-gradient: linear-gradient(135deg, #3b82f6 0%, #8fbaffff 50%, #8b5cf6 100%);
+  
   --btn-text: #060912;
+  --text-mainee: #e6edf3;
+
 }
 
 body { background: var(--bg-color); color: var(--text-main); position: relative; }
@@ -118,14 +130,15 @@ body { background: var(--bg-color); color: var(--text-main); position: relative;
 @keyframes badgeGlowDark { 0%,100%{box-shadow: 0 0 20px rgba(96,165,250,0.3), 0 8px 24px rgba(96,165,250,0.15), inset 0 1px 2px rgba(255,255,255,0.1);} 50%{box-shadow: 0 0 30px rgba(96,165,250,0.5), 0 12px 36px rgba(96,165,250,0.3), inset 0 1px 2px rgba(255,255,255,0.15);} }
 
 .nav-wrapper { position: sticky; top: 10px; z-index: 100; margin: 0 20px; transition: all 0.3s ease; }
-.nav-glass { display: flex; align-items: center; justify-content: space-between; padding: 16px 20px; background: var(--nav-bg); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid var(--nav-border); border-radius: 24px; box-shadow: 0 8px 32px rgba(0,0,0,0.05); animation: fadeUp 0.6s ease-out; }
-.nav-link { position: relative; color: var(--text-muted); text-decoration: none; font-family: 'Syne', sans-serif; font-size: 14px; font-weight: 700; padding: 8px 16px; border-radius: 12px; transition: all 0.3s cubic-bezier(0.4,0,0.2,1); overflow: hidden; }
-.nav-link::before { content:''; position:absolute; top:0; left:0; width:100%; height:100%; background:var(--text-main); opacity:0; z-index:-1; transition:opacity 0.3s ease; border-radius:12px; }
-.nav-link:hover { color:var(--bg-color); transform:translateY(-2px); }
+.nav-glass { display: flex; align-items: center; justify-content: space-between; padding: 16px 20px; background: inherit; backdrop-filter: blur(2px); -webkit-backdrop-filter: blur(20px); border: 1px solid var(--nav-border); border-radius: 24px; box-shadow: 0 8px 32px rgba(0,0,0,0.05); animation: fadeUp 0.6s ease-out; }
+.nav-link { position: relative; color: #fff; text-decoration: none; font-family: 'Syne', sans-serif; font-size: 14px; font-weight: 700; padding: 8px 16px; border-radius: 12px; transition: all 0.3s cubic-bezier(0.4,0,0.2,1); overflow: hidden; opacity: 0.9; }
+[data-theme='light'] .nav-link { color: #ffffffff;font-weight: 800; }
+.nav-link::before { content:''; position:absolute; top:0; left:0; width:100%; height:100%; background:var(--accent-color); opacity:0; z-index:-1; transition:opacity 0.3s ease; border-radius:12px; }
+.nav-link:hover { color:#fff; transform:translateY(-2px); opacity: 1; }
 .nav-link:hover::before { opacity:1; }
 
-.icon-btn { background:rgba(255,255,255,0.05); border:1px solid var(--nav-border); color:var(--text-main); cursor:pointer; padding:10px; border-radius:50%; display:flex; align-items:center; justify-content:center; transition:all 0.3s cubic-bezier(0.4,0,0.2,1);position:relative;left: 10px; }
-.icon-btn:hover { background:var(--text-main); color:var(--bg-color); transform:scale(1.1) rotate(5deg); box-shadow:0 4px 12px rgba(0,0,0,0.1); }
+.icon-btn { background:rgba(255,255,255,0.1); border:1px solid rgba(255,255,255,0.2); color:#fff; cursor:pointer; padding:10px; border-radius:50%; display:flex; align-items:center; justify-content:center; transition:all 0.3s cubic-bezier(0.4,0,0.2,1);position:relative;left: 10px; }
+.icon-btn:hover { background:var(--accent-color); color:#fff; transform:scale(1.1) rotate(5deg); box-shadow:0 4px 12px rgba(0,0,0,0.2); }
 
 .primary-btnDE {
   position:relative; background:linear-gradient(135deg,#1e3a8a 0%,#2563eb 50%,#0ea5e9 100%); background-size:200% 200%;
@@ -152,6 +165,7 @@ body { background: var(--bg-color); color: var(--text-main); position: relative;
 
 .primary-btnE { color:#ffffff; border:none; padding:11px 30px; border-radius:12px; font-family:'Syne',sans-serif; font-size:15.3px; font-weight:700; cursor:pointer; transition:all 0.3s cubic-bezier(0.4,0,0.2,1); display:flex; align-items:center; justify-content:center; gap:8px; backdrop-filter:blur(4px); background:var(--text-main); }
 .primary-btnE:hover { background:var(--accent-gradient); color:white; transform:translateY(-2px); box-shadow:0 4px 12px rgba(0,0,0,0.1); border:none; }
+:root .primary-btnE { background:linear-gradient(135deg, #064e3b 0%, #059669 100%); box-shadow:0px 4px 15px rgba(5, 150, 105, 0.2); }
 [data-theme='dark'] .primary-btnE { background:linear-gradient(155deg,#1e3a8a,#1d4ed8); box-shadow:0px 0px 15px #1e3a8a; }
 
 .fleet-card { background:var(--card-bg); border:1px solid var(--card-border); border-radius:24px; padding:32px; transition:all 0.4s cubic-bezier(0.2,0.8,0.2,1); display:flex; flex-direction:column; overflow:hidden; position:relative; }
@@ -174,6 +188,10 @@ body { background: var(--bg-color); color: var(--text-main); position: relative;
 .f-col:hover .f-col-title::after { width:100%; }
 .f-bottom-link { color:var(--text-muted); font-size:15px; text-decoration:none; transition:all 0.3s; }
 .f-bottom-link:hover { color:var(--accent-color); }
+
+/* Logo Dark Background */
+:root .animated-logo-bg { background: linear-gradient(135deg, #0d4d49 0%, #081b19 100%) !important; box-shadow: 0 8px 16px rgba(13,90,82,0.35) !important; }
+[data-theme='dark'] .animated-logo-bg { background: linear-gradient(135deg, #0891b2 0%, #0d5a52 100%) !important; box-shadow: 0 8px 16px rgba(8,145,178,0.25) !important; }
 
 /* ══════════════════════════════════
    MOBILE STYLES — Ultra Modern
@@ -253,7 +271,6 @@ function ZapIcon({ size = 24, color = "currentColor" }) {
 function CheckIcon({ size = 16, color = "currentColor" }) {
   return <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12" /></svg>;
 }
-
 function AnimatedSearchIcon() {
   return (
     <div style={{ position: 'relative', width: 100, height: 100, margin: '0 auto 28px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
@@ -314,7 +331,7 @@ function CalendarIcon({ size = 18, color = "currentColor" }) {
 function AnimatedLogo({ hideText = false }) {
   return (
     <div style={{ display: 'flex', alignItems: 'center', gap: 14, cursor: 'pointer', transition: 'transform 0.2s ease' }} onMouseOver={e => e.currentTarget.style.transform = 'scale(1.02)'} onMouseOut={e => e.currentTarget.style.transform = 'scale(1)'}>
-      <div style={{ position: 'relative', width: 44, height: 44, borderRadius: 14, background: 'var(--text-main)', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 8px 16px rgba(0,0,0,0.15)', overflow: 'hidden' }}>
+      <div className="animated-logo-bg" style={{ position: 'relative', width: 44, height: 44, borderRadius: 14, display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden' }}>
         <div style={{ position: 'absolute', top: '-50%', left: '-50%', width: '200%', height: '200%', background: 'conic-gradient(from 0deg,transparent 0%,var(--accent-color) 30%,transparent 40%)', animation: 'spinWheel 4s linear infinite' }} />
         <div style={{ position: 'absolute', inset: 2, background: 'var(--bg-color)', borderRadius: 12, zIndex: 1 }} />
         <svg style={{ zIndex: 2, animation: 'driveBumps 2s ease-in-out infinite' }} width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--text-main)" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
@@ -325,7 +342,7 @@ function AnimatedLogo({ hideText = false }) {
       </div>
       {!hideText && (
         <div style={{ position: 'relative', fontFamily: "'Syne',sans-serif", fontWeight: 900, fontSize: 26, letterSpacing: "-0.5px" }}>
-          <span style={{ color: "var(--text-main)" }}>Upp</span>
+          <span style={{ color: "var(--text-mainee)" }}>Upp</span>
           <span style={{ color: "var(--accent-color)" }}>Car</span>
           <span style={{ position: 'absolute', bottom: 6, right: -12, width: 6, height: 6, borderRadius: '50%', background: 'var(--accent-color)', animation: 'blink 2s infinite' }} />
         </div>
@@ -595,6 +612,7 @@ export default function UppCarLanding() {
   const footerRef = useRef(null);
   const [displayed, setDisplayed] = useState("");
   const [phraseIndex, setPhraseIndex] = useState(0);
+  const [lightBgIndex, setLightBgIndex] = useState(0);
   const [isDeleting, setIsDeleting] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState(() => localStorage.getItem("appTheme") === "dark");
   const [showScrollButton, setShowScrollButton] = useState(false);
@@ -619,6 +637,14 @@ export default function UppCarLanding() {
   const [searchResults, setSearchResults] = useState([]);
   const [hasSearched, setHasSearched] = useState(false);
   const [showSearchOverlay, setShowSearchOverlay] = useState(false);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setLightBgIndex(prev => prev + 1);
+    }, 4000);
+    return () => clearInterval(interval);
+  }, []);
+
   useEffect(() => {
     const ensureCtx = () => {
       if (!audioCtxRef.current) {
@@ -666,14 +692,26 @@ export default function UppCarLanding() {
   };
 
   useEffect(() => {
+    const prevLang = localStorage.getItem("appLang");
     document.documentElement.dir = selectedLang === "AR" ? "rtl" : "ltr";
-    localStorage.setItem("appLang", selectedLang);
+    if (prevLang && prevLang !== selectedLang) {
+      localStorage.setItem("appLang", selectedLang);
+      window.location.reload();
+    } else {
+      localStorage.setItem("appLang", selectedLang);
+    }
   }, [selectedLang]);
 
   useEffect(() => {
+    const prevTheme = localStorage.getItem("appTheme");
     const t = isDarkMode ? "dark" : "light";
     document.documentElement.setAttribute("data-theme", t);
-    localStorage.setItem("appTheme", t);
+    if (prevTheme && prevTheme !== t) {
+      localStorage.setItem("appTheme", t);
+      window.location.reload();
+    } else {
+      localStorage.setItem("appTheme", t);
+    }
   }, [isDarkMode]);
 
   // Fermer si clic dehors
@@ -972,6 +1010,80 @@ return () => { cancelAnimationFrame(id); window.removeEventListener("resize", re
 
       <div style={{ position: "relative", zIndex: 1, overflowX: "hidden", width: "100%" }}>
 
+        {/* ── Cinematic Global Background (Navbar + Hero) ── */}
+        <div style={{
+          position: "absolute",
+          top: 0,
+          left: 0,
+          right: 0,
+          height: isMobile ? "900px" : "110vh",
+          overflow: "hidden",
+          zIndex: 0,
+          pointerEvents: "none",
+        }}>
+          {/* ── Cinematic Car Background Layers (Pure Cross-fade) ── */}
+          {(() => {
+            const activeImages = isDarkMode ? [heroBg, darkBg2, darkBg3, darkBg4] : [lightBg, lightBg2, lightBg3, lightBg4];
+            const currentIdx = lightBgIndex % activeImages.length;
+            return activeImages.map((img, idx) => {
+              const isActive = idx === currentIdx;
+
+              return (
+                <div key={img} style={{
+                  position: "absolute",
+                  inset: 0,
+                  backgroundImage: `url("${img}")`,
+                  backgroundSize: "cover",
+                  backgroundPosition: "center 60%",
+                  backgroundRepeat: "no-repeat",
+                  transform: "scale(1.04)",
+                  opacity: isActive ? 1 : 0,
+                  zIndex: isActive ? 2 : 1,
+                  // Technique : l'image qui s'en va attend (delay) que la nouvelle soit chargée
+                  transition: isActive
+                    ? "opacity 1.5s ease-in-out, transform 8s ease-out"
+                    : "opacity 0.5s 1.5s linear, transform 8s ease-out",
+                }} />
+              );
+            });
+          })()}
+          {/* ── Dark cinematic overlay ── */}
+          <div style={{
+            position: "absolute",
+            inset: 0,
+            zIndex: 3,
+            background: isDarkMode
+              ? "linear-gradient(to bottom, rgba(0,0,0,0.65) 0%, rgba(0,0,0,0.33) 40%, rgba(0,0,0,0.7) 100%)"
+              : "linear-gradient(to bottom, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0.15) 50%, rgba(0,0,0,0.35) 100%)",
+          }} />
+          {/* ── Bottom gradient fade ── */}
+          <div style={{
+            position: "absolute",
+            bottom: 0,
+            left: 0,
+            right: 0,
+            zIndex: 4,
+            height: isDarkMode ? "45%" : "15%",
+            background: isDarkMode
+              ? `linear-gradient(to top, var(--bg-color) 0%, transparent 100%)`
+              : `linear-gradient(to top, var(--bg-color) 0%, transparent 100%)`,
+          }} />
+          {/* ── Animated colored glow on car ── */}
+          <div style={{
+            position: "absolute",
+            bottom: "20%",
+            left: "50%",
+            transform: "translateX(-50%)",
+            width: isMobile ? "300px" : "800px",
+            height: isMobile ? "80px" : "200px",
+            background: isDarkMode
+              ? "radial-gradient(ellipse, rgba(96,165,250,0.22) 0%, transparent 70%)"
+              : "radial-gradient(ellipse, rgba(16,185,129,0.22) 0%, transparent 70%)",
+            animation: "breathe 5s ease-in-out infinite",
+          }} />
+        </div>
+
+
         {/* ══ NAV ══ */}
         <div className="nav-wrapper" onMouseLeave={() => setActiveDropdown(null)}>
           <nav className="nav-glass" dir="ltr">
@@ -1052,13 +1164,13 @@ return () => { cancelAnimationFrame(id); window.removeEventListener("resize", re
                           ))}
                         </div>
                         <div style={{ height: 1, background: "var(--card-border)", margin: "0 -20px 20px" }} />
-                        <div style={{ fontFamily: "'Syne',sans-serif", fontSize: 11, fontWeight: 800, color: "var(--text-muted)", textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 12 }}>{t("nav.signIn", "Se Connecter")}</div>
+                        <div style={{ fontFamily: "'Syne',sans-serif", fontSize: 11, fontWeight: 800, color: "var(--accent-color)", textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 12 }}>{t("nav.signIn", "Se Connecter")}</div>
                         <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-                          <button onClick={() => navigate("/login")} className="secondary-btn" style={{ fontSize: 14, padding: "12px", borderRadius: 14, justifyContent: "flex-start", width: "100%", gap: 12 }}>
+                          <button onClick={() => window.location.href = "/login"} className="secondary-btn" style={{ fontSize: 14, padding: "12px", borderRadius: 14, justifyContent: "flex-start", width: "100%", gap: 12 }}>
                             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" /><circle cx="12" cy="7" r="4" /></svg>
                             {t("loginMenu.client.label", "Client")}
                           </button>
-                          <button onClick={() => navigate("/loginagence")} className="primary-btnE" style={{ fontSize: 14, padding: "12px", borderRadius: 14, justifyContent: "flex-start", width: "100%", gap: 12 }}>
+                          <button onClick={() => window.location.href = "/loginagence"} className="primary-btnE" style={{ fontSize: 14, padding: "12px", borderRadius: 14, justifyContent: "flex-start", width: "100%", gap: 12 }}>
                             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="7" width="20" height="14" rx="2" /><path d="M16 7V5a2 2 0 0 0-4 0v2" /><path d="M8 7V5a2 2 0 0 0-4 0v2" /></svg>
                             {t("loginMenu.agency.label", "Agence")}
                           </button>
@@ -1076,8 +1188,8 @@ return () => { cancelAnimationFrame(id); window.removeEventListener("resize", re
                       className="icon-btn"
                       style={{
                         position: "relative",
-                        background: langMenuOpen ? "var(--text-main)" : "transparent",
-                        color: langMenuOpen ? "var(--bg-color)" : "var(--text-main)",
+                        background: langMenuOpen ? "var(--accent-color)" : "rgba(255,255,255,0.1)",
+                        color: "#fff",
                         transition: "all 0.3s cubic-bezier(0.16,1,0.3,1)",
                       }}
                       onClick={() => setLangMenuOpen(p => !p)}
@@ -1225,8 +1337,8 @@ return () => { cancelAnimationFrame(id); window.removeEventListener("resize", re
                           position: "relative",
                         }}
                           onClick={() => {
-                            if (id === "Client") navigate("/login");
-                            if (id === "Agence") navigate("/loginagence");
+                            if (id === "Client") window.location.href = "/login";
+                            if (id === "Agence") window.location.href = "/loginagence";
                           }}
                           onMouseEnter={e => {
                             e.currentTarget.style.background = glow;
@@ -1285,9 +1397,10 @@ return () => { cancelAnimationFrame(id); window.removeEventListener("resize", re
             <div style={{
               position: "absolute", top: "calc(100% + 12px)", left: "50%",
               width: "100%", maxWidth: 900,
-              background: "var(--nav-bg)", backdropFilter: "blur(32px)", WebkitBackdropFilter: "blur(32px)",
+              background: isDarkMode ? "var(--nav-bg)" : "rgba(255, 255, 255, 0.98)",
+              backdropFilter: "blur(40px)", WebkitBackdropFilter: "blur(40px)",
               border: "1px solid var(--nav-border)", borderRadius: 32, padding: activeDropdown ? 32 : 0,
-              boxShadow: "0 40px 80px rgba(0,0,0,0.15)",
+              boxShadow: isDarkMode ? "0 40px 80px rgba(0,0,0,0.5)" : "0 40px 80px rgba(0,0,0,0.1)",
               opacity: activeDropdown ? 1 : 0,
               visibility: activeDropdown ? "visible" : "hidden",
               pointerEvents: activeDropdown ? "auto" : "none",
@@ -1336,7 +1449,7 @@ return () => { cancelAnimationFrame(id); window.removeEventListener("resize", re
                     <div style={{ padding: "4px 10px", background: "rgba(16,185,129,0.15)", color: "#10b981", fontSize: 10, fontWeight: 800, textTransform: "uppercase", borderRadius: 12, width: "fit-content", marginBottom: "auto", border: "1px solid rgba(16,185,129,0.3)" }}>{t("vehiclesDropdown.featured", "Featured Release")}</div>
                     <h4 style={{ fontFamily: "'Syne',sans-serif", fontSize: 26, fontWeight: 800, color: "var(--text-main)", marginBottom: 8, marginTop: 40 }}>{t("vehiclesDropdown.featuredTitle", "UppCar-Utopia")}</h4>
                     <p style={{ fontFamily: "'DM Sans',sans-serif", fontSize: 13, color: "var(--text-muted)", marginBottom: 24, lineHeight: 1.6 }}>{t("vehiclesDropdown.featuredDesc", "Experience 0-100 km/h in 3.2s. The pinnacle of modern engineering and design.")}</p>
-                    <button onClick={() => navigate("/login")} className="primary-btnE" style={{ padding: "12px 20px", fontSize: 14, width: "100%", borderRadius: 16 }}>{t("vehiclesDropdown.reserveNow", "Reserve Now")}</button>
+                    <button onClick={() => window.location.href = "/login"} className="primary-btnE" style={{ padding: "12px 20px", fontSize: 14, width: "100%", borderRadius: 16 }}>{t("vehiclesDropdown.reserveNow", "Reserve Now")}</button>
                   </div>
                 </div>
 
@@ -1354,7 +1467,7 @@ return () => { cancelAnimationFrame(id); window.removeEventListener("resize", re
                     ];
                     const merged = { ...iconList[idx], ...s };
                     return (
-                      <div key={s.title} onClick={() => { if (idx === 1) navigate("/login"); if (idx === 2) navigate("/loginagence"); }} style={{ padding: "32px 24px", borderRadius: 24, background: "var(--card-bg)", border: "1px solid var(--nav-border)", transition: "all 0.4s cubic-bezier(0.175,0.885,0.32,1.275)", cursor: "pointer", position: "relative", overflow: "hidden" }}
+                      <div key={s.title} onClick={() => { if (idx === 1) window.location.href = "/login"; if (idx === 2) window.location.href = "/loginagence"; }} style={{ padding: "32px 24px", borderRadius: 24, background: "var(--card-bg)", border: "1px solid var(--nav-border)", transition: "all 0.4s cubic-bezier(0.175,0.885,0.32,1.275)", cursor: "pointer", position: "relative", overflow: "hidden" }}
                         onMouseEnter={e => { e.currentTarget.style.transform = "translateY(-8px)"; e.currentTarget.style.borderColor = s.color; e.currentTarget.style.boxShadow = `0 20px 40px ${s.color}20`; }}
                         onMouseLeave={e => { e.currentTarget.style.transform = "translateY(0)"; e.currentTarget.style.borderColor = "var(--nav-border)"; e.currentTarget.style.boxShadow = "none"; }}>
                         {s.badge && <div style={{ position: "absolute", top: 16, right: selectedLang === "AR" ? "auto" : 16, left: selectedLang === "AR" ? 16 : "auto", background: `${s.color}15`, color: s.color, padding: "4px 10px", borderRadius: 12, fontSize: 10, fontWeight: 800, textTransform: "uppercase", border: `1px solid ${s.color}30`, zIndex: 10 }}>{s.badge}</div>}
@@ -1380,7 +1493,7 @@ return () => { cancelAnimationFrame(id); window.removeEventListener("resize", re
                       <h4 style={{ fontFamily: "'DM Sans',sans-serif", fontSize: 11, textTransform: "uppercase", letterSpacing: "0.15em", color: "var(--text-muted)", marginBottom: 8, marginTop: p.highlight ? 16 : 0 }}>{p.tier}</h4>
                       <div style={{ fontFamily: "'Syne',sans-serif", fontSize: 32, fontWeight: 800, color: "var(--text-main)", marginBottom: 12, letterSpacing: -1 }}>{p.price}</div>
                       <p style={{ fontFamily: "'DM Sans',sans-serif", fontSize: 13, color: "var(--text-muted)", lineHeight: 1.6, marginBottom: 24, flex: 1 }}>{p.desc}</p>
-                      <button onClick={() => navigate(p.tier === "Enterprise Fleet" ? "/registre" : "/registreagence")} className={p.highlight ? "primary-btnDE" : "secondary-btn"} style={{ width: "100%", padding: "12px", fontSize: 13, borderRadius: 14 }}>{p.btn}</button>
+                      <button onClick={() => { if (p.tier === "Enterprise Fleet") window.location.href = "/registre"; else window.location.href = "/registreagence"; }} className={p.highlight ? "primary-btnDE" : "secondary-btn"} style={{ width: "100%", padding: "12px", fontSize: 13, borderRadius: 14 }}>{p.btn}</button>
                     </div>
                   ))}
                 </div>
@@ -1395,275 +1508,295 @@ return () => { cancelAnimationFrame(id); window.removeEventListener("resize", re
           display: "flex", flexDirection: "column", alignItems: "center", textAlign: "center",
           padding: isMobile ? "60px 16px 48px" : "90px 20px 70px",
           position: "relative",
+          minHeight: isMobile ? "auto" : "100vh",
+          zIndex: 1, // Stay above the global background
         }}>
-          {isDarkMode && (
-            <div style={{
-              position: "absolute", top: "50%", left: "50%",
-              width: isMobile ? 280 : 600, height: isMobile ? 280 : 600,
-              borderRadius: "50%",
-              background: "radial-gradient(ellipse,rgba(99,102,241,0.12) 0%,rgba(59,130,246,0.06) 40%,transparent 70%)",
-              pointerEvents: "none", animation: "breathe 6s ease-in-out infinite",
-              transform: "translate(-50%,-50%)",
-            }} />
-          )}
+          <div style={{ position: "relative", zIndex: 10, width: "100%", display: "flex", flexDirection: "column", alignItems: "center" }}>
 
-          {/* Live badge */}
-          {true && (
+            {/* Live badge */}
+            {true && (
 
 
 
-            <div style={{
-              display: "inline-flex", alignItems: "center", gap: isMobile ? 5 : 10,
-              padding: isMobile ? "10px 17px" : "10.7px 20px", borderRadius: 50,
-              fontFamily: "'DM Sans', sans-serif", fontSize: isMobile ? 11 : 14, fontWeight: 500,
-              whiteSpace: "nowrap",
-              background: isDarkMode ? "rgba(255,255,255,0.04)" : "rgba(255,255,255,0.9)",
-              border: `1px solid ${isDarkMode ? "rgba(255,255,255,0.1)" : "rgba(16,185,129,0.25)"}`,
-              color: "var(--accent-color)",
-              position: "relative", bottom: isMobile ? 22 : 24, left: isMobile ? 6 : 23,
-              boxShadow: isDarkMode
-                ? "0 0 0 2px rgba(96,165,250,0.2), 0 4px 20px rgba(96,165,250,0.15), 0 0 40px rgba(96,165,250,0.08)"
-                : "0 0 0 2px rgba(16,185,129,0.2), 0 4px 20px rgba(16,185,129,0.15), 0 0 40px rgba(16,185,129,0.08)",
+              <div style={{
+                display: "inline-flex", alignItems: "center", gap: isMobile ? 5 : 10,
+                padding: isMobile ? "10px 17px" : "10.7px 20px", borderRadius: 50,
+                fontFamily: "'DM Sans', sans-serif", fontSize: isMobile ? 11 : 14, fontWeight: 500,
+                whiteSpace: "nowrap",
+                background: isDarkMode ? "rgba(10,14,26,0.6)" : "rgba(255,255,255,0.7)",
+                border: isDarkMode ? "1px solid rgba(255,255,255,0.2)" : "1px solid rgba(16,185,129,0.3)",
+                color: isDarkMode ? "#29aad1" : "#059669",
+                position: "relative", bottom: isMobile ? 22 : 24, left: isMobile ? 6 : 23,
+                backdropFilter: "blur(10px)",
+                boxShadow: isDarkMode
+                  ? "0 0 0 2px rgba(96,165,250,0.2), 0 4px 20px rgba(96,165,250,0.15), 0 0 40px rgba(96,165,250,0.08)"
+                  : "0 0 0 2px rgba(16,185,129,0.1), 0 4px 20px rgba(16,185,129,0.1), 0 0 40px rgba(16,185,129,0.05)"
+              }}>
+                <span style={{
+                  width: 8, height: 8, borderRadius: "50%", flexShrink: 0,
+                  background: isDarkMode ? "#60a5fa" : "#10b981",
+                  animation: "pulse 2s ease-in-out infinite",
+                }} />
+                {t("hero.liveBadge", "Up to 50 bookings processed automatically in 1 click")}
+              </div>
+
+
+
+            )}
+
+
+
+            <h1 key={isDarkMode ? "dark" : "light"} style={{
+              fontFamily: "'Syne',sans-serif",
+              fontSize: isMobile
+                ? (selectedLang === "AR" ? "clamp(40px,9.5vw,42px)" : "clamp(36px,9vw,37px)")
+                : (selectedLang === "AR" ? "clamp(60px,5vw,95px)" : "clamp(50px,4.8vw,90px)"),
+              fontWeight: 800,
+              letterSpacing: isMobile ? -2 : -3,
+              lineHeight: isMobile ? (selectedLang === "AR" ? 1.2 : 1.1) : (selectedLang === "AR" ? 1.2 : 1),
+              marginBottom: isMobile ? 16 : 20,
+              paddingBottom: selectedLang === "AR" ? 10 : 0,
+              color: isDarkMode ? "#ffffff" : "#ffffff",
+              animation: "fadeUp 0.7s 0.1s ease both",
+              position: "relative", top: isMobile ? 0 : (selectedLang === "AR" ? -1 : 10),
+              maxWidth: "100%",
+              marginTop: 0,
             }}>
               <span style={{
-                width: 8, height: 8, borderRadius: "50%", flexShrink: 0,
-                background: isDarkMode ? "#60a5fa" : "#10b981",
-                animation: "pulse 2s ease-in-out infinite",
-              }} />
-              {t("hero.liveBadge", "Up to 50 bookings processed automatically in 1 click")}
-            </div>
+                background: isDarkMode
+                  ? "var(--accent-gradient)"
+                  : "linear-gradient(135deg, #ffffffff 0%, #ffffffff 50%, #00ff2aff 100%)",
+                WebkitBackgroundClip: "text",
+                backgroundClip: "text",
+                WebkitTextFillColor: "transparent",
+                display: "inline-block",
+              }}>
+                {isMobile
+                  ? t("hero.h1Mobile", <>The Car You Want Ready To Drive<br /></>)
+                  : t("hero.h1Desktop", <>The Car You Want The Second<br />You Need It</>)
+                }
+              </span>
+            </h1>
 
-
-
-          )}
-
-
-
-          <h1 style={{
-            fontFamily: "'Syne',sans-serif",
-            fontSize: isMobile
-              ? (selectedLang === "AR" ? "clamp(40px,9.5vw,42px)" : "clamp(36px,9vw,37px)")
-              : (selectedLang === "AR" ? "clamp(60px,5vw,95px)" : "clamp(50px,4.8vw,90px)"),
-            fontWeight: 800,
-            letterSpacing: isMobile ? -2 : -3,
-            lineHeight: isMobile ? (selectedLang === "AR" ? 1.2 : 1.1) : (selectedLang === "AR" ? 1.2 : 1),
-            marginBottom: isMobile ? 16 : 20,
-            paddingBottom: selectedLang === "AR" ? 10 : 0,
-            background: "var(--accent-gradient)",
-            WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent",
-            animation: "fadeUp 0.7s 0.1s ease both",
-            position: "relative", top: isMobile ? 0 : (selectedLang === "AR" ? -1 : 10),
-            maxWidth: "100%",
-            marginTop: 0,
-          }}>
-            {isMobile
-              ? t("hero.h1Mobile", <>The Car You Want Ready To Drive<br /></>)
-              : t("hero.h1Desktop", <>The Car You Want The Second<br />You Need It</>)
-            }
-          </h1>
-
-          <div style={{
-            fontFamily: "'Syne',sans-serif",
-            fontSize: isMobile
-              ? (selectedLang === "AR" ? "clamp(20px,5.5vw,26px)" : "clamp(16px,5vw,24px)")
-              : (selectedLang === "AR" ? "clamp(40px,3.8vw,60px)" : "clamp(37px,3.5vw,55px)"),
-            fontWeight: selectedLang === "AR" ? 600 : 400, color: isDarkMode ? "var(--accent-color)" : "rgba(33, 141, 0, 1)",
-            marginBottom: isMobile ? 29 : 12,
-            height: "1.5em", width: "100%",
-            maxWidth: isMobile ? "100%" : 900,
-            display: "flex", alignItems: "center", justifyContent: "center", gap: 4,
-            animation: "fadeUp 0.7s 0.2s ease both",
-            position: "relative", bottom: isMobile ? "1px" : 0,
-            top: isMobile ? 0 : (selectedLang === "AR" ? 0 : 27),
-          }}>
-            <span>{displayed}</span>
-            <span style={{ display: "inline-block", width: 2, height: "0.85em", background: isDarkMode ? "var(--accent-color)" : "#064e3b", animation: "blink 1s infinite", flexShrink: 0, boxShadow: `0 0 6px ${isDarkMode ? "var(--accent-color)" : "#064e3b"}` }} />
-          </div>
-
-          {!isMobile && (
-            <p style={{ color: "var(--text-muted)", fontSize: selectedLang === "AR" ? 24 : 25, maxWidth: selectedLang === "AR" ? 760 : 760, marginBottom: 32, animation: "fadeUp 0.7s 0.3s ease both", position: "relative", top: isMobile ? 0 : (selectedLang === "AR" ? 15 : 32), fontWeight: selectedLang === "AR" ? 500 : 400 }}>
-              {t("hero.subtitle", "The ultimate platform for modern drivers and agencies. Seamless bookings, powerful management.")}
-            </p>
-          )}
-
-          <div style={{
-            width: "100%", maxWidth: isMobile ? "100%" : (selectedLang === "AR" ? 780 : 700),
-            marginBottom: isMobile ? 38 : 48,
-            animation: "fadeUp 0.7s 0.4s ease both",
-            position: "relative", zIndex: 1,
-            bottom: isMobile ? 7 : 0,
-          }}>
             <div style={{
-              display: "flex", alignItems: "center",
-              background: isDarkMode ? "rgba(255,255,255,0.04)" : "rgba(255,255,255,0.85)",
-              border: `1.5px solid ${aiFocused
-                ? (isDarkMode ? "rgba(96,165,250,0.55)" : "rgba(4,120,87,0.5)")
-                : (isDarkMode ? "rgba(255,255,255,0.09)" : "rgba(6,78,59,0.13)")}`,
-              borderRadius: 50,
-              height: selectedLang === "AR" ? (isMobile ? 65 : 76) : (isMobile ? 60 : 70),
-              padding: isMobile
-                ? (selectedLang === "AR" ? "0 24px 0 0" : "0 0 0 24px")
-                : (selectedLang === "AR" ? "0 30px 0 6px" : "0 6px 0 30px"),
-              overflow: "hidden",
-              backdropFilter: "blur(20px)", WebkitBackdropFilter: "blur(20px)",
-              boxShadow: isMobile
-                ? (aiFocused
-                  ? (isDarkMode
-                    ? "0 0 0 3px rgba(96,165,250,0.3), 0 12px 50px rgba(37,99,235,0.4), inset 0 1px 2px rgba(255,255,255,0.1)"
-                    : "0 0 0 3px rgba(16,185,129,0.3), 0 12px 50px rgba(16,185,129,0.35), inset 0 1px 2px rgba(255,255,255,0.2)")
-                  : (isDarkMode
-                    ? "0 8px 32px rgba(37,99,235,0.2), 0 0 60px rgba(14,165,233,0.08)"
-                    : "0 8px 32px rgba(16,185,129,0.15), 0 0 60px rgba(74,222,128,0.06)"))
-                : (aiFocused
-                  ? (isDarkMode
-                    ? "0 0 0 3.2px rgba(96,165,250,0.25), 0 8px 40px rgba(37,99,235,0.3), 0 0 80px rgba(14,165,233,0.15)"
-                    : "0 0 0 3.2px rgba(16,185,129,0.25), 0 8px 40px rgba(5,150,105,0.25), 0 0 60px rgba(16,185,129,0.12)")
-                  : (isDarkMode
-                    ? "0 0 0 3.2px rgba(96,165,250,0.15), 0 8px 40px rgba(37,99,235,0.25), 0 0 80px rgba(14,165,233,0.1)"
-                    : "0 0 0 3.2px rgba(16,185,129,0.15), 0 8px 40px rgba(5,150,105,0.2), 0 0 60px rgba(16,185,129,0.08)")),
-              transition: "border-color 0.3s, box-shadow 0.3s",
-              width: isMobile ? "100%" : (selectedLang === "AR" ? "100%" : "111%"),
-              margin: isMobile ? "0 auto" : (selectedLang === "AR" ? "0 5%" : "0 -5.5%"),
-              position: "relative",
-              top: isMobile ? 0 : (selectedLang === "AR" ? 10 : 34),
-              right: isMobile ? "auto" : (selectedLang === "AR" ? "-35px" : "auto"),
-              boxSizing: "border-box",
-              animation: isMobile && !aiFocused ? (isDarkMode ? "borderGlowDark 3s ease-in-out infinite" : "borderGlow 3s ease-in-out infinite") : "none"
+              fontFamily: "'Syne',sans-serif",
+              fontSize: isMobile
+                ? (selectedLang === "AR" ? "clamp(20px,5.5vw,26px)" : "clamp(16px,5vw,24px)")
+                : (selectedLang === "AR" ? "clamp(40px,3.8vw,60px)" : "clamp(37px,3.5vw,55px)"),
+              fontWeight: selectedLang === "AR" ? 600 : 700,
+              color: isDarkMode ? "var(--accent-color)" : "var(--accent-color)",
+              marginBottom: isMobile ? 29 : 12,
+              height: "1.5em", width: "100%",
+              maxWidth: isMobile ? "100%" : 999,
+              display: "flex", alignItems: "center", justifyContent: "center", gap: 4,
+              animation: "fadeUp 0.7s 0.2s ease both",
+              position: "relative", bottom: isMobile ? "1px" : 0,
+              top: isMobile ? 0 : (selectedLang === "AR" ? 0 : 27),
             }}>
-              <input
-                value={aiValue}
-                onChange={e => setAiValue(e.target.value)}
-                onFocus={() => setAiFocused(true)}
-                onBlur={() => setAiFocused(false)}
-                onKeyDown={e => e.key === "Enter" && handleGenerate()}
-                placeholder={aiFocused ? t("hero.searchPlaceholder", "Décrivez votre voiture…") : aiPlaceholder}
-                style={{
-                  flex: 1, border: "none", outline: "none", background: "transparent",
-                  fontFamily: "'DM Sans','Syne',sans-serif",
-                  fontSize: selectedLang === "AR" ? (isMobile ? 16 : 20) : 17.3,
-                  fontWeight: 700, color: "var(--text-main)",
-                  caretColor: isDarkMode ? "#60a5fa" : "#10b981",
-                  minWidth: 0,
-                }}
-              />
+              <span style={{
+                background: isDarkMode ? "none" : "linear-gradient(135deg, #15ebfcff 0%, #15ebfcff 20%, #15ebfcff 50%)",
+                WebkitBackgroundClip: isDarkMode ? "none" : "text",
+                WebkitTextFillColor: isDarkMode ? "currentColor" : "transparent",
+                textShadow: isDarkMode ? "none" : "0px 2px 10px rgba(255,255,255,0.2)",
+              }}>{displayed}</span>
+              <span style={{ display: "inline-block", width: 2, height: "0.85em", background: isDarkMode ? "var(--accent-color)" : "#064e3b", animation: "blink 1s infinite", flexShrink: 0, boxShadow: `0 0 6px ${isDarkMode ? "var(--accent-color)" : "#064e3b"}` }} />
+            </div>
+
+            {!isMobile && (
+              <p style={{
+                color: isDarkMode ? "rgba(255,255,255,0.75)" : "#ffffff",
+                textShadow: isDarkMode ? "none" : "0px 2px 15px rgba(0,0,0,0.4)",
+                fontSize: selectedLang === "AR" ? 24 : 25,
+                maxWidth: selectedLang === "AR" ? 760 : 760,
+                marginBottom: 32,
+                animation: "fadeUp 0.7s 0.3s ease both",
+                position: "relative",
+                top: isMobile ? 0 : (selectedLang === "AR" ? 15 : 32),
+                fontWeight: selectedLang === "AR" ? 500 : 500
+              }}>
+                {t("hero.subtitle", "The ultimate platform for modern drivers and agencies. Seamless bookings, powerful management.")}
+              </p>
+            )}
+
+            <div style={{
+              width: "100%", maxWidth: isMobile ? "100%" : (selectedLang === "AR" ? 780 : 700),
+              marginBottom: isMobile ? 38 : 48,
+              animation: "fadeUp 0.7s 0.4s ease both",
+              position: "relative", zIndex: 1,
+              bottom: isMobile ? 7 : 0,
+            }}>
+              <div style={{
+                display: "flex", alignItems: "center",
+                background: isDarkMode ? "rgba(255,255,255,0.04)" : "rgba(255,255,255,0.85)",
+                border: `1.5px solid ${aiFocused
+                  ? (isDarkMode ? "rgba(96,165,250,0.55)" : "rgba(4,120,87,0.5)")
+                  : (isDarkMode ? "rgba(255,255,255,0.09)" : "rgba(6,78,59,0.13)")}`,
+                borderRadius: 50,
+                height: selectedLang === "AR" ? (isMobile ? 65 : 76) : (isMobile ? 60 : 70),
+                padding: isMobile
+                  ? (selectedLang === "AR" ? "0 24px 0 0" : "0 0 0 24px")
+                  : (selectedLang === "AR" ? "0 30px 0 6px" : "0 6px 0 30px"),
+                overflow: "hidden",
+                backdropFilter: "blur(20px)", WebkitBackdropFilter: "blur(20px)",
+                boxShadow: isMobile
+                  ? (aiFocused
+                    ? (isDarkMode
+                      ? "0 0 0 3px rgba(96,165,250,0.3), 0 12px 50px rgba(37,99,235,0.4), inset 0 1px 2px rgba(255,255,255,0.1)"
+                      : "0 0 0 3px rgba(16,185,129,0.3), 0 12px 50px rgba(16,185,129,0.35), inset 0 1px 2px rgba(255,255,255,0.2)")
+                    : (isDarkMode
+                      ? "0 8px 32px rgba(37,99,235,0.2), 0 0 60px rgba(14,165,233,0.08)"
+                      : "0 8px 32px rgba(16,185,129,0.15), 0 0 60px rgba(74,222,128,0.06)"))
+                  : (aiFocused
+                    ? (isDarkMode
+                      ? "0 0 0 3.2px rgba(96,165,250,0.25), 0 8px 40px rgba(37,99,235,0.3), 0 0 80px rgba(14,165,233,0.15)"
+                      : "0 0 0 3.2px rgba(16,185,129,0.25), 0 8px 40px rgba(5,150,105,0.25), 0 0 60px rgba(16,185,129,0.12)")
+                    : (isDarkMode
+                      ? "0 0 0 3.2px rgba(96,165,250,0.15), 0 8px 40px rgba(37,99,235,0.25), 0 0 80px rgba(14,165,233,0.1)"
+                      : "0 0 0 3.2px rgba(16,185,129,0.15), 0 8px 40px rgba(5,150,105,0.2), 0 0 60px rgba(16,185,129,0.08)")),
+                transition: "border-color 0.3s, box-shadow 0.3s",
+                width: isMobile ? "100%" : (selectedLang === "AR" ? "100%" : "111%"),
+                margin: isMobile ? "0 auto" : (selectedLang === "AR" ? "0 5%" : "0 -5.5%"),
+                position: "relative",
+                top: isMobile ? 0 : (selectedLang === "AR" ? 10 : 34),
+                right: isMobile ? "auto" : (selectedLang === "AR" ? "-35px" : "auto"),
+                boxSizing: "border-box",
+                animation: isMobile && !aiFocused ? (isDarkMode ? "borderGlowDark 3s ease-in-out infinite" : "borderGlow 3s ease-in-out infinite") : "none"
+              }}>
+                <input
+                  value={aiValue}
+                  onChange={e => setAiValue(e.target.value)}
+                  onFocus={() => setAiFocused(true)}
+                  onBlur={() => setAiFocused(false)}
+                  onKeyDown={e => e.key === "Enter" && handleGenerate()}
+                  placeholder={aiFocused ? t("hero.searchPlaceholder", "Décrivez votre voiture…") : aiPlaceholder}
+                  style={{
+                    flex: 1, border: "none", outline: "none", background: "transparent",
+                    fontFamily: "'DM Sans','Syne',sans-serif",
+                    fontSize: selectedLang === "AR" ? (isMobile ? 16 : 20) : 17.3,
+                    fontWeight: 700, color: "var(--text-main)",
+                    caretColor: isDarkMode ? "#60a5fa" : "#10b981",
+                    minWidth: 0,
+                  }}
+                />
+                <button
+                  aria-label="Entrée vocale"
+                  onClick={startListening}
+                  style={{
+                    width: selectedLang === "AR" ? (isMobile ? 50 : 54) : 45,
+                    height: selectedLang === "AR" ? (isMobile ? 50 : 54) : 45,
+                    borderRadius: "50%",
+                    background: listening ? "rgba(239,68,68,0.15)" : "none",
+                    border: "none", cursor: "pointer",
+                    display: "flex", alignItems: "center", justifyContent: "center",
+                    color: listening ? "#ef4444" : (isDarkMode ? "rgba(255,255,255,0.85)" : "rgba(4,120,87,0.85)"),
+                    flexShrink: 0,
+                    marginRight: isMobile ? 4 : (selectedLang === "AR" ? 0 : 6),
+                    marginLeft: isMobile ? 4 : (selectedLang === "AR" ? 6 : 0),
+                    transition: "all 0.2s",
+                    position: "relative",
+                  }}
+                >
+                  {listening && (
+                    <div style={{
+                      position: "absolute", inset: -4, borderRadius: "50%",
+                      border: "1.5px solid #ef4444",
+                      animation: "ping 1s ease-out infinite",
+                    }} />
+                  )}
+                  <svg width={selectedLang === "AR" ? 20 : 17} height={selectedLang === "AR" ? 20 : 17} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z" />
+                    <path d="M19 10v2a7 7 0 0 1-14 0v-2" />
+                    <line x1="12" y1="19" x2="12" y2="23" />
+                    <line x1="8" y1="23" x2="16" y2="23" />
+                  </svg>
+                </button>
+                <button
+                  className="primary-btnDE"
+                  onClick={handleGenerate}
+                  disabled={aiLoading}
+                  style={{
+                    width: isMobile ? "auto" : "auto",
+                    height: isMobile ? "100%" : (selectedLang === "AR" ? 76 : 68),
+                    padding: isMobile ? "0 22px" : (selectedLang === "AR" ? "3px 69px" : "3px 41px"),
+                    display: "flex", justifyContent: "center", alignItems: "center",
+                    borderRadius: isMobile
+                      ? (selectedLang === "AR" ? "50px 0 0 50px" : "0 50px 50px 0")
+                      : 44,
+                    fontSize: selectedLang === "AR" ? (isMobile ? 15 : 19) : (isMobile ? 11.5 : 16),
+                    letterSpacing: (selectedLang === "AR" || isMobile) ? "0" : "0.05em",
+                    fontFamily: "'DM Sans','Syne',sans-serif",
+                    fontWeight: 700,
+                    gap: 7,
+                    whiteSpace: "nowrap",
+                    flexShrink: 0,
+                    alignSelf: isMobile ? "stretch" : "auto",
+                    position: "relative",
+                    left: isMobile ? "auto" : (selectedLang === "AR" ? "auto" : "6px"),
+                    right: isMobile ? "auto" : (selectedLang === "AR" ? "6px" : "auto"),
+                  }}
+                >
+                  <svg className="hyrakle" width={selectedLang === "AR" ? 25 : (isMobile ? 24 : 23)} height={selectedLang === "AR" ? 25 : (isMobile ? 24 : 23)} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <circle cx="11" cy="11" r="8" /><path d="m21 21-4.35-4.35" />
+                  </svg>
+                  {!isMobile && t("hero.searchBtn", "To research")}
+                </button>
+              </div>
+            </div>
+
+            <div style={{
+              display: "flex", alignItems: "center", justifyContent: "center", gap: isMobile ? 4 : 12,
+              animation: "fadeUp 0.7s 0.45s ease both",
+              width: "100%", maxWidth: 600,
+            }}>
+              <span style={{
+                fontSize: isMobile
+                  ? (selectedLang === "AR" ? 17 : 12)
+                  : (selectedLang === "AR" ? 22 : 16),
+                fontWeight: 800, letterSpacing: selectedLang === "AR" ? "0em" : "0.15em",
+                fontFamily: "'Syne', sans-serif", whiteSpace: "nowrap",
+                position: "relative",
+                top: isMobile ? -15 : (selectedLang === "AR" ? -10 : 15),
+                bottom: isMobile ? 0 : "0px",
+                left: "auto",
+                textAlign: "center",
+                margin: isMobile ? "-8px 0 0" : "0 auto",
+                backgroundImage: isDarkMode
+                  ? "linear-gradient(270deg, #60a5fa, #a855f7, #f472b6, #60a5fa)"
+                  : "linear-gradient(270deg, #ffffff, #10b981, #ffffff, #10b981)",
+                backgroundSize: "200% 200%",
+                backgroundClip: "text",
+                WebkitBackgroundClip: "text",
+                color: "transparent",
+                WebkitTextFillColor: "transparent",
+                display: "inline-block",
+                animation: "btnGradientMove 3s ease infinite",
+              }}>
+                {t("hero.number1", "Number 1 platform in Morocco")}
+              </span>
+            </div>
+
+            <div style={{
+              display: "flex", gap: isMobile ? 12 : (selectedLang === "AR" ? 26 : 22),
+              flexDirection: isMobile ? "column" : "row",
+              animation: "fadeUp 0.7s 0.6s ease both",
+              width: isMobile ? "100%" : "auto",
+              justifyContent: "center",
+              alignItems: "center",
+              position: "relative",
+              bottom: isMobile ? 0 : (selectedLang === "AR" ? "-40px" : "-68px")
+            }}>
               <button
-                aria-label="Entrée vocale"
-                onClick={startListening}
-                style={{
-                  width: selectedLang === "AR" ? (isMobile ? 50 : 54) : 45,
-                  height: selectedLang === "AR" ? (isMobile ? 50 : 54) : 45,
-                  borderRadius: "50%",
-                  background: listening ? "rgba(239,68,68,0.15)" : "none",
-                  border: "none", cursor: "pointer",
-                  display: "flex", alignItems: "center", justifyContent: "center",
-                  color: listening ? "#ef4444" : (isDarkMode ? "rgba(96,165,250,0.6)" : "rgba(4,120,87,0.55)"),
-                  flexShrink: 0,
-                  marginRight: isMobile ? 4 : (selectedLang === "AR" ? 0 : 6),
-                  marginLeft: isMobile ? 4 : (selectedLang === "AR" ? 6 : 0),
-                  transition: "all 0.2s",
-                  position: "relative",
-                }}
-              >
-                {listening && (
-                  <div style={{
-                    position: "absolute", inset: -4, borderRadius: "50%",
-                    border: "1.5px solid #ef4444",
-                    animation: "ping 1s ease-out infinite",
-                  }} />
-                )}
-                <svg width={selectedLang === "AR" ? 20 : 17} height={selectedLang === "AR" ? 20 : 17} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z" />
-                  <path d="M19 10v2a7 7 0 0 1-14 0v-2" />
-                  <line x1="12" y1="19" x2="12" y2="23" />
-                  <line x1="8" y1="23" x2="16" y2="23" />
-                </svg>
-              </button>
-              <button
+                onClick={() => window.location.href = "/loginagence"}
                 className="primary-btnDE"
-                onClick={handleGenerate}
-                disabled={aiLoading}
-                style={{
-                  width: isMobile ? "auto" : "auto",
-                  height: isMobile ? "100%" : (selectedLang === "AR" ? 76 : 68),
-                  padding: isMobile ? "0 22px" : (selectedLang === "AR" ? "3px 69px" : "3px 41px"),
-                  display: "flex", justifyContent: "center", alignItems: "center",
-                  borderRadius: isMobile
-                    ? (selectedLang === "AR" ? "50px 0 0 50px" : "0 50px 50px 0")
-                    : 44,
-                  fontSize: selectedLang === "AR" ? (isMobile ? 15 : 19) : (isMobile ? 11.5 : 16),
-                  letterSpacing: (selectedLang === "AR" || isMobile) ? "0" : "0.05em",
-                  fontFamily: "'DM Sans','Syne',sans-serif",
-                  fontWeight: 700,
-                  gap: 7,
-                  whiteSpace: "nowrap",
-                  flexShrink: 0,
-                  alignSelf: isMobile ? "stretch" : "auto",
-                  position: "relative",
-                  left: isMobile ? "auto" : (selectedLang === "AR" ? "auto" : "6px"),
-                  right: isMobile ? "auto" : (selectedLang === "AR" ? "6px" : "auto"),
-                }}
+                style={{ padding: isMobile ? "12px 20px" : (selectedLang === "AR" ? "18px 60px" : "17px 56px"), fontSize: selectedLang === "AR" ? (isMobile ? 16 : 20) : (isMobile ? 14 : 18), width: isMobile ? "100%" : "auto", maxWidth: isMobile ? "320px" : "none", fontFamily: "'DM Sans','Syne',sans-serif", position: "relative", bottom: isMobile ? "-12px" : "6px" }}
               >
-                <svg className="hyrakle" width={selectedLang === "AR" ? 25 : (isMobile ? 24 : 23)} height={selectedLang === "AR" ? 25 : (isMobile ? 24 : 23)} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <circle cx="11" cy="11" r="8" /><path d="m21 21-4.35-4.35" />
-                </svg>
-                {!isMobile && t("hero.searchBtn", "To research")}
+                {t("hero.startFree", "Start For Free")} <ArrowRightIcon size={selectedLang === "AR" ? 20 : 19} />
+              </button>
+              <button onClick={() => window.scrollBy({ top: 500, behavior: "smooth" })} className="secondary-btn" style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.2)", color: "#fff", padding: isMobile ? "12px 20px" : (selectedLang === "AR" ? "18px 40px" : "16px 36px"), fontSize: selectedLang === "AR" ? (isMobile ? 16 : 20) : (isMobile ? 14 : 18), width: isMobile ? "100%" : "auto", maxWidth: isMobile ? "320px" : "none", fontFamily: "'DM Sans','Syne',sans-serif", position: "relative", bottom: isMobile ? "-20px" : "6px" }}>
+                <CompassIcon size={selectedLang === "AR" ? 20 : 18} /> {t("hero.browseFleet", "Browse Fleet")}
               </button>
             </div>
-          </div>
-
-          <div style={{
-            display: "flex", alignItems: "center", justifyContent: "center", gap: isMobile ? 4 : 12,
-            animation: "fadeUp 0.7s 0.45s ease both",
-            width: "100%", maxWidth: 600,
-          }}>
-            <span style={{
-              fontSize: isMobile
-                ? (selectedLang === "AR" ? 17 : 12)
-                : (selectedLang === "AR" ? 22 : 16),
-              fontWeight: 800, letterSpacing: selectedLang === "AR" ? "0em" : "0.15em",
-              fontFamily: "'Syne', sans-serif", whiteSpace: "nowrap",
-              position: "relative",
-              top: isMobile ? -15 : (selectedLang === "AR" ? -10 : 15),
-              bottom: isMobile ? 0 : "0px",
-              left: "auto",
-              textAlign: "center",
-              margin: isMobile ? "-8px 0 0" : "0 auto",
-              backgroundImage: isDarkMode
-                ? "linear-gradient(270deg, #60a5fa, #a855f7, #f472b6, #60a5fa)"
-                : "linear-gradient(270deg, #059669, #10b981, #0ea5e9, #059669)",
-              backgroundSize: "300% 300%",
-              backgroundClip: "text",
-              WebkitBackgroundClip: "text",
-              color: "transparent",
-              WebkitTextFillColor: "transparent",
-              display: "inline-block",
-              animation: "btnGradientMove 3s ease infinite",
-            }}>
-              {t("hero.number1", "Number 1 platform in Morocco")}
-            </span>
-          </div>
-
-          <div style={{
-            display: "flex", gap: isMobile ? 12 : (selectedLang === "AR" ? 26 : 22),
-            flexDirection: isMobile ? "column" : "row",
-            animation: "fadeUp 0.7s 0.6s ease both",
-            width: isMobile ? "100%" : "auto",
-            justifyContent: "center",
-            alignItems: "center",
-            position: "relative",
-            bottom: isMobile ? 0 : (selectedLang === "AR" ? "-40px" : "-68px")
-          }}>
-            <button
-              onClick={() => navigate("/loginagence")}
-              className="primary-btnDE"
-              style={{ padding: isMobile ? "12px 20px" : (selectedLang === "AR" ? "18px 60px" : "17px 56px"), fontSize: selectedLang === "AR" ? (isMobile ? 16 : 20) : (isMobile ? 14 : 18), width: isMobile ? "100%" : "auto", maxWidth: isMobile ? "320px" : "none", fontFamily: "'DM Sans','Syne',sans-serif", position: "relative", bottom: isMobile ? "-12px" : "6px" }}
-            >
-              {t("hero.startFree", "Start For Free")} <ArrowRightIcon size={selectedLang === "AR" ? 20 : 19} />
-            </button>
-            <button onClick={() => window.scrollBy({ top: 500, behavior: "smooth" })} className="secondary-btn" style={{ padding: isMobile ? "12px 20px" : (selectedLang === "AR" ? "18px 40px" : "16px 36px"), fontSize: selectedLang === "AR" ? (isMobile ? 16 : 20) : (isMobile ? 14 : 18), width: isMobile ? "100%" : "auto", maxWidth: isMobile ? "320px" : "none", fontFamily: "'DM Sans','Syne',sans-serif", position: "relative", bottom: isMobile ? "-20px" : "6px" }}>
-              <CompassIcon size={selectedLang === "AR" ? 20 : 18} /> {t("hero.browseFleet", "Browse Fleet")}
-            </button>
-          </div>
+          </div>{/* end zIndex:10 content wrapper */}
         </section>
 
         {/* ── SEARCH RESULTS ── */}
@@ -1675,7 +1808,7 @@ return () => { cancelAnimationFrame(id); window.removeEventListener("resize", re
           }}>
             <div style={{
               textAlign: "center", marginBottom: 40,
-              display: "flex", flexDirection: "column", alignItems: "center", gap: 12
+              display: "flex", flexDirection: "column", alignItems: "center", gap: 12, marginTop: 56
             }}>
               {searchResults.length > 0 && (
                 <div style={{

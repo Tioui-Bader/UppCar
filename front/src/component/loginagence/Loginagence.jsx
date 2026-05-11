@@ -554,7 +554,11 @@ export default function LoginAgence() {
           {/* Theme Toggle */}
           <button
             className="la-theme-toggle"
-            onClick={() => setIsDark(!isDark)}
+            onClick={() => {
+              const nextMode = !isDark ? "dark" : "light";
+              localStorage.setItem("appTheme", nextMode);
+              window.location.reload();
+            }}
             style={{
               position: "absolute", top: 20,
               left: isAr ? "auto" : 32,
@@ -579,7 +583,7 @@ export default function LoginAgence() {
             {/* ── Animated Logo UppCar ── */}
             <div style={{ display: "flex", alignItems: "center", gap: 13, marginBottom: 28, animation: "laUp .5s ease both", direction: "ltr" }}>
               {/* Spinning wheel logo — identical to Home.jsx */}
-              <div onClick={() => navigate("/")} style={{ position: "relative", width: 46, height: 46, borderRadius: 14, background: fg, display: "flex", alignItems: "center", justifyContent: "center", boxShadow: `0 8px 20px ${isDark ? "rgba(0,0,0,0.4)" : "rgba(16,185,129,0.2)"}`, overflow: "hidden", flexShrink: 0, cursor: "pointer" }}>
+              <div onClick={() => window.location.href = "/"} style={{ position: "relative", width: 46, height: 46, borderRadius: 14, background: fg, display: "flex", alignItems: "center", justifyContent: "center", boxShadow: `0 8px 20px ${isDark ? "rgba(0,0,0,0.4)" : "rgba(16,185,129,0.2)"}`, overflow: "hidden", flexShrink: 0, cursor: "pointer" }}>
                 <div style={{ position: "absolute", top: "-50%", left: "-50%", width: "200%", height: "200%", background: "conic-gradient(from 0deg,transparent 0%,#10b981 30%,transparent 40%)", animation: "laOrb 4s linear infinite" }} />
                 <div style={{ position: "absolute", inset: 2, background: isDark ? "#070b17" : "#fff", borderRadius: 12, zIndex: 1 }} />
                 <svg style={{ zIndex: 2 }} width="22" height="22" viewBox="0 0 24 24" fill="none" stroke={fg} strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
@@ -588,7 +592,7 @@ export default function LoginAgence() {
                   <circle cx="16.5" cy="16.5" r="2.5" />
                 </svg>
               </div>
-              <div onClick={() => navigate("/")} style={{ position: "relative", fontFamily: "'Syne',sans-serif", fontWeight: 900, fontSize: 28, letterSpacing: "-0.5px", lineHeight: 1, cursor: "pointer" }}>
+              <div onClick={() => window.location.href = "/"} style={{ position: "relative", fontFamily: "'Syne',sans-serif", fontWeight: 900, fontSize: 28, letterSpacing: "-0.5px", lineHeight: 1, cursor: "pointer" }}>
                 <span style={{ color: fg }}>Upp</span>
                 <span style={{ color: accentGr }}>Car</span>
                 <span style={{ position: "absolute", bottom: 5, right: -10, width: 6, height: 6, borderRadius: "50%", background: accentGr, animation: "laPulse 2s infinite", display: "inline-block" }} />

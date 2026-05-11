@@ -283,7 +283,11 @@ export default function LoginUser() {
                                 )}
                             </div>
 
-                            <button className="icon-btn" onClick={() => setIsDarkMode(!isDarkMode)}>
+                            <button className="icon-btn" onClick={() => {
+                                const nextMode = !isDarkMode ? "dark" : "light";
+                                localStorage.setItem("appTheme", nextMode);
+                                window.location.reload();
+                            }}>
                                 {isDarkMode ? <SunIcon /> : <MoonIcon />}
                             </button>
                         </div>
@@ -363,8 +367,8 @@ export default function LoginUser() {
                                             position: "relative",
                                         }}
                                             onClick={() => {
-                                                if (label === "Client") navigate("/login");
-                                                if (label === t("nav.agency", "Agence de location")) navigate("/loginagence");
+                                                if (label === "Client") window.location.href = "/login";
+                                                if (label === t("nav.agency", "Agence de location")) window.location.href = "/loginagence";
                                             }}
                                             onMouseEnter={e => {
                                                 e.currentTarget.style.background = glow;

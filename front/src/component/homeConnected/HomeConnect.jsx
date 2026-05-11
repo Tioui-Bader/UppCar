@@ -3,6 +3,14 @@ import { useNavigate } from "react-router-dom";
 import { logActivity } from "../../utils/activity";
 import { AR } from "./ar";
 import { FR } from "./fr";
+import heroBg from "../../asset/hero_pg.png";
+import lightBg from "../../asset/home_light_bg.png";
+import lightBg2 from "../../asset/image copy 2.png";
+import lightBg3 from "../../asset/image copy 3.png";
+import darkBg2 from "../../asset/image copy 4.png";
+import darkBg3 from "../../asset/image copy.png";
+import darkBg4 from "../../asset/image copy 5.png";
+import lightBg4 from "../../asset/image copy 6.png";
 const PHRASES = [
     "Smarter Rentals Start Here.",
     "All-in-One Rental Intelligence.",
@@ -39,6 +47,8 @@ body { transition: background 0.3s; overflow-x: hidden; }
   --accent-gradient: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 50%, #ec4899 100%);
   --accent-color: #60a5fa;
   --btn-text: #060912;
+    --accent-gradientee: linear-gradient(135deg, #3b82f6 0%, #8fbaffff 50%, #8b5cf6 100%);
+
 }
 
 body { background: var(--bg-color); color: var(--text-main); position: relative; }
@@ -117,7 +127,7 @@ body { background: var(--bg-color); color: var(--text-main); position: relative;
 @keyframes mobilePing { 0%{transform:scale(1);opacity:1;} 100%{transform:scale(2);opacity:0;} }
 
 .nav-wrapper { position: sticky; top: 10px; z-index: 100; margin: 0 20px; transition: all 0.3s ease; }
-.nav-glass { display: flex; align-items: center; justify-content: space-between; padding: 5px 20px; background: var(--nav-bg); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid var(--nav-border); border-radius: 24px; box-shadow: 0 8px 32px rgba(0,0,0,0.05); animation: fadeUp 0.6s ease-out; }
+.nav-glass { display: flex; align-items: center; justify-content: space-between; padding: 5px 20px; background: inherit; backdrop-filter: blur(2px); -webkit-backdrop-filter: blur(20px); border: 1px solid var(--nav-border); border-radius: 24px; box-shadow: 0 8px 32px rgba(0,0,0,0.05); animation: fadeUp 0.6s ease-out; }
 .nav-link { position: relative; color: var(--text-muted); text-decoration: none; font-family: 'Syne', sans-serif; font-size: 14px; font-weight: 700; padding: 8px 16px; border-radius: 12px; transition: all 0.3s cubic-bezier(0.4,0,0.2,1); overflow: hidden; }
 .nav-link::before { content:''; position:absolute; top:0; left:0; width:100%; height:100%; background:var(--text-main); opacity:0; z-index:-1; transition:opacity 0.3s ease; border-radius:12px; }
 .nav-link:hover { color:var(--bg-color); transform:translateY(-2px); }
@@ -282,12 +292,6 @@ body { background: var(--bg-color); color: var(--text-main); position: relative;
 function SearchIcon() {
     return <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="11" cy="11" r="8" /><path d="m21 21-4.35-4.35" /></svg>;
 }
-function SunIcon() {
-    return <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="5" /><line x1="12" y1="1" x2="12" y2="3" /><line x1="12" y1="21" x2="12" y2="23" /><line x1="4.22" y1="4.22" x2="5.64" y2="5.64" /><line x1="18.36" y1="18.36" x2="19.78" y2="19.78" /><line x1="1" y1="12" x2="3" y2="12" /><line x1="21" y1="12" x2="23" y2="12" /><line x1="4.22" y1="19.78" x2="5.64" y2="18.36" /><line x1="18.36" y1="5.64" x2="19.78" y2="4.22" /></svg>;
-}
-function MoonIcon() {
-    return <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" /></svg>;
-}
 function GlobeIcon({ size = 24, color = "currentColor" }) {
     return <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10" /><line x1="2" y1="12" x2="22" y2="12" /><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" /></svg>;
 }
@@ -296,6 +300,15 @@ function ZapIcon({ size = 24, color = "currentColor" }) {
 }
 function CheckIcon({ size = 16, color = "currentColor" }) {
     return <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12" /></svg>;
+}
+function CarSportIcon({ size = 18, color = "currentColor" }) {
+    return <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.4-1.1-.7-1.8-.7H5c-.6 0-1.1.4-1.4.9l-1.4 2.9A3.7 3.7 0 0 0 2 12v4c0 .6.4 1 1 1h2" /><circle cx="7" cy="17" r="2" /><path d="M9 17h6" /><circle cx="17" cy="17" r="2" /></svg>;
+}
+function CarKeyIcon({ size = 18, color = "currentColor" }) {
+    return <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 2l-2 2" /><circle cx="15.5" cy="7.5" r="3.5" /><path d="M13 10l-3.5 3.5" /><path d="M10 11l.5.5" /><path d="M9.5 11.5l.5.5" /><path d="M9 12l.5.5" /><path d="M8.5 12.5l.5.5" /><path d="M7 14l-5 5v3h3l5-5" /></svg>;
+}
+function CarHeartIcon({ size = 18, color = "currentColor" }) {
+    return <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.4-1.1-.7-1.8-.7H5c-.6 0-1.1.4-1.4.9l-1.4 2.9A3.7 3.7 0 0 0 2 12v4c0 .6.4 1 1 1h2" /><circle cx="7" cy="17" r="2" /><circle cx="17" cy="17" r="2" /><path d="M12 13c0 1.1-1.1 2-2.5 2s-2.5-.9-2.5-2 1.1-2 2.5-2 2.5.9 2.5 2z" /></svg>;
 }
 
 function AnimatedSearchIcon() {
@@ -627,6 +640,7 @@ export default function UppCarLanding() {
     const [profileImage, setProfileImage] = useState(
         localStorage.getItem("profileImage") || null
     );
+    const [lightBgIndex, setLightBgIndex] = useState(0);
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
     const audioCtxRef = useRef(null);
     const lastPlayRef = useRef(0);
@@ -637,6 +651,13 @@ export default function UppCarLanding() {
         const saved = localStorage.getItem("favoriteCars");
         return saved ? new Set(JSON.parse(saved)) : new Set();
     });
+
+    useEffect(() => {
+        const timer = setInterval(() => {
+            setLightBgIndex(prev => prev + 1);
+        }, 8000);
+        return () => clearInterval(timer);
+    }, []);
 
     const toggleFavorite = (carId) => {
         setFavorites(prev => {
@@ -1011,6 +1032,77 @@ export default function UppCarLanding() {
             <div className="home-blob home-blob3" />
             <div className="home-blob home-blob4" />
 
+            <div style={{
+                position: "absolute",
+                top: 0,
+                left: 0,
+                right: 0,
+                height: isMobile ? "900px" : "110vh",
+                overflow: "hidden",
+                zIndex: 0,
+                pointerEvents: "none",
+            }}>
+                {/* ── Cinematic Car Background Layers (Pure Cross-fade) ── */}
+                {(() => {
+                    const activeImages = isDarkMode ? [heroBg, darkBg2, darkBg3, darkBg4] : [lightBg, lightBg2, lightBg3, lightBg4];
+                    const currentIdx = lightBgIndex % activeImages.length;
+                    return activeImages.map((img, idx) => {
+                        const isActive = idx === currentIdx;
+
+                        return (
+                            <div key={img} style={{
+                                position: "absolute",
+                                inset: 0,
+                                backgroundImage: `url("${img}")`,
+                                backgroundSize: "cover",
+                                backgroundPosition: "center 60%",
+                                backgroundRepeat: "no-repeat",
+                                transform: "scale(1.04)",
+                                opacity: isActive ? 1 : 0,
+                                zIndex: isActive ? 2 : 1,
+                                transition: isActive
+                                    ? "opacity 1.5s ease-in-out, transform 8s ease-out"
+                                    : "opacity 0.5s 1.5s linear, transform 8s ease-out",
+                            }} />
+                        );
+                    });
+                })()}
+                {/* ── Dark cinematic overlay ── */}
+                <div style={{
+                    position: "absolute",
+                    inset: 0,
+                    zIndex: 3,
+                    background: isDarkMode
+                        ? "linear-gradient(to bottom, rgba(0,0,0,0.65) 0%, rgba(0,0,0,0.33) 40%, rgba(0,0,0,0.7) 100%)"
+                        : "linear-gradient(to bottom, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0.15) 50%, rgba(0,0,0,0.35) 100%)",
+                }} />
+                {/* ── Bottom gradient fade ── */}
+                <div style={{
+                    position: "absolute",
+                    bottom: 0,
+                    left: 0,
+                    right: 0,
+                    zIndex: 4,
+                    height: isDarkMode ? "45%" : "15%",
+                    background: isDarkMode
+                        ? `linear-gradient(to top, var(--bg-color) 0%, transparent 100%)`
+                        : `linear-gradient(to top, var(--bg-color) 0%, transparent 100%)`,
+                }} />
+                {/* ── Animated colored glow on car ── */}
+                <div style={{
+                    position: "absolute",
+                    bottom: "20%",
+                    left: "50%",
+                    transform: "translateX(-50%)",
+                    width: isMobile ? "300px" : "800px",
+                    height: isMobile ? "80px" : "200px",
+                    background: isDarkMode
+                        ? "radial-gradient(ellipse, rgba(96,165,250,0.22) 0%, transparent 70%)"
+                        : "radial-gradient(ellipse, rgba(16,185,129,0.22) 0%, transparent 70%)",
+                    animation: "breathe 5s ease-in-out infinite",
+                }} />
+            </div>
+
             <div style={{ position: "relative", zIndex: 1, overflowX: "hidden", width: "100%" }}>
 
                 {/* ══ NAV ══ */}
@@ -1037,7 +1129,7 @@ export default function UppCarLanding() {
                                                 navigate("/favorites");
                                             }
                                         }} className="nav-link" style={{
-                                            display: "flex", alignItems: "center", gap: 6, cursor: "pointer"
+                                            display: "flex", alignItems: "center", gap: 8, cursor: "pointer"
                                         }}>
                                             {l}
                                             {b && <span style={{ background: "var(--accent-gradient)", color: isDarkMode ? "#000" : "#fff", fontSize: 9, padding: "2px 6px", borderRadius: 6, fontWeight: 800, textTransform: "uppercase" }}>{t("nav.pricingBadge", "Pro")}</span>}
@@ -1052,9 +1144,7 @@ export default function UppCarLanding() {
                             {isMobile ? (
                                 <div style={{ display: "flex", alignItems: "center", gap: 8, position: "relative", right: selectedLang === "AR" ? 19 : 0 }}>
                                     {/* Theme toggle */}
-                                    <button className="icon-btn" onClick={() => setIsDarkMode(!isDarkMode)}>
-                                        {isDarkMode ? <SunIcon /> : <MoonIcon />}
-                                    </button>
+
                                     {/* Hamburger */}
                                     <div className="mobile-menu-wrap" style={{ position: "relative" }}>
                                         <button
@@ -1157,9 +1247,13 @@ export default function UppCarLanding() {
                                         </div>
                                     )}
 
-                                    <button className="icon-btn" style={{ display: isMobile ? "none" : undefined }} onClick={() => setIsDarkMode(!isDarkMode)}>
+                                    {/*     <button className="icon-btn" style={{ display: isMobile ? "none" : undefined }} onClick={() => {
+                                        const nextMode = !isDarkMode ? "dark" : "light";
+                                        localStorage.setItem("appTheme", nextMode);
+                                        window.location.reload();
+                                    }}>
                                         {isDarkMode ? <SunIcon /> : <MoonIcon />}
-                                    </button>
+                                    </button> */}
                                     {!isMobile && <div style={{ width: 1, height: 24, background: "var(--nav-border)", margin: "0 4px" }} />}
                                     <div className="login-menu-wrap desktop-user-pill" style={{ position: "relative", display: isMobile ? "none" : undefined }}>
                                         {currentUser ? (
@@ -1808,8 +1902,9 @@ export default function UppCarLanding() {
                         padding: isMobile ? "10px 17px" : "10.7px 20px", borderRadius: 50,
                         fontFamily: "'DM Sans', sans-serif", fontSize: isMobile ? 11 : 14, fontWeight: 500,
                         whiteSpace: "nowrap",
-                        background: isDarkMode ? "rgba(255,255,255,0.04)" : "rgba(255,255,255,0.9)",
-                        border: `1px solid ${isDarkMode ? "rgba(255,255,255,0.1)" : "rgba(16,185,129,0.25)"}`,
+                        background: "rgba(10, 14, 26, 0.6)",
+                        backdropFilter: "blur(10px)", WebkitBackdropFilter: "blur(10px)",
+                        border: `1px solid ${isDarkMode ? "rgba(255,255,255,0.15)" : "rgba(255,255,255,0.2)"}`,
                         color: "var(--accent-color)",
                         position: "relative", bottom: isMobile ? 22 : 24, left: isMobile ? 6 : 23,
                         boxShadow: isDarkMode
@@ -1834,7 +1929,7 @@ export default function UppCarLanding() {
                         lineHeight: isMobile ? (selectedLang === "AR" ? 1.2 : 1.1) : (selectedLang === "AR" ? 1.2 : 1),
                         marginBottom: isMobile ? 16 : 20,
                         paddingBottom: selectedLang === "AR" ? 10 : 0,
-                        background: "var(--accent-gradient)",
+                        background: "var(--accent-gradientee)",
                         WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent",
                         animation: "fadeUp 0.7s 0.1s ease both",
                         position: "relative", top: isMobile ? 0 : (selectedLang === "AR" ? -1 : 10),
@@ -1853,16 +1948,22 @@ export default function UppCarLanding() {
                         fontSize: isMobile
                             ? (selectedLang === "AR" ? "clamp(20px,5.5vw,26px)" : "clamp(16px,5vw,24px)")
                             : (selectedLang === "AR" ? "clamp(40px,3.8vw,60px)" : "clamp(37px,3.5vw,55px)"),
-                        fontWeight: selectedLang === "AR" ? 600 : 400, color: isDarkMode ? "var(--accent-color)" : "rgba(33, 141, 0, 1)",
+                        fontWeight: selectedLang === "AR" ? 600 : 700,
+                        color: "var(--accent-color)",
                         marginBottom: isMobile ? 29 : 12,
                         height: "1.5em", width: "100%",
-                        maxWidth: isMobile ? "100%" : 900,
+                        maxWidth: isMobile ? "100%" : 999,
                         display: "flex", alignItems: "center", justifyContent: "center", gap: 4,
                         animation: "fadeUp 0.7s 0.2s ease both",
                         position: "relative", bottom: isMobile ? "1px" : 0,
-                        top: isMobile ? 0 : (selectedLang === "AR" ? 0 : 12),
+                        top: isMobile ? 0 : (selectedLang === "AR" ? 0 : 27),
                     }}>
-                        <span>{displayed}</span>
+                        <span style={{
+                            background: isDarkMode ? "none" : "linear-gradient(135deg, #15ebfcff 0%, #15ebfcff 20%, #15ebfcff 50%)",
+                            WebkitBackgroundClip: isDarkMode ? "none" : "text",
+                            WebkitTextFillColor: isDarkMode ? "currentColor" : "transparent",
+                            textShadow: isDarkMode ? "none" : "0px 2px 10px rgba(255,255,255,0.2)",
+                        }}>{displayed}</span>
                         <span style={{ display: "inline-block", width: 2, height: "0.85em", background: isDarkMode ? "var(--accent-color)" : "#064e3b", animation: "blink 1s infinite", flexShrink: 0, boxShadow: `0 0 6px ${isDarkMode ? "var(--accent-color)" : "#064e3b"}` }} />
                     </div>
 
@@ -1906,10 +2007,10 @@ export default function UppCarLanding() {
                             width: isMobile ? "100%" : (selectedLang === "AR" ? "100%" : "111%"),
                             margin: isMobile ? "0 auto" : (selectedLang === "AR" ? "0 5%" : "0 -5.5%"),
                             position: "relative",
-                            top: isMobile ? 0 : (selectedLang === "AR" ? 10 : 34),
+                            top: isMobile ? 0 : (selectedLang === "AR" ? 10 : 50),
                             right: isMobile ? "auto" : (selectedLang === "AR" ? "-35px" : "auto"),
                             boxSizing: "border-box",
-                            animation: isMobile && !aiFocused ? (isDarkMode ? "borderGlowDark 3s ease-in-out infinite" : "borderGlow 3s ease-in-out infinite") : "none"
+                            animation: aiFocused ? "none" : (isDarkMode ? "glow-pulse-dark 4s infinite alternate" : "glow-pulse-light 4s infinite alternate")
                         }}>
                             <input
                                 value={aiValue}
@@ -1922,7 +2023,8 @@ export default function UppCarLanding() {
                                     flex: 1, border: "none", outline: "none", background: "transparent",
                                     fontFamily: "'DM Sans','Syne',sans-serif",
                                     fontSize: selectedLang === "AR" ? (isMobile ? 16 : 20) : 17.3,
-                                    fontWeight: 700, color: "var(--text-main)",
+                                    fontWeight: 700,
+                                    color: isDarkMode ? "#ffffff" : "var(--text-main)",
                                     caretColor: isDarkMode ? "#60a5fa" : "#10b981",
                                     minWidth: 0,
                                 }}
@@ -1993,35 +2095,19 @@ export default function UppCarLanding() {
                     </div>
 
                     {!isMobile && (
-                        <div style={{
-                            fontSize: selectedLang === "AR" ? 24 : 22,
-                            maxWidth: 760,
-                            margin: "16px auto 0",
-                            textAlign: "center",
-                            lineHeight: 1.6,
-                            fontWeight: 700,
-                            fontFamily: "'Syne', sans-serif",
-                            whiteSpace: "pre-line",
-                            ...(isDarkMode ? {
-                                background: "linear-gradient(90deg, #3b82f6 0%, #60a5fa 25%, #93c5fd 50%, #60a5fa 75%, #3b82f6 100%)",
-                                backgroundSize: "300% 300%",
-                                WebkitBackgroundClip: "text",
-                                backgroundClip: "text",
-                                WebkitTextFillColor: "transparent",
-                                color: "transparent",
-                                animation: "gradientShift 5s ease infinite",
-                            } : {
-                                color: "var(--text-main)",
-                                opacity: 0.85,
-                            }),
-                            opacity: 1,
+                        <p style={{
+                            color: isDarkMode ? "rgba(255,255,255,0.75)" : "#ffffff",
+                            textShadow: isDarkMode ? "none" : "0px 2px 15px rgba(0,0,0,0.4)",
+                            fontSize: selectedLang === "AR" ? 24 : 25,
+                            maxWidth: selectedLang === "AR" ? 760 : 760,
+                            marginBottom: 32,
+                            animation: "fadeUp 0.7s 0.3s ease both",
                             position: "relative",
-                            top: selectedLang === "AR" ? -22 : 10,
-
-                            letterSpacing: "0.3px",
+                            top: isMobile ? 0 : (selectedLang === "AR" ? 15 : 32),
+                            fontWeight: selectedLang === "AR" ? 500 : 500
                         }}>
-                            {t("hero.subtitle", "The ultimate platform for modern drivers and agencies.\nSmooth reservations and powerful management.")}
-                        </div>
+                            {t("hero.subtitle", "The ultimate platform for modern drivers and agencies. Seamless bookings, powerful management.")}
+                        </p>
                     )}
 
                     <div style={{
@@ -2151,6 +2237,7 @@ export default function UppCarLanding() {
                         padding: isMobile ? "0 12px" : "0 40px",
                         position: "relative",
                         top: isMobile ? 0 : 90,
+                        marginTop: 85
                     }}>
                         <div style={{
                             textAlign: "center", marginBottom: 40,
@@ -2296,7 +2383,7 @@ export default function UppCarLanding() {
                 )}
 
                 {/* ══ MARQUEE ══ */}
-                <section style={{ padding: isMobile ? "32px 0" : "50px 0", position: "relative", top: isMobile ? 20 : 80 }}>
+                <section style={{ padding: isMobile ? "32px 0" : "50px 0", position: "relative", top: isMobile ? 20 : 80, paddingTop: isMobile ? "30px" : "166px" }}>
                     <div style={{ position: "absolute", top: 0, left: 0, width: "15%", height: "100%", zIndex: 2, pointerEvents: "none" }} />
                     <div style={{ position: "absolute", top: 0, right: 0, width: "15%", height: "100%", zIndex: 2, pointerEvents: "none" }} />
                     <div style={{ textAlign: "center", marginBottom: isMobile ? 24 : 40, position: "relative", zIndex: 1 }}>
