@@ -11,6 +11,7 @@ import Registreagence from './component/registreagence/Registreagence';
 
 import HomeConnect from './component/homeConnected/HomeConnect';
 import Homeagence from './component/homeagence/Homeagence';
+import Homeadmin from './component/homeadmin/Homeadmin';
 import Profile from './component/profile/Profile';
 import Favorites from './component/favorites/Favorites';
 import CarDetails from './component/carDetails/CarDetails';
@@ -651,7 +652,10 @@ function App() {
             }
           />
 
-          {/* 🚫 ROUTE INCONNUE */}
+          {/* � ADMIN */}
+          <Route path="/admin" element={<Homeadmin />} />
+          
+          {/* �🚫 ROUTE INCONNUE */}
           <Route path="*" element={<Navigate to="/" replace />} />
 
         </Routes>

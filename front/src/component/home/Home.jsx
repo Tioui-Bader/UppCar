@@ -10,7 +10,7 @@ import darkBg2 from "../../asset/image copy 4.png";
 import darkBg3 from "../../asset/image copy.png";
 import darkBg4 from "../../asset/image copy 5.png";
 import lightBg4 from "../../asset/image copy 6.png";
-const PHRASES = [
+const PHRASES = [    
   "Smarter Rentals Start Here.",
   "All-in-One Rental Intelligence.",
   "Powering Modern Mobility.",
