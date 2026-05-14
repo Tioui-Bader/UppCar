@@ -17,11 +17,11 @@ const Homeadmin = () => {
   };
 
   const navItems = [
-    { name: "Overview", icon: "📊", active: true },
-    { name: "Users", icon: "👥", active: false },
-    { name: "Agencies", icon: "🏢", active: false },
-    { name: "Reservations", icon: "📅", active: false },
-    { name: "Financials", icon: "💰", active: false },
+    { name: "Overview", icon: "�" },
+    { name: "Users", icon: "👥" },
+    { name: "Agencies", icon: "🏘️" },
+    { name: "Reservations", icon: "🗓️" },
+    { name: "Financials", icon: "💹" },
   ];
 
   const kpis = [
@@ -61,18 +61,18 @@ const Homeadmin = () => {
   return (
     <div style={{
       minHeight: "100vh",
-      backgroundColor: "#f8fafc",
+      backgroundColor: "#eef2ff",
       fontFamily: "'Inter', system-ui, sans-serif",
       display: "flex",
     }}>
       {/* SIDEBAR */}
       <div style={{
-        width: 280,
+        width: 300,
         backgroundColor: "#ffffff",
         borderRight: "1px solid #e2e8f0",
         display: "flex",
         flexDirection: "column",
-        boxShadow: "0 1px 3px rgba(0, 0, 0, 0.1)",
+        boxShadow: "0 25px 60px rgba(15, 23, 42, 0.08)",
       }}>
         {/* Logo */}
         <div style={{
@@ -98,25 +98,38 @@ const Homeadmin = () => {
           padding: "20px 0",
         }}>
           {navItems.map((item) => (
-            <div
+            <button
               key={item.name}
               onClick={() => setActiveNav(item.name)}
               style={{
-                padding: "12px 20px",
+                width: "100%",
+                border: "none",
+                backgroundColor: activeNav === item.name ? "#eff6ff" : "transparent",
+                color: activeNav === item.name ? "#1e293b" : "#64748b",
+                padding: "14px 22px",
                 cursor: "pointer",
                 display: "flex",
                 alignItems: "center",
-                gap: 12,
-                backgroundColor: activeNav === item.name ? "#f1f5f9" : "transparent",
-                borderRight: activeNav === item.name ? "3px solid #3b82f6" : "3px solid transparent",
-                color: activeNav === item.name ? "#1e293b" : "#64748b",
-                fontWeight: activeNav === item.name ? 600 : 500,
+                gap: 14,
+                fontSize: 15,
+                fontWeight: activeNav === item.name ? 700 : 500,
+                justifyContent: "flex-start",
+                borderLeft: activeNav === item.name ? "4px solid #3b82f6" : "4px solid transparent",
                 transition: "all 0.2s ease",
               }}
             >
-              <span style={{ fontSize: 18 }}>{item.icon}</span>
+              <span style={{
+                width: 36,
+                height: 36,
+                borderRadius: 12,
+                display: "grid",
+                placeItems: "center",
+                backgroundColor: activeNav === item.name ? "#dbeafe" : "#f8fafc",
+                color: activeNav === item.name ? "#2563eb" : "#94a3b8",
+                fontSize: 18,
+              }}>{item.icon}</span>
               <span>{item.name}</span>
-            </div>
+            </button>
           ))}
         </nav>
 
@@ -306,9 +319,9 @@ const Homeadmin = () => {
               {kpis.map((kpi, i) => (
                 <div key={i} style={{
                   backgroundColor: "#ffffff",
-                  borderRadius: 12,
+                  borderRadius: 18,
                   padding: 24,
-                  boxShadow: "0 1px 3px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.06)",
+                  boxShadow: "0 18px 40px rgba(15, 23, 42, 0.08)",
                   border: "1px solid #e2e8f0",
                   position: "relative",
                 }}>
@@ -318,33 +331,44 @@ const Homeadmin = () => {
                     right: 16,
                     backgroundColor: kpi.color,
                     color: "#ffffff",
-                    padding: "4px 8px",
-                    borderRadius: 12,
+                    padding: "6px 10px",
+                    borderRadius: 999,
                     fontSize: 12,
-                    fontWeight: 600,
+                    fontWeight: 700,
                   }}>
                     {kpi.indicator}
                   </div>
                   <div style={{
                     display: "flex",
                     alignItems: "center",
-                    gap: 12,
+                    gap: 16,
                     marginBottom: 16,
                   }}>
-                    <span style={{ fontSize: 32 }}>{kpi.icon}</span>
+                    <div style={{
+                      width: 52,
+                      height: 52,
+                      borderRadius: 16,
+                      display: "grid",
+                      placeItems: "center",
+                      backgroundColor: `${kpi.color}22`,
+                      color: kpi.color,
+                      fontSize: 24,
+                    }}>
+                      {kpi.icon}
+                    </div>
                     <div>
                       <p style={{
                         margin: 0,
                         fontSize: 14,
                         color: "#64748b",
-                        fontWeight: 500,
+                        fontWeight: 600,
                       }}>
                         {kpi.label}
                       </p>
                       <p style={{
-                        margin: "4px 0 0",
-                        fontSize: 28,
-                        fontWeight: 700,
+                        margin: "8px 0 0",
+                        fontSize: 30,
+                        fontWeight: 800,
                         color: "#1e293b",
                       }}>
                         {kpi.value}
@@ -448,7 +472,10 @@ const Homeadmin = () => {
                   {activities.map((activity, i) => (
                     <tr key={i} style={{
                       borderBottom: i < activities.length - 1 ? "1px solid #f1f5f9" : "none",
-                    }}>
+                    }}
+                    onMouseOver={(e) => e.currentTarget.style.backgroundColor = "#f8fbff"}
+                    onMouseOut={(e) => e.currentTarget.style.backgroundColor = "transparent"}
+                    >
                       <td style={{
                         padding: "20px 24px",
                       }}>
