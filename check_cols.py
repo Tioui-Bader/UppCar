@@ -1,0 +1,10 @@
+import psycopg2
+conn = psycopg2.connect(dbname='uppcar', user='postgres', password='1234badrtiwi', host='localhost')
+cur = conn.cursor()
+cur.execute("SELECT column_name FROM information_schema.columns WHERE table_name = 'cars'")
+print("cars:", [r[0] for r in cur.fetchall()])
+cur.execute("SELECT column_name FROM information_schema.columns WHERE table_name = 'agences'")
+print("agences:", [r[0] for r in cur.fetchall()])
+cur.execute("SELECT column_name FROM information_schema.columns WHERE table_name = 'car_photos'")
+print("car_photos:", [r[0] for r in cur.fetchall()])
+conn.close()
