@@ -11,6 +11,7 @@ import Registreagence from './component/registreagence/Registreagence';
 
 import HomeConnect from './component/homeConnected/HomeConnect';
 import Homeagence from './component/homeagence/Homeagence';
+import Homeadmin from './component/homeadmin/Homeadmin';
 import Profile from './component/profile/Profile';
 import Favorites from './component/favorites/Favorites';
 import CarDetails from './component/carDetails/CarDetails';
@@ -659,6 +660,13 @@ function App() {
                 el.style.setProperty('border-radius', '14px', 'important');
                 el.style.setProperty('box-shadow', 'none', 'important');
             });
+          />
+
+          {/* � ADMIN */}
+          <Route path="/admin" element={<Homeadmin />} />
+          
+          {/* �🚫 ROUTE INCONNUE */}
+          <Route path="*" element={<Navigate to="/" replace />} />
 
             // Éléments avec fond sombre → blanc (sauf le bouton FAB)
             widget.querySelectorAll('*').forEach(el => {
