@@ -22,8 +22,8 @@ public class CarService {
         return carRepository.findByAgencyId(agencyId);
     }
 
-    public List<Car> searchCars(String query) {
-        return carRepository.findByNameContainingIgnoreCase(query);
+    public List<Car> searchCars(String query, String category) {
+        return carRepository.searchAdvanced(query, category);
     }
 
     public Car saveCar(Car car) {

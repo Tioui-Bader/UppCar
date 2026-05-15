@@ -33,12 +33,11 @@ public class CarController {
     }
 
     @GetMapping("/search")
-    public List<CarDTO> searchCars(@RequestParam String query) {
-        System.out.println("DEBUG: Searching for cars with query: " + query);
-        List<CarDTO> results = carService.searchCars(query).stream().map(this::convertToDTO)
+    public List<CarDTO> searchCars(@RequestParam String query, @RequestParam(required = false) String category) {
+        System.out.println("DEBUG: Searching for cars with query: " + query + " and category: " + category);
+        List<CarDTO> results = carService.searchCars(query, category).stream().map(this::convertToDTO)
                 .collect(Collectors.toList());
-        System.out.println("DEBUG: Found " + results.size() + " results. IDs: "
-                + results.stream().map(CarDTO::getId).collect(Collectors.toList()));
+        System.out.println("DEBUG: Found " + results.size() + " results.");
         return results;
     }
 
