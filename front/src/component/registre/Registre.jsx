@@ -196,14 +196,16 @@ export default function RegisterUser() {
     });
     return (
         <div style={{
-            height: "100dvh",
+            height: isMobile ? "auto" : "100dvh",
+            minHeight: "100dvh",
             width: "100%",
             display: "flex", flexDirection: "column",
             background: `url(${isDarkMode ? bgImageDark : bgImageLight}) center/cover no-repeat fixed`,
             fontFamily: "'DM Sans', sans-serif",
-            position: "fixed",
+            position: isMobile ? "relative" : "fixed",
             top: 0, left: 0,
-            overflow: "hidden"
+            overflowY: "auto",
+            overflowX: "hidden"
         }}>
             <div style={{
                 position: "absolute", inset: 0,

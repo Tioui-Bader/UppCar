@@ -28,6 +28,13 @@ export const FR = {
 
     // ── HERO ──
     hero: {
+        dateBar: {
+            pickup: "Départ",
+            dropoff: "Retour",
+            city: "Ville",
+            cityPlaceholder: "Où allez-vous ?",
+            dateFormat: "jj/mm/aaaa"
+        },
         liveBadge: "Traitez 50 réservations automatiquement en un clic",
         taglineBadge: "Traitez 50 réservations automatiquement en un clic",
         h1Desktop: <>Le véhicule que vous voulez<br />Au moment où vous en avez besoin</>,

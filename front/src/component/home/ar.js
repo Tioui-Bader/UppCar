@@ -28,6 +28,13 @@ export const AR = {
 
     // ── HERO ──
     hero: {
+        dateBar: {
+            pickup: "المغادرة",
+            dropoff: "العودة",
+            city: "المدينة",
+            cityPlaceholder: "إلى أين أنت ذاهب؟",
+            dateFormat: "ي ي/ش ش/س س س س"
+        },
         liveBadge: "معالجة 50 حجزًا تلقائيًا بنقرة واحدة",
         taglineBadge: "معالجة 50 حجزًا تلقائيًا بنقرة واحدة",
         h1Desktop: <>السيارة التي تريدها<br />في اللحظة التي تحتاجها</>,

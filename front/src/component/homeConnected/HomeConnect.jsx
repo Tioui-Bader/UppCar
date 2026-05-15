@@ -798,45 +798,63 @@ export default function UppCarLanding() {
         return () => clearTimeout(t);
     }, [aiCharIdx, aiDeleting, aiTextIdx, aiFocused]);
 
-    const handleGenerate = (queryOverride) => {
+    const handleGenerate = async (queryOverride) => {
         const query = (typeof queryOverride === 'string') ? queryOverride : aiValue;
         if (aiLoading || !query.trim()) return;
         setAiLoading(true);
         setShowSearchOverlay(true);
         setHasSearched(false);
 
-        fetch(`http://localhost:8080/api/cars/search?query=${encodeURIComponent(query)}`)
-            .then(res => res.json())
-            .then(data => {
-                setSearchResults(data);
-                setHasSearched(true);
-
-                // Log view activities for found cars (limit to first 4 for stats)
-                if (data && data.length > 0) {
-                    data.slice(0, 4).forEach(car => {
-                        logActivity('view', { carId: car.id, carName: car.name });
-                    });
+        try {
+            // 1. Appel au service IA pour prédire la catégorie
+            // 1. Appel au service IA pour prédire la catégorie et nettoyer la recherche
+            let category = "";
+            let searchKeyword = query;
+            try {
+                const aiRes = await fetch(`http://localhost:5000/predict?query=${encodeURIComponent(query)}`);
+                if (aiRes.ok) {
+                    const aiData = await aiRes.json();
+                    category = aiData.prediction;
+                    searchKeyword = aiData.clean_keyword || query; // Utiliser le mot-clé nettoyé
+                    console.log("AI Prediction:", category, "Search Keyword:", searchKeyword);
                 }
-                // Minimum delay to show the "Searching" animation
-                setTimeout(() => {
-                    setAiLoading(false);
-                    setShowSearchOverlay(false);
-                    // Scroll to results
-                    setTimeout(() => {
-                        const resultsEl = document.getElementById("search-results");
-                        if (resultsEl) {
-                            const yOffset = -40;
-                            const y = resultsEl.getBoundingClientRect().top + window.pageYOffset + yOffset;
-                            window.scrollTo({ top: y, behavior: "smooth" });
-                        }
-                    }, 100);
-                }, 2500);
-            })
-            .catch(err => {
-                console.error("Search error:", err);
+            } catch (aiErr) {
+                console.warn("AI Service not available, falling back to normal search.");
+            }
+
+            // 2. Appel au backend Java avec le mot-clé nettoyé et la catégorie prédite
+            const res = await fetch(`http://localhost:8080/api/cars/search?query=${encodeURIComponent(searchKeyword)}&category=${category}`);
+            const data = await res.json();
+
+            setSearchResults(data);
+            setHasSearched(true);
+
+            // Log activity
+            if (data && data.length > 0) {
+                data.slice(0, 4).forEach(car => {
+                    logActivity('view', { carId: car.id, carName: car.name, ai_category: category });
+                });
+            }
+
+            // Delay for animation
+            setTimeout(() => {
                 setAiLoading(false);
                 setShowSearchOverlay(false);
-            });
+                setTimeout(() => {
+                    const resultsEl = document.getElementById("search-results");
+                    if (resultsEl) {
+                        const yOffset = -40;
+                        const y = resultsEl.getBoundingClientRect().top + window.pageYOffset + yOffset;
+                        window.scrollTo({ top: y, behavior: "smooth" });
+                    }
+                }, 100);
+            }, 1500);
+
+        } catch (err) {
+            console.error("Search error:", err);
+            setAiLoading(false);
+            setShowSearchOverlay(false);
+        }
     };
     const features = [
         {
@@ -2278,6 +2296,16 @@ export default function UppCarLanding() {
                                                 style={{ width: "100%", height: "100%", objectFit: "cover" }}
                                                 className="car-img"
                                             />
+                                            {/* City Badge Overlay */}
+                                            <div style={{
+                                                position: "absolute", bottom: 12, right: 12,
+                                                background: "rgba(0,0,0,0.6)", backdropFilter: "blur(8px)",
+                                                padding: "4px 10px", borderRadius: 12, border: "1px solid rgba(255,255,255,0.1)",
+                                                display: "flex", alignItems: "center", gap: 5, color: "#fff", fontSize: 11, fontWeight: 700
+                                            }}>
+                                                <MapPinIcon size={12} color="var(--accent-color)" />
+                                                {car.city}
+                                            </div>
                                             {/* ❤ Favorite button */}
                                             <button
                                                 onClick={(e) => { e.stopPropagation(); toggleFavorite(car.id); }}
@@ -2434,7 +2462,7 @@ export default function UppCarLanding() {
                 </section>
 
 
-                <section style={{ padding: isMobile ? "60px 16px" : "100px 20px", position: "relative", zIndex: 1, position: "relative", bottom: 8 }}>
+                <section style={{ padding: isMobile ? "60px 16px" : "100px 20px", position: "relative", zIndex: 1, bottom: 8 }}>
                     <div style={{ maxWidth: 1200, margin: "0 auto" }}>
                         <div style={{ display: "flex", justifyContent: "center", marginBottom: 16, marginTop: 40 }}>
                             <div style={{ display: "inline-flex", alignItems: "center", gap: 8, background: "var(--card-bg)", border: "1px solid var(--card-border)", borderRadius: 30, padding: "6px 16px", animation: "fadeUp 0.6s ease both", position: "relative", bottom: 11 }}>
