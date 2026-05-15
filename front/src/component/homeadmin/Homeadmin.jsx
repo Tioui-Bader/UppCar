@@ -1,5 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { 
+  LayoutDashboard, Users, Building2, CalendarDays, Wallet,
+  UserPlus, Building, Calendar, DollarSign,
+  Search, Bell, Settings, LogOut, HelpCircle, FileText,
+  Car
+} from "lucide-react";
 
 const Homeadmin = () => {
   const navigate = useNavigate();
@@ -17,18 +23,18 @@ const Homeadmin = () => {
   };
 
   const navItems = [
-    { name: "Overview", icon: "�" },
-    { name: "Users", icon: "👥" },
-    { name: "Agencies", icon: "🏘️" },
-    { name: "Reservations", icon: "🗓️" },
-    { name: "Financials", icon: "💹" },
+    { name: "Overview", icon: <LayoutDashboard size={20} className="lucide-icon" /> },
+    { name: "Users", icon: <Users size={20} className="lucide-icon" /> },
+    { name: "Agencies", icon: <Building2 size={20} className="lucide-icon" /> },
+    { name: "Reservations", icon: <CalendarDays size={20} className="lucide-icon" /> },
+    { name: "Financials", icon: <Wallet size={20} className="lucide-icon" /> },
   ];
 
   const kpis = [
-    { label: "New Users", value: "24", icon: "👤", indicator: "+12%", color: "#10b981" },
-    { label: "New Agencies", value: "3", icon: "🏢", indicator: "+2", color: "#3b82f6" },
-    { label: "Reservations", value: "12", icon: "📅", indicator: "+8%", color: "#f59e0b" },
-    { label: "Daily Revenue", value: "$2,450", icon: "💵", indicator: "+15%", color: "#ef4444" },
+    { label: "New Users", value: "24", icon: <UserPlus size={24} className="lucide-icon kpi-svg" />, indicator: "+12%", gradient: "linear-gradient(135deg, #10b981, #059669)", bgSoft: "#ecfdf5", color: "#10b981" },
+    { label: "New Agencies", value: "3", icon: <Building size={24} className="lucide-icon kpi-svg" />, indicator: "+2", gradient: "linear-gradient(135deg, #3b82f6, #2563eb)", bgSoft: "#eff6ff", color: "#3b82f6" },
+    { label: "Reservations", value: "12", icon: <Calendar size={24} className="lucide-icon kpi-svg" />, indicator: "+8%", gradient: "linear-gradient(135deg, #f59e0b, #d97706)", bgSoft: "#fffbeb", color: "#f59e0b" },
+    { label: "Daily Revenue", value: "$2,450", icon: <DollarSign size={24} className="lucide-icon kpi-svg" />, indicator: "+15%", gradient: "linear-gradient(135deg, #ef4444, #dc2626)", bgSoft: "#fef2f2", color: "#ef4444" },
   ];
 
   const activities = [
@@ -38,7 +44,8 @@ const Homeadmin = () => {
       entity: "User Account",
       status: "SUCCESS",
       time: "2 min ago",
-      statusColor: "#ef4444"
+      statusColor: "#10b981",
+      statusBg: "#ecfdf5"
     },
     {
       user: "Sarah Wilson",
@@ -46,7 +53,8 @@ const Homeadmin = () => {
       entity: "Agency Profile",
       status: "UPDATED",
       time: "15 min ago",
-      statusColor: "#3b82f6"
+      statusColor: "#3b82f6",
+      statusBg: "#eff6ff"
     },
     {
       user: "Mike Johnson",
@@ -54,535 +62,770 @@ const Homeadmin = () => {
       entity: "Reservation #1234",
       status: "CONFIRMED",
       time: "1 hour ago",
-      statusColor: "#10b981"
+      statusColor: "#f59e0b",
+      statusBg: "#fffbeb"
     },
   ];
 
   return (
-    <div style={{
-      minHeight: "100vh",
-      backgroundColor: "#eef2ff",
-      fontFamily: "'Inter', system-ui, sans-serif",
-      display: "flex",
-    }}>
-      {/* SIDEBAR */}
-      <div style={{
-        width: 300,
-        backgroundColor: "#ffffff",
-        borderRight: "1px solid #e2e8f0",
-        display: "flex",
-        flexDirection: "column",
-        boxShadow: "0 25px 60px rgba(15, 23, 42, 0.08)",
-      }}>
-        {/* Logo */}
-        <div style={{
-          padding: "24px 20px",
-          borderBottom: "1px solid #e2e8f0",
-        }}>
-          <h1 style={{
-            margin: 0,
-            fontSize: 24,
-            fontWeight: 700,
-            color: "#1e293b",
-            display: "flex",
-            alignItems: "center",
-            gap: 12,
-          }}>
-            🚗 UppCar Admin
-          </h1>
-        </div>
+    <>
+      <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap');
 
-        {/* Navigation */}
-        <nav style={{
-          flex: 1,
-          padding: "20px 0",
-        }}>
-          {navItems.map((item) => (
-            <button
-              key={item.name}
-              onClick={() => setActiveNav(item.name)}
-              style={{
-                width: "100%",
-                border: "none",
-                backgroundColor: activeNav === item.name ? "#eff6ff" : "transparent",
-                color: activeNav === item.name ? "#1e293b" : "#64748b",
-                padding: "14px 22px",
-                cursor: "pointer",
-                display: "flex",
-                alignItems: "center",
-                gap: 14,
-                fontSize: 15,
-                fontWeight: activeNav === item.name ? 700 : 500,
-                justifyContent: "flex-start",
-                borderLeft: activeNav === item.name ? "4px solid #3b82f6" : "4px solid transparent",
-                transition: "all 0.2s ease",
-              }}
-            >
-              <span style={{
-                width: 36,
-                height: 36,
-                borderRadius: 12,
-                display: "grid",
-                placeItems: "center",
-                backgroundColor: activeNav === item.name ? "#dbeafe" : "#f8fafc",
-                color: activeNav === item.name ? "#2563eb" : "#94a3b8",
-                fontSize: 18,
-              }}>{item.icon}</span>
-              <span>{item.name}</span>
+        .admin-dashboard {
+          font-family: 'Outfit', system-ui, sans-serif;
+          background: #f8fafc;
+          /* Subtle background pattern */
+          background-image: radial-gradient(#e2e8f0 1px, transparent 1px);
+          background-size: 20px 20px;
+          min-height: 100vh;
+          display: flex;
+          color: #1e293b;
+        }
+
+        /* Glassmorphism sidebar */
+        .glass-sidebar {
+          width: 280px;
+          background: rgba(255, 255, 255, 0.85);
+          backdrop-filter: blur(20px);
+          -webkit-backdrop-filter: blur(20px);
+          border-right: 1px solid rgba(255, 255, 255, 0.6);
+          box-shadow: 4px 0 24px rgba(0, 0, 0, 0.02);
+          display: flex;
+          flex-direction: column;
+          z-index: 20;
+          position: sticky;
+          top: 0;
+          height: 100vh;
+        }
+
+        .logo-area {
+          padding: 28px 24px;
+          border-bottom: 1px solid rgba(226, 232, 240, 0.6);
+        }
+        
+        .logo-text {
+          font-size: 26px;
+          font-weight: 800;
+          background: linear-gradient(135deg, #1e293b, #3b82f6);
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+          display: flex;
+          align-items: center;
+          gap: 12px;
+          letter-spacing: -0.5px;
+          margin: 0;
+        }
+
+        .nav-container {
+          flex: 1;
+          padding: 24px 16px;
+          display: flex;
+          flex-direction: column;
+          gap: 8px;
+        }
+
+        .nav-btn {
+          width: 100%;
+          border: none;
+          padding: 14px 18px;
+          border-radius: 12px;
+          cursor: pointer;
+          display: flex;
+          align-items: center;
+          gap: 16px;
+          font-size: 15px;
+          font-family: 'Outfit', sans-serif;
+          transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+          background: transparent;
+          color: #64748b;
+          font-weight: 500;
+        }
+
+        .nav-btn:hover {
+          transform: translateX(4px);
+          background: rgba(255, 255, 255, 0.9);
+          color: #1e293b;
+          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+        }
+
+        .nav-btn.active {
+          background: #ffffff;
+          color: #2563eb;
+          font-weight: 700;
+          box-shadow: 0 8px 16px rgba(37, 99, 235, 0.08);
+          position: relative;
+        }
+        
+        .nav-btn.active::before {
+          content: '';
+          position: absolute;
+          left: -16px;
+          top: 50%;
+          transform: translateY(-50%);
+          height: 24px;
+          width: 4px;
+          background: #3b82f6;
+          border-radius: 0 4px 4px 0;
+        }
+
+        .nav-icon {
+          width: 38px;
+          height: 38px;
+          border-radius: 10px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-size: 18px;
+          background: #f1f5f9;
+          transition: all 0.3s ease;
+        }
+        
+        .nav-btn.active .nav-icon {
+          background: linear-gradient(135deg, #3b82f6, #2563eb);
+          color: white;
+          box-shadow: 0 4px 10px rgba(37, 99, 235, 0.3);
+          transform: scale(1.05);
+        }
+
+        .sidebar-footer {
+          padding: 24px;
+          border-top: 1px solid rgba(226, 232, 240, 0.6);
+        }
+
+        .btn-primary {
+          width: 100%;
+          padding: 14px;
+          background: linear-gradient(135deg, #3b82f6, #2563eb);
+          color: white;
+          border: none;
+          border-radius: 12px;
+          font-weight: 600;
+          font-size: 15px;
+          font-family: 'Outfit', sans-serif;
+          cursor: pointer;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 10px;
+          transition: all 0.3s ease;
+          box-shadow: 0 8px 16px rgba(59, 130, 246, 0.25);
+          margin-bottom: 20px;
+        }
+        
+        .btn-primary:hover {
+          transform: translateY(-2px);
+          box-shadow: 0 12px 20px rgba(59, 130, 246, 0.35);
+        }
+
+        .footer-link {
+          padding: 10px 14px;
+          border-radius: 8px;
+          cursor: pointer;
+          font-size: 14px;
+          font-weight: 500;
+          color: #64748b;
+          transition: all 0.2s ease;
+          display: flex;
+          align-items: center;
+          gap: 10px;
+        }
+        
+        .footer-link:hover {
+          background: #f1f5f9;
+          color: #1e293b;
+        }
+        
+        .footer-link.logout {
+          color: #ef4444;
+        }
+        
+        .footer-link.logout:hover {
+          background: #fef2f2;
+          color: #dc2626;
+        }
+
+        /* Main Content */
+        .main-wrapper {
+          flex: 1;
+          display: flex;
+          flex-direction: column;
+          overflow: hidden;
+        }
+
+        .glass-header {
+          background: rgba(255, 255, 255, 0.7);
+          backdrop-filter: blur(20px);
+          -webkit-backdrop-filter: blur(20px);
+          border-bottom: 1px solid rgba(255, 255, 255, 0.8);
+          padding: 20px 32px;
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          z-index: 10;
+          position: sticky;
+          top: 0;
+        }
+
+        .search-bar {
+          position: relative;
+          width: 320px;
+        }
+        
+        .search-input {
+          width: 100%;
+          padding: 12px 16px 12px 44px;
+          background: #ffffff;
+          border: 1px solid #e2e8f0;
+          border-radius: 12px;
+          font-family: 'Outfit', sans-serif;
+          font-size: 14px;
+          outline: none;
+          transition: all 0.3s ease;
+          box-shadow: 0 2px 6px rgba(0,0,0,0.02);
+        }
+        
+        .search-input:focus {
+          border-color: #3b82f6;
+          box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
+        }
+        
+        .search-icon {
+          position: absolute;
+          left: 16px;
+          top: 50%;
+          transform: translateY(-50%);
+          color: #94a3b8;
+          font-size: 16px;
+        }
+
+        .header-actions {
+          display: flex;
+          align-items: center;
+          gap: 16px;
+        }
+        
+        .icon-btn {
+          width: 42px;
+          height: 42px;
+          border-radius: 12px;
+          border: 1px solid transparent;
+          background: #ffffff;
+          color: #64748b;
+          cursor: pointer;
+          display: grid;
+          place-items: center;
+          font-size: 18px;
+          transition: all 0.2s ease;
+          box-shadow: 0 2px 6px rgba(0,0,0,0.02);
+        }
+        
+        .icon-btn:hover {
+          border-color: #e2e8f0;
+          color: #1e293b;
+          transform: translateY(-1px);
+          box-shadow: 0 4px 10px rgba(0,0,0,0.04);
+        }
+
+        .avatar {
+          width: 44px;
+          height: 44px;
+          border-radius: 12px;
+          background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+          color: white;
+          font-weight: 700;
+          font-size: 16px;
+          display: grid;
+          place-items: center;
+          cursor: pointer;
+          box-shadow: 0 4px 10px rgba(59, 130, 246, 0.3);
+          transition: all 0.2s ease;
+          border: 2px solid #ffffff;
+        }
+        
+        .avatar:hover {
+          transform: scale(1.05);
+        }
+
+        .main-content {
+          padding: 32px;
+          overflow-y: auto;
+          flex: 1;
+        }
+
+        .page-title {
+          font-size: 28px;
+          font-weight: 800;
+          color: #0f172a;
+          margin: 0 0 8px 0;
+          letter-spacing: -0.5px;
+        }
+        
+        .page-subtitle {
+          color: #64748b;
+          font-size: 15px;
+          margin: 0 0 32px 0;
+        }
+
+        .kpi-grid {
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+          gap: 24px;
+          margin-bottom: 40px;
+        }
+
+        .kpi-card {
+          background: rgba(255, 255, 255, 0.8);
+          backdrop-filter: blur(10px);
+          border: 1px solid rgba(255, 255, 255, 0.9);
+          border-radius: 20px;
+          padding: 24px;
+          box-shadow: 0 10px 30px rgba(0, 0, 0, 0.03);
+          transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+          position: relative;
+          overflow: hidden;
+        }
+        
+        .kpi-card::before {
+          content: '';
+          position: absolute;
+          top: 0; left: 0; right: 0; height: 4px;
+          background: var(--card-gradient);
+          opacity: 0;
+          transition: opacity 0.3s ease;
+        }
+        
+        .kpi-card:hover {
+          transform: translateY(-6px);
+          box-shadow: 0 20px 40px rgba(0, 0, 0, 0.06);
+          background: #ffffff;
+        }
+        
+        .kpi-card:hover::before {
+          opacity: 1;
+        }
+
+        .kpi-header {
+          display: flex;
+          justify-content: space-between;
+          align-items: flex-start;
+          margin-bottom: 20px;
+        }
+
+        .kpi-icon {
+          width: 54px;
+          height: 54px;
+          border-radius: 16px;
+          display: grid;
+          place-items: center;
+          font-size: 24px;
+          box-shadow: 0 8px 16px rgba(0,0,0,0.08);
+        }
+
+        .kpi-indicator {
+          padding: 6px 12px;
+          border-radius: 20px;
+          font-size: 13px;
+          font-weight: 700;
+        }
+
+        .kpi-label {
+          font-size: 15px;
+          color: #64748b;
+          font-weight: 600;
+          margin: 0 0 8px 0;
+        }
+
+        .kpi-value {
+          font-size: 32px;
+          font-weight: 800;
+          color: #0f172a;
+          margin: 0;
+          letter-spacing: -1px;
+        }
+
+        /* Activity Table */
+        .table-container {
+          background: #ffffff;
+          border-radius: 20px;
+          box-shadow: 0 10px 30px rgba(0, 0, 0, 0.03);
+          border: 1px solid #f1f5f9;
+          overflow: hidden;
+        }
+
+        .table-header {
+          padding: 24px 32px;
+          border-bottom: 1px solid #f1f5f9;
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+        }
+
+        .table-title {
+          font-size: 20px;
+          font-weight: 700;
+          color: #0f172a;
+          margin: 0;
+        }
+        
+        .view-all-btn {
+          color: #3b82f6;
+          font-weight: 600;
+          font-size: 14px;
+          cursor: pointer;
+          background: transparent;
+          border: none;
+          font-family: inherit;
+        }
+        .view-all-btn:hover {
+          text-decoration: underline;
+        }
+
+        .activity-table {
+          width: 100%;
+          border-collapse: separate;
+          border-spacing: 0;
+        }
+
+        .activity-table th {
+          background: #f8fafc;
+          padding: 16px 32px;
+          text-align: left;
+          font-size: 13px;
+          font-weight: 600;
+          color: #64748b;
+          text-transform: uppercase;
+          letter-spacing: 0.5px;
+          border-bottom: 1px solid #e2e8f0;
+        }
+
+        .activity-table td {
+          padding: 20px 32px;
+          border-bottom: 1px solid #f1f5f9;
+          transition: all 0.2s ease;
+        }
+
+        .table-row {
+          transition: all 0.2s ease;
+        }
+        
+        .table-row:hover td {
+          background: #f8fafc;
+        }
+        
+        .table-row:last-child td {
+          border-bottom: none;
+        }
+
+        .user-cell {
+          display: flex;
+          align-items: center;
+          gap: 16px;
+        }
+
+        .user-avatar {
+          width: 38px;
+          height: 38px;
+          border-radius: 10px;
+          background: #e2e8f0;
+          display: grid;
+          place-items: center;
+          font-weight: 700;
+          color: #475569;
+          font-size: 14px;
+        }
+
+        .user-name {
+          font-weight: 700;
+          color: #1e293b;
+          margin: 0;
+          font-size: 15px;
+        }
+
+        .user-action {
+          color: #64748b;
+          margin: 4px 0 0;
+          font-size: 13px;
+        }
+
+        .entity-cell {
+          font-weight: 600;
+          color: #334155;
+          font-size: 14px;
+        }
+
+        .status-badge {
+          display: inline-flex;
+          padding: 6px 14px;
+          border-radius: 20px;
+          font-size: 12px;
+          font-weight: 700;
+          letter-spacing: 0.5px;
+        }
+
+        .time-cell {
+          color: #64748b;
+          font-size: 14px;
+          font-weight: 500;
+        }
+
+        .action-btn {
+          padding: 8px 16px;
+          border-radius: 8px;
+          border: 1px solid #e2e8f0;
+          background: #ffffff;
+          font-family: inherit;
+          font-weight: 600;
+          font-size: 13px;
+          color: #475569;
+          cursor: pointer;
+          transition: all 0.2s ease;
+        }
+        
+        .action-btn:hover {
+          border-color: #cbd5e1;
+          background: #f1f5f9;
+          color: #0f172a;
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+          from { opacity: 0; transform: translateY(10px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+
+        .animate-fade-in {
+          animation: fadeIn 0.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+        }
+        
+        .delay-1 { animation-delay: 0.1s; }
+        .delay-2 { animation-delay: 0.2s; }
+        .delay-3 { animation-delay: 0.3s; }
+
+        /* Lucide icon base animations */
+        .lucide-icon {
+          transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+          stroke-width: 2px;
+        }
+
+        .logo-icon {
+          animation: float 6s ease-in-out infinite;
+          filter: drop-shadow(0 4px 6px rgba(59, 130, 246, 0.4));
+        }
+
+        /* Nav Icon Hover animations */
+        .nav-btn:hover .lucide-icon {
+          transform: scale(1.15) rotate(-5deg);
+        }
+        
+        .nav-btn.active .lucide-icon {
+          animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+        }
+
+        /* KPI Icon animations */
+        .kpi-card:hover .kpi-svg {
+          animation: pulseIcon 1.5s infinite;
+          transform: scale(1.1);
+        }
+
+        /* Header Icons animations */
+        .icon-btn:hover .bell-icon {
+          animation: ring 1s ease-in-out infinite;
+        }
+
+        .icon-btn:hover .settings-icon {
+          animation: spin 3s linear infinite;
+        }
+
+        .btn-primary:hover .lucide-icon {
+          transform: translateX(4px) scale(1.1);
+        }
+
+        .footer-link:hover .lucide-icon {
+          transform: scale(1.1) translateX(2px);
+        }
+
+        @keyframes float {
+          0% { transform: translateY(0px); }
+          50% { transform: translateY(-4px); }
+          100% { transform: translateY(0px); }
+        }
+
+        @keyframes popIn {
+          0% { transform: scale(0.8); opacity: 0.5; }
+          50% { transform: scale(1.2); }
+          100% { transform: scale(1); opacity: 1; }
+        }
+
+        @keyframes pulseIcon {
+          0% { transform: scale(1); }
+          50% { transform: scale(1.15); }
+          100% { transform: scale(1); }
+        }
+
+        @keyframes ring {
+          0% { transform: rotate(0); }
+          10% { transform: rotate(15deg); }
+          20% { transform: rotate(-10deg); }
+          30% { transform: rotate(10deg); }
+          40% { transform: rotate(-5deg); }
+          50% { transform: rotate(5deg); }
+          60% { transform: rotate(0); }
+          100% { transform: rotate(0); }
+        }
+
+        @keyframes spin {
+          from { transform: rotate(0deg); }
+          to { transform: rotate(360deg); }
+        }
+      `}</style>
+
+      <div className="admin-dashboard">
+        {/* SIDEBAR */}
+        <aside className="glass-sidebar">
+          <div className="logo-area">
+            <h1 className="logo-text">
+              <Car size={32} className="logo-icon lucide-icon" color="#3b82f6" /> UppCar
+            </h1>
+          </div>
+
+          <nav className="nav-container">
+            {navItems.map((item) => (
+              <button
+                key={item.name}
+                onClick={() => setActiveNav(item.name)}
+                className={`nav-btn ${activeNav === item.name ? "active" : ""}`}
+              >
+                <div className="nav-icon">{item.icon}</div>
+                {item.name}
+              </button>
+            ))}
+          </nav>
+
+          <div className="sidebar-footer">
+            <button className="btn-primary">
+              <FileText size={18} className="lucide-icon" /> New Report
             </button>
-          ))}
-        </nav>
-
-        {/* Bottom Actions */}
-        <div style={{
-          padding: "20px",
-          borderTop: "1px solid #e2e8f0",
-        }}>
-          <button style={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            gap: 8,
-            padding: "12px 16px",
-            backgroundColor: "#3b82f6",
-            color: "#ffffff",
-            border: "none",
-            borderRadius: 8,
-            fontWeight: 600,
-            cursor: "pointer",
-            marginBottom: 12,
-            transition: "background-color 0.2s ease",
-          }}
-          onMouseOver={(e) => e.target.style.backgroundColor = "#2563eb"}
-          onMouseOut={(e) => e.target.style.backgroundColor = "#3b82f6"}
-          >
-            📊 New Report
-          </button>
-
-          <div style={{
-            display: "flex",
-            flexDirection: "column",
-            gap: 8,
-          }}>
-            <div style={{
-              padding: "8px 12px",
-              color: "#64748b",
-              fontSize: 14,
-              cursor: "pointer",
-              borderRadius: 6,
-              transition: "background-color 0.2s ease",
-            }}
-            onMouseOver={(e) => e.target.style.backgroundColor = "#f1f5f9"}
-            onMouseOut={(e) => e.target.style.backgroundColor = "transparent"}
+            <div 
+              className="footer-link"
+              onClick={() => {}}
             >
-              ❓ Help Center
+              <HelpCircle size={18} className="lucide-icon" /> Help Center
             </div>
-            <div
+            <div 
+              className="footer-link logout"
               onClick={handleLogout}
-              style={{
-                padding: "8px 12px",
-                color: "#dc2626",
-                fontSize: 14,
-                cursor: "pointer",
-                borderRadius: 6,
-                transition: "background-color 0.2s ease",
-              }}
-              onMouseOver={(e) => e.target.style.backgroundColor = "#fef2f2"}
-              onMouseOut={(e) => e.target.style.backgroundColor = "transparent"}
             >
-              🚪 Logout
+              <LogOut size={18} className="lucide-icon" /> Logout
             </div>
           </div>
-        </div>
-      </div>
+        </aside>
 
-      {/* MAIN CONTENT */}
-      <div style={{
-        flex: 1,
-        display: "flex",
-        flexDirection: "column",
-      }}>
-        {/* TOP HEADER */}
-        <header style={{
-          backgroundColor: "#ffffff",
-          borderBottom: "1px solid #e2e8f0",
-          padding: "16px 24px",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-          boxShadow: "0 1px 3px rgba(0, 0, 0, 0.1)",
-        }}>
-          <div style={{ flex: 1, maxWidth: 400 }}>
-            <div style={{
-              position: "relative",
-            }}>
-              <input
-                type="text"
-                placeholder="Search..."
-                style={{
-                  width: "100%",
-                  padding: "10px 16px",
-                  paddingLeft: 40,
-                  border: "1px solid #e2e8f0",
-                  borderRadius: 8,
-                  fontSize: 14,
-                  backgroundColor: "#f8fafc",
-                  outline: "none",
-                }}
-              />
-              <span style={{
-                position: "absolute",
-                left: 12,
-                top: "50%",
-                transform: "translateY(-50%)",
-                color: "#64748b",
-                fontSize: 16,
-              }}>
-                🔍
-              </span>
+        {/* MAIN CONTENT */}
+        <div className="main-wrapper">
+          {/* HEADER */}
+          <header className="glass-header">
+            <div className="search-bar">
+              <Search size={18} className="search-icon lucide-icon" />
+              <input type="text" placeholder="Search anything..." className="search-input" />
             </div>
-          </div>
-
-          <div style={{
-            display: "flex",
-            alignItems: "center",
-            gap: 16,
-          }}>
-            <button style={{
-              background: "none",
-              border: "none",
-              cursor: "pointer",
-              padding: 8,
-              borderRadius: 6,
-              color: "#64748b",
-              fontSize: 18,
-              transition: "background-color 0.2s ease",
-            }}
-            onMouseOver={(e) => e.target.style.backgroundColor = "#f1f5f9"}
-            onMouseOut={(e) => e.target.style.backgroundColor = "transparent"}
-            >
-              🔔
-            </button>
-            <button style={{
-              background: "none",
-              border: "none",
-              cursor: "pointer",
-              padding: 8,
-              borderRadius: 6,
-              color: "#64748b",
-              fontSize: 18,
-              transition: "background-color 0.2s ease",
-            }}
-            onMouseOver={(e) => e.target.style.backgroundColor = "#f1f5f9"}
-            onMouseOut={(e) => e.target.style.backgroundColor = "transparent"}
-            >
-              ⚙️
-            </button>
-            <div style={{
-              width: 40,
-              height: 40,
-              borderRadius: "50%",
-              backgroundColor: "#3b82f6",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              color: "#ffffff",
-              fontWeight: 600,
-              cursor: "pointer",
-            }}>
-              A
+            
+            <div className="header-actions">
+              <button className="icon-btn">
+                <Bell size={20} className="lucide-icon bell-icon" />
+              </button>
+              <button className="icon-btn">
+                <Settings size={20} className="lucide-icon settings-icon" />
+              </button>
+              <div className="avatar">A</div>
             </div>
-          </div>
-        </header>
+          </header>
 
-        {/* MAIN CONTENT AREA */}
-        <main style={{
-          flex: 1,
-          padding: 24,
-          overflow: "auto",
-        }}>
-          {/* KPI GRID */}
-          <div style={{ marginBottom: 32 }}>
-            <h2 style={{
-              margin: "0 0 20px",
-              fontSize: 24,
-              fontWeight: 700,
-              color: "#1e293b",
-            }}>
-              Today at a Glance
-            </h2>
-            <div style={{
-              display: "grid",
-              gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))",
-              gap: 20,
-            }}>
+          {/* DASHBOARD CONTENT */}
+          <main className="main-content">
+            <div className="animate-fade-in">
+              <h2 className="page-title">Welcome back, Admin 👋</h2>
+              <p className="page-subtitle">Here is what's happening with UppCar today.</p>
+            </div>
+
+            {/* KPI GRID */}
+            <div className="kpi-grid">
               {kpis.map((kpi, i) => (
-                <div key={i} style={{
-                  backgroundColor: "#ffffff",
-                  borderRadius: 18,
-                  padding: 24,
-                  boxShadow: "0 18px 40px rgba(15, 23, 42, 0.08)",
-                  border: "1px solid #e2e8f0",
-                  position: "relative",
-                }}>
-                  <div style={{
-                    position: "absolute",
-                    top: 16,
-                    right: 16,
-                    backgroundColor: kpi.color,
-                    color: "#ffffff",
-                    padding: "6px 10px",
-                    borderRadius: 999,
-                    fontSize: 12,
-                    fontWeight: 700,
-                  }}>
-                    {kpi.indicator}
-                  </div>
-                  <div style={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: 16,
-                    marginBottom: 16,
-                  }}>
-                    <div style={{
-                      width: 52,
-                      height: 52,
-                      borderRadius: 16,
-                      display: "grid",
-                      placeItems: "center",
-                      backgroundColor: `${kpi.color}22`,
-                      color: kpi.color,
-                      fontSize: 24,
-                    }}>
+                <div 
+                  key={i} 
+                  className={`kpi-card animate-fade-in delay-${i % 4}`}
+                  style={{ "--card-gradient": kpi.gradient }}
+                >
+                  <div className="kpi-header">
+                    <div className="kpi-icon" style={{ background: kpi.gradient, color: "white" }}>
                       {kpi.icon}
                     </div>
-                    <div>
-                      <p style={{
-                        margin: 0,
-                        fontSize: 14,
-                        color: "#64748b",
-                        fontWeight: 600,
-                      }}>
-                        {kpi.label}
-                      </p>
-                      <p style={{
-                        margin: "8px 0 0",
-                        fontSize: 30,
-                        fontWeight: 800,
-                        color: "#1e293b",
-                      }}>
-                        {kpi.value}
-                      </p>
+                    <div className="kpi-indicator" style={{ background: kpi.bgSoft, color: kpi.color }}>
+                      {kpi.indicator}
                     </div>
+                  </div>
+                  <div>
+                    <p className="kpi-label">{kpi.label}</p>
+                    <p className="kpi-value">{kpi.value}</p>
                   </div>
                 </div>
               ))}
             </div>
-          </div>
 
-          {/* ACTIVITY TABLE */}
-          <div style={{
-            backgroundColor: "#ffffff",
-            borderRadius: 12,
-            boxShadow: "0 1px 3px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.06)",
-            border: "1px solid #e2e8f0",
-            overflow: "hidden",
-          }}>
-            <div style={{
-              padding: 24,
-              borderBottom: "1px solid #e2e8f0",
-            }}>
-              <h2 style={{
-                margin: 0,
-                fontSize: 20,
-                fontWeight: 700,
-                color: "#1e293b",
-              }}>
-                Recent Activity
-              </h2>
-            </div>
-            <div style={{ overflowX: "auto" }}>
-              <table style={{
-                width: "100%",
-                borderCollapse: "collapse",
-              }}>
-                <thead>
-                  <tr style={{
-                    backgroundColor: "#f8fafc",
-                    borderBottom: "1px solid #e2e8f0",
-                  }}>
-                    <th style={{
-                      padding: "16px 24px",
-                      textAlign: "left",
-                      fontSize: 12,
-                      fontWeight: 600,
-                      color: "#64748b",
-                      textTransform: "uppercase",
-                      letterSpacing: "0.05em",
-                    }}>
-                      User / Action
-                    </th>
-                    <th style={{
-                      padding: "16px 24px",
-                      textAlign: "left",
-                      fontSize: 12,
-                      fontWeight: 600,
-                      color: "#64748b",
-                      textTransform: "uppercase",
-                      letterSpacing: "0.05em",
-                    }}>
-                      Entity
-                    </th>
-                    <th style={{
-                      padding: "16px 24px",
-                      textAlign: "left",
-                      fontSize: 12,
-                      fontWeight: 600,
-                      color: "#64748b",
-                      textTransform: "uppercase",
-                      letterSpacing: "0.05em",
-                    }}>
-                      Status
-                    </th>
-                    <th style={{
-                      padding: "16px 24px",
-                      textAlign: "left",
-                      fontSize: 12,
-                      fontWeight: 600,
-                      color: "#64748b",
-                      textTransform: "uppercase",
-                      letterSpacing: "0.05em",
-                    }}>
-                      Time
-                    </th>
-                    <th style={{
-                      padding: "16px 24px",
-                      textAlign: "left",
-                      fontSize: 12,
-                      fontWeight: 600,
-                      color: "#64748b",
-                      textTransform: "uppercase",
-                      letterSpacing: "0.05em",
-                    }}>
-                      Action
-                    </th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {activities.map((activity, i) => (
-                    <tr key={i} style={{
-                      borderBottom: i < activities.length - 1 ? "1px solid #f1f5f9" : "none",
-                    }}
-                    onMouseOver={(e) => e.currentTarget.style.backgroundColor = "#f8fbff"}
-                    onMouseOut={(e) => e.currentTarget.style.backgroundColor = "transparent"}
-                    >
-                      <td style={{
-                        padding: "20px 24px",
-                      }}>
-                        <div style={{
-                          display: "flex",
-                          alignItems: "center",
-                          gap: 12,
-                        }}>
-                          <div style={{
-                            width: 32,
-                            height: 32,
-                            borderRadius: "50%",
-                            backgroundColor: "#e2e8f0",
-                            display: "flex",
-                            alignItems: "center",
-                            justifyContent: "center",
-                            fontSize: 14,
-                            fontWeight: 600,
-                            color: "#475569",
-                          }}>
-                            {activity.user.split(' ').map(n => n[0]).join('')}
-                          </div>
-                          <div>
-                            <p style={{
-                              margin: 0,
-                              fontSize: 14,
-                              fontWeight: 600,
-                              color: "#1e293b",
-                            }}>
-                              {activity.user}
-                            </p>
-                            <p style={{
-                              margin: "2px 0 0",
-                              fontSize: 12,
-                              color: "#64748b",
-                            }}>
-                              {activity.action}
-                            </p>
-                          </div>
-                        </div>
-                      </td>
-                      <td style={{
-                        padding: "20px 24px",
-                        fontSize: 14,
-                        color: "#374151",
-                        fontWeight: 500,
-                      }}>
-                        {activity.entity}
-                      </td>
-                      <td style={{
-                        padding: "20px 24px",
-                      }}>
-                        <span style={{
-                          display: "inline-flex",
-                          alignItems: "center",
-                          padding: "4px 12px",
-                          borderRadius: 12,
-                          fontSize: 12,
-                          fontWeight: 600,
-                          backgroundColor: `${activity.statusColor}20`,
-                          color: activity.statusColor,
-                        }}>
-                          {activity.status}
-                        </span>
-                      </td>
-                      <td style={{
-                        padding: "20px 24px",
-                        fontSize: 14,
-                        color: "#64748b",
-                      }}>
-                        {activity.time}
-                      </td>
-                      <td style={{
-                        padding: "20px 24px",
-                      }}>
-                        <button style={{
-                          padding: "6px 12px",
-                          border: "1px solid #e2e8f0",
-                          borderRadius: 6,
-                          backgroundColor: "transparent",
-                          color: "#374151",
-                          fontSize: 12,
-                          fontWeight: 500,
-                          cursor: "pointer",
-                          transition: "all 0.2s ease",
-                        }}
-                        onMouseOver={(e) => {
-                          e.target.style.backgroundColor = "#f1f5f9";
-                          e.target.style.borderColor = "#cbd5e1";
-                        }}
-                        onMouseOut={(e) => {
-                          e.target.style.backgroundColor = "transparent";
-                          e.target.style.borderColor = "#e2e8f0";
-                        }}
-                        >
-                          View
-                        </button>
-                      </td>
+            {/* ACTIVITY TABLE */}
+            <div className="table-container animate-fade-in delay-3">
+              <div className="table-header">
+                <h3 className="table-title">Recent Activity</h3>
+                <button className="view-all-btn">View All</button>
+              </div>
+              <div style={{ overflowX: "auto" }}>
+                <table className="activity-table">
+                  <thead>
+                    <tr>
+                      <th>User / Action</th>
+                      <th>Entity</th>
+                      <th>Status</th>
+                      <th>Time</th>
+                      <th>Action</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
+                  </thead>
+                  <tbody>
+                    {activities.map((activity, i) => (
+                      <tr key={i} className="table-row">
+                        <td>
+                          <div className="user-cell">
+                            <div className="user-avatar">
+                              {activity.user.split(' ').map(n => n[0]).join('')}
+                            </div>
+                            <div>
+                              <p className="user-name">{activity.user}</p>
+                              <p className="user-action">{activity.action}</p>
+                            </div>
+                          </div>
+                        </td>
+                        <td className="entity-cell">{activity.entity}</td>
+                        <td>
+                          <span 
+                            className="status-badge"
+                            style={{ background: activity.statusBg, color: activity.statusColor }}
+                          >
+                            {activity.status}
+                          </span>
+                        </td>
+                        <td className="time-cell">{activity.time}</td>
+                        <td>
+                          <button className="action-btn">Review</button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
             </div>
-          </div>
-        </main>
+          </main>
+        </div>
       </div>
-    </div>
+    </>
   );
 };
 
