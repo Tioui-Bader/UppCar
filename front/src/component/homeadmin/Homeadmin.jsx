@@ -1,11 +1,34 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { 
-  LayoutDashboard, Users, Building2, CalendarDays, Wallet,
-  UserPlus, Building, Calendar, DollarSign,
-  Search, Bell, Settings, LogOut, HelpCircle, FileText,
-  Car
-} from "lucide-react";
+import {
+  PiSquaresFourDuotone, PiUsersDuotone, PiBuildingsDuotone, PiCalendarCheckDuotone, PiWalletDuotone,
+  PiUserPlusDuotone, PiBuildingDuotone, PiCalendarPlusDuotone, PiCurrencyDollarDuotone,
+  PiMagnifyingGlassDuotone, PiBellDuotone, PiGearDuotone, PiSignOutDuotone, PiQuestionDuotone, PiFileTextDuotone,
+  PiCarProfileDuotone
+} from "react-icons/pi";
+
+const AnimatedLogo = ({ hideText = false }) => {
+  return (
+    <div style={{ display: 'flex', alignItems: 'center', gap: 14, cursor: 'pointer', transition: 'transform 0.2s ease' }} onMouseOver={e => e.currentTarget.style.transform = 'scale(1.02)'} onMouseOut={e => e.currentTarget.style.transform = 'scale(1)'}>
+      <div className="animated-logo-bg" style={{ position: 'relative', width: 44, height: 44, borderRadius: 14, display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden' }}>
+        <div style={{ position: 'absolute', top: '-50%', left: '-50%', width: '200%', height: '200%', background: 'conic-gradient(from 0deg,transparent 0%,#3b82f6 30%,transparent 40%)', animation: 'spinWheel 4s linear infinite' }} />
+        <div style={{ position: 'absolute', inset: 2, background: '#ffffff', borderRadius: 12, zIndex: 1 }} />
+        <svg style={{ zIndex: 2, animation: 'driveBumps 2s ease-in-out infinite' }} width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#1e293b" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M14 16H9m10 0h3v-3.15a1 1 0 0 0-.84-.99L16 11l-2.7-3.6a2 2 0 0 0-1.6-.8H9.3a2 2 0 0 0-1.6.8L5 11l-5.16.86a1 1 0 0 0-.84.99V16h3" />
+          <circle cx="6.5" cy="16.5" r="2.5" style={{ animation: 'spinWheel 1s linear infinite', transformOrigin: '6.5px 16.5px' }} />
+          <circle cx="16.5" cy="16.5" r="2.5" style={{ animation: 'spinWheel 1s linear infinite', transformOrigin: '16.5px 16.5px' }} />
+        </svg>
+      </div>
+      {!hideText && (
+        <div style={{ position: 'relative', fontFamily: "'Outfit',sans-serif", fontWeight: 900, fontSize: 26, letterSpacing: "-0.5px", margin: 0 }}>
+          <span style={{ color: "#1e293b" }}>Upp</span>
+          <span style={{ color: "#3b82f6" }}>Car</span>
+          <span style={{ position: 'absolute', bottom: 6, right: -12, width: 6, height: 6, borderRadius: '50%', background: '#3b82f6', animation: 'blink 2s infinite' }} />
+        </div>
+      )}
+    </div>
+  );
+};
 
 const Homeadmin = () => {
   const navigate = useNavigate();
@@ -19,22 +42,22 @@ const Homeadmin = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("role");
     localStorage.removeItem("user");
-    navigate("/login");
+    navigate("/loginadmin");
   };
 
   const navItems = [
-    { name: "Overview", icon: <LayoutDashboard size={20} className="lucide-icon" /> },
-    { name: "Users", icon: <Users size={20} className="lucide-icon" /> },
-    { name: "Agencies", icon: <Building2 size={20} className="lucide-icon" /> },
-    { name: "Reservations", icon: <CalendarDays size={20} className="lucide-icon" /> },
-    { name: "Financials", icon: <Wallet size={20} className="lucide-icon" /> },
+    { name: "Overview", icon: <PiSquaresFourDuotone size={22} className="modern-icon" /> },
+    { name: "Users", icon: <PiUsersDuotone size={22} className="modern-icon" /> },
+    { name: "Agencies", icon: <PiBuildingsDuotone size={22} className="modern-icon" /> },
+    { name: "Reservations", icon: <PiCalendarCheckDuotone size={22} className="modern-icon" /> },
+    { name: "Financials", icon: <PiWalletDuotone size={22} className="modern-icon" /> },
   ];
 
   const kpis = [
-    { label: "New Users", value: "24", icon: <UserPlus size={24} className="lucide-icon kpi-svg" />, indicator: "+12%", gradient: "linear-gradient(135deg, #10b981, #059669)", bgSoft: "#ecfdf5", color: "#10b981" },
-    { label: "New Agencies", value: "3", icon: <Building size={24} className="lucide-icon kpi-svg" />, indicator: "+2", gradient: "linear-gradient(135deg, #3b82f6, #2563eb)", bgSoft: "#eff6ff", color: "#3b82f6" },
-    { label: "Reservations", value: "12", icon: <Calendar size={24} className="lucide-icon kpi-svg" />, indicator: "+8%", gradient: "linear-gradient(135deg, #f59e0b, #d97706)", bgSoft: "#fffbeb", color: "#f59e0b" },
-    { label: "Daily Revenue", value: "$2,450", icon: <DollarSign size={24} className="lucide-icon kpi-svg" />, indicator: "+15%", gradient: "linear-gradient(135deg, #ef4444, #dc2626)", bgSoft: "#fef2f2", color: "#ef4444" },
+    { label: "New Users", value: "24", icon: <PiUserPlusDuotone size={28} className="modern-icon kpi-svg" />, indicator: "+12%", gradient: "linear-gradient(135deg, #10b981, #059669)", bgSoft: "#ecfdf5", color: "#10b981" },
+    { label: "New Agencies", value: "3", icon: <PiBuildingDuotone size={28} className="modern-icon kpi-svg" />, indicator: "+2", gradient: "linear-gradient(135deg, #3b82f6, #2563eb)", bgSoft: "#eff6ff", color: "#3b82f6" },
+    { label: "Reservations", value: "12", icon: <PiCalendarPlusDuotone size={28} className="modern-icon kpi-svg" />, indicator: "+8%", gradient: "linear-gradient(135deg, #f59e0b, #d97706)", bgSoft: "#fffbeb", color: "#f59e0b" },
+    { label: "Daily Revenue", value: "$2,450", icon: <PiCurrencyDollarDuotone size={28} className="modern-icon kpi-svg" />, indicator: "+15%", gradient: "linear-gradient(135deg, #ef4444, #dc2626)", bgSoft: "#fef2f2", color: "#ef4444" },
   ];
 
   const activities = [
@@ -97,6 +120,7 @@ const Homeadmin = () => {
           position: sticky;
           top: 0;
           height: 100vh;
+          overflow-y: auto;
         }
 
         .logo-area {
@@ -123,6 +147,7 @@ const Homeadmin = () => {
           display: flex;
           flex-direction: column;
           gap: 8px;
+          overflow-y: auto;
         }
 
         .nav-btn {
@@ -270,24 +295,45 @@ const Homeadmin = () => {
         .search-bar {
           position: relative;
           width: 320px;
+          transition: width 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .search-bar:focus-within {
+          width: 420px;
         }
         
         .search-input {
           width: 100%;
           padding: 12px 16px 12px 44px;
-          background: #ffffff;
-          border: 1px solid #e2e8f0;
-          border-radius: 12px;
+          background: #f8fafc;
+          border: 1px solid transparent;
+          border-radius: 14px;
           font-family: 'Outfit', sans-serif;
           font-size: 14px;
           outline: none;
-          transition: all 0.3s ease;
-          box-shadow: 0 2px 6px rgba(0,0,0,0.02);
+          transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+          color: #1e293b;
+        }
+
+        .search-input::placeholder {
+          color: #94a3b8;
+          transition: opacity 0.3s ease;
+        }
+
+        .search-input:focus::placeholder {
+          opacity: 0.5;
+        }
+        
+        .search-input:hover {
+          background: #ffffff;
+          border-color: #e2e8f0;
+          box-shadow: 0 4px 12px rgba(0,0,0,0.03);
         }
         
         .search-input:focus {
+          background: #ffffff;
           border-color: #3b82f6;
-          box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
+          box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.15), 0 4px 20px rgba(37, 99, 235, 0.08);
         }
         
         .search-icon {
@@ -297,6 +343,14 @@ const Homeadmin = () => {
           transform: translateY(-50%);
           color: #94a3b8;
           font-size: 16px;
+          pointer-events: none;
+          transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .search-bar:focus-within .search-icon {
+          color: #3b82f6;
+          transform: translateY(-50%) scale(1.1);
+          filter: drop-shadow(0 0 8px rgba(59, 130, 246, 0.3));
         }
 
         .header-actions {
@@ -602,46 +656,55 @@ const Homeadmin = () => {
         .delay-2 { animation-delay: 0.2s; }
         .delay-3 { animation-delay: 0.3s; }
 
-        /* Lucide icon base animations */
-        .lucide-icon {
+        /* Modern icon base animations */
+        .modern-icon {
           transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-          stroke-width: 2px;
+        }
+        
+        /* Dual-tone effect enhancement */
+        .modern-icon path[opacity="0.2"] {
+          opacity: 0.35 !important;
         }
 
         .logo-icon {
           animation: float 6s ease-in-out infinite;
-          filter: drop-shadow(0 4px 6px rgba(59, 130, 246, 0.4));
+          filter: drop-shadow(0 4px 10px rgba(59, 130, 246, 0.5));
         }
 
         /* Nav Icon Hover animations */
-        .nav-btn:hover .lucide-icon {
+        .nav-btn:hover .modern-icon {
           transform: scale(1.15) rotate(-5deg);
+          filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
         }
         
-        .nav-btn.active .lucide-icon {
+        .nav-btn.active .modern-icon {
           animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+          filter: drop-shadow(0 0 8px rgba(37, 99, 235, 0.4));
         }
 
         /* KPI Icon animations */
         .kpi-card:hover .kpi-svg {
           animation: pulseIcon 1.5s infinite;
-          transform: scale(1.1);
+          transform: scale(1.15);
+          filter: drop-shadow(0 0 12px currentColor);
         }
 
         /* Header Icons animations */
         .icon-btn:hover .bell-icon {
           animation: ring 1s ease-in-out infinite;
+          color: #ef4444;
         }
 
         .icon-btn:hover .settings-icon {
           animation: spin 3s linear infinite;
+          color: #3b82f6;
         }
 
-        .btn-primary:hover .lucide-icon {
+        .btn-primary:hover .modern-icon {
           transform: translateX(4px) scale(1.1);
         }
 
-        .footer-link:hover .lucide-icon {
+        .footer-link:hover .modern-icon {
           transform: scale(1.1) translateX(2px);
         }
 
@@ -678,15 +741,22 @@ const Homeadmin = () => {
           from { transform: rotate(0deg); }
           to { transform: rotate(360deg); }
         }
+
+        @keyframes spinWheel { 100%{transform:rotate(360deg);} }
+        @keyframes driveBumps { 0%,100%{transform:translateY(0);} 50%{transform:translateY(-1.5px);} }
+        @keyframes blink { 0%,100%{opacity:1;} 50%{opacity:0;} }
+
+        .animated-logo-bg { 
+          background: linear-gradient(135deg, #e0e7ff 0%, #bfdbfe 100%); 
+          box-shadow: 0 8px 16px rgba(59, 130, 246, 0.25); 
+        }
       `}</style>
 
       <div className="admin-dashboard">
         {/* SIDEBAR */}
         <aside className="glass-sidebar">
-          <div className="logo-area">
-            <h1 className="logo-text">
-              <Car size={32} className="logo-icon lucide-icon" color="#3b82f6" /> UppCar
-            </h1>
+          <div className="logo-area" style={{ padding: '24px 20px', display: 'flex', justifyContent: 'flex-start' }}>
+            <AnimatedLogo />
           </div>
 
           <nav className="nav-container">
@@ -704,19 +774,19 @@ const Homeadmin = () => {
 
           <div className="sidebar-footer">
             <button className="btn-primary">
-              <FileText size={18} className="lucide-icon" /> New Report
+              <PiFileTextDuotone size={20} className="modern-icon" /> New Report
             </button>
-            <div 
+            <div
               className="footer-link"
-              onClick={() => {}}
+              onClick={() => { }}
             >
-              <HelpCircle size={18} className="lucide-icon" /> Help Center
+              <PiQuestionDuotone size={20} className="modern-icon" /> Help Center
             </div>
-            <div 
+            <div
               className="footer-link logout"
               onClick={handleLogout}
             >
-              <LogOut size={18} className="lucide-icon" /> Logout
+              <PiSignOutDuotone size={20} className="modern-icon" /> Logout
             </div>
           </div>
         </aside>
@@ -726,16 +796,16 @@ const Homeadmin = () => {
           {/* HEADER */}
           <header className="glass-header">
             <div className="search-bar">
-              <Search size={18} className="search-icon lucide-icon" />
+              <PiMagnifyingGlassDuotone size={20} className="search-icon modern-icon" />
               <input type="text" placeholder="Search anything..." className="search-input" />
             </div>
-            
+
             <div className="header-actions">
               <button className="icon-btn">
-                <Bell size={20} className="lucide-icon bell-icon" />
+                <PiBellDuotone size={24} className="modern-icon bell-icon" />
               </button>
               <button className="icon-btn">
-                <Settings size={20} className="lucide-icon settings-icon" />
+                <PiGearDuotone size={24} className="modern-icon settings-icon" />
               </button>
               <div className="avatar">A</div>
             </div>
@@ -751,8 +821,8 @@ const Homeadmin = () => {
             {/* KPI GRID */}
             <div className="kpi-grid">
               {kpis.map((kpi, i) => (
-                <div 
-                  key={i} 
+                <div
+                  key={i}
                   className={`kpi-card animate-fade-in delay-${i % 4}`}
                   style={{ "--card-gradient": kpi.gradient }}
                 >
@@ -805,7 +875,7 @@ const Homeadmin = () => {
                         </td>
                         <td className="entity-cell">{activity.entity}</td>
                         <td>
-                          <span 
+                          <span
                             className="status-badge"
                             style={{ background: activity.statusBg, color: activity.statusColor }}
                           >
