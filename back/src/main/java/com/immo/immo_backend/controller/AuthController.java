@@ -37,10 +37,10 @@ public class AuthController {
     private String refreshTokenSecret;
 
     public AuthController(UserService userService,
-                          AgencyService agencyService,
-                          JwtService jwtService,
-                          UserRepository userRepository,
-                          AgencyRepository agencyRepository) {
+            AgencyService agencyService,
+            JwtService jwtService,
+            UserRepository userRepository,
+            AgencyRepository agencyRepository) {
         this.userService = userService;
         this.agencyService = agencyService;
         this.jwtService = jwtService;
@@ -85,7 +85,7 @@ public class AuthController {
             Map<String, Object> response = new HashMap<>();
             response.put("accessToken", accessToken);
             response.put("refreshToken", refreshToken);
-            response.put("agency", savedAgency); 
+            response.put("agency", savedAgency);
 
             return ResponseEntity.ok(response);
         } catch (IllegalArgumentException e) {
@@ -163,10 +163,10 @@ public class AuthController {
 
         try {
             String userId = Jwts.parser()
-                .setSigningKey(refreshTokenSecret.getBytes())
-                .parseClaimsJws(refreshToken)
-                .getBody()
-                .getSubject();
+                    .setSigningKey(refreshTokenSecret.getBytes())
+                    .parseClaimsJws(refreshToken)
+                    .getBody()
+                    .getSubject();
 
             User user = userRepository.findById(Long.parseLong(userId))
                     .orElseThrow(() -> new RuntimeException("Utilisateur non trouvé"));
@@ -193,11 +193,10 @@ public class AuthController {
             HttpEntity<String> entity = new HttpEntity<>(headers);
 
             ResponseEntity<Map> googleResponse = restTemplate.exchange(
-                "https://www.googleapis.com/oauth2/v3/userinfo",
-                HttpMethod.GET,
-                entity,
-                Map.class
-            );
+                    "https://www.googleapis.com/oauth2/v3/userinfo",
+                    HttpMethod.GET,
+                    entity,
+                    Map.class);
 
             Map<String, Object> googleUser = googleResponse.getBody();
             String email = (String) googleUser.get("email");
@@ -211,9 +210,9 @@ public class AuthController {
                 return userRepository.save(newUser);
             });
 
-// ✅ Met à jour le nom même si user existait déjà
+            // ✅ Met à jour le nom même si user existait déjà
             user.setName(name);
-userRepository.save(user);
+            userRepository.save(user);
 
             Map<String, Object> response = new HashMap<>();
             response.put("accessToken", jwtService.generateAccessToken(user));
@@ -239,11 +238,10 @@ userRepository.save(user);
             HttpEntity<String> entity = new HttpEntity<>(headers);
 
             ResponseEntity<Map> googleResponse = restTemplate.exchange(
-                "https://www.googleapis.com/oauth2/v3/userinfo",
-                HttpMethod.GET,
-                entity,
-                Map.class
-            );
+                    "https://www.googleapis.com/oauth2/v3/userinfo",
+                    HttpMethod.GET,
+                    entity,
+                    Map.class);
 
             Map<String, Object> googleUser = googleResponse.getBody();
             String email = (String) googleUser.get("email");
@@ -276,137 +274,202 @@ userRepository.save(user);
             return ResponseEntity.status(500).body("Erreur Google login agency: " + e.getMessage());
         }
     }
-}
 
-
-
-
-
-
-
-
-/* 
-@PostMapping("/forgot-password")
-public ResponseEntity<?> forgotPassword(@RequestBody Map<String, String> request) {
-    String email = request.get("email").toLowerCase().trim();  // Normaliser et trimmer l'email
-
-    try {
-        // 1️⃣ Vérifier si email existe
-        Optional<User> userOptional = userRepository.findByEmail(email);
-
-        if (userOptional.isEmpty()) {
-            return ResponseEntity
-                    .badRequest()
-                    .body(Map.of("message", "Email n'existe pas"));
+    // ------------------- PROFILE -------------------
+    @PostMapping("/update-profile")
+    public ResponseEntity<?> updateProfile(@RequestHeader("Authorization") String token,
+            @RequestBody User updatedData) {
+        try {
+            String userIdStr = jwtService.extractUserId(token.substring(7));
+            Long userId = Long.parseLong(userIdStr);
+            User updatedUser = userService.updateUserProfile(userId, updatedData);
+            return ResponseEntity.ok(updatedUser);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erreur lors de la mise à jour");
         }
+    }
 
-        // 2️⃣ Générer code 6 chiffres
-        String code = String.format("%06d", new Random().nextInt(1000000));  // Génère de 000000 à 999999
+    @GetMapping("/me")
+    public ResponseEntity<?> getCurrentUser(@RequestHeader("Authorization") String token) {
+        try {
+            String userIdStr = jwtService.extractUserId(token.substring(7));
+            Long userId = Long.parseLong(userIdStr);
+            User user = userRepository.findById(userId)
+                    .orElseThrow(() -> new RuntimeException("Utilisateur non trouvé"));
+            return ResponseEntity.ok(user);
+        } catch (Exception e) {
+            return ResponseEntity.status(401).body("Non autorisé");
+        }
+    }
 
-        // 3️⃣ Supprimer ancien code si existe
-        codeRepository.findByCode(code)
-                .ifPresent(existingCode -> codeRepository.delete(existingCode));
+    // ------------------- AGENCY PROFILE -------------------
+    @PostMapping("/agency/update-profile")
+    public ResponseEntity<?> updateAgencyProfile(@RequestHeader("Authorization") String token,
+            @RequestBody Agency updatedData) {
+        try {
+            String agencyIdStr = jwtService.extractUserId(token.substring(7));
+            Long agencyId = Long.parseLong(agencyIdStr);
+            Agency agency = agencyRepository.findById(agencyId)
+                    .orElseThrow(() -> new RuntimeException("Agence non trouvée"));
 
-        // 4️⃣ Sauvegarder nouveau code
-        VerificationCode verificationCode = new VerificationCode();
-        verificationCode.setEmail(email);
-        verificationCode.setCode(code);
-        verificationCode.setExpirationTime(LocalDateTime.now().plusMinutes(10));
+            Agency updatedAgency = agencyService.updateAgencyProfile(agency.getEmail(), updatedData);
+            return ResponseEntity.ok(updatedAgency);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erreur : " + e.getMessage());
+        }
+    }
 
-        codeRepository.save(verificationCode);
-
-        // 5️⃣ Envoyer email
-        emailService.sendVerificationCode(email, code);
-
-        return ResponseEntity.ok(Map.of("message", "Code envoyé à votre email"));
-    } catch (Exception e) {
-        // Gérer l'exception ici pour renvoyer des informations d'erreur plus précises
-        e.printStackTrace();
-        return ResponseEntity
-                .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body(Map.of("message", "Une erreur s'est produite", "error", e.getMessage()));
+    @GetMapping("/agency/me")
+    public ResponseEntity<?> getCurrentAgency(@RequestHeader("Authorization") String token) {
+        try {
+            String agencyIdStr = jwtService.extractUserId(token.substring(7));
+            Long agencyId = Long.parseLong(agencyIdStr);
+            Agency agency = agencyRepository.findById(agencyId)
+                    .orElseThrow(() -> new RuntimeException("Agence non trouvée"));
+            return ResponseEntity.ok(agency);
+        } catch (Exception e) {
+            return ResponseEntity.status(401).body("Non autorisé");
+        }
     }
 }
 
-
-
-
-@PostMapping("/verify-code")
-public ResponseEntity<?> verifyCode(@RequestBody Map<String, String> request) {
-    String code = request.get("code");  // Récupère uniquement le code
-
-    // Recherche du code dans la base de données
-    Optional<VerificationCode> verificationCodeOptional =
-            codeRepository.findByCode(code);  // Utilisation de findByCode
-
-    if (verificationCodeOptional.isEmpty()) {
-        return ResponseEntity
-                .badRequest()
-                .body(Map.of("message", "Code est incorrect"));
-    }
-
-    VerificationCode verificationCode = verificationCodeOptional.get();
-
-    // Vérifier l'expiration du code
-    if (verificationCode.getExpirationTime().isBefore(LocalDateTime.now())) {
-        return ResponseEntity
-                .badRequest()
-                .body(Map.of("message", "Code expiré"));
-    }
-
-    // Code valide
-    return ResponseEntity.ok(Map.of("message", "Code valide"));
-}
-
-
-
-
-
-
-@PostMapping("/reset-password")
-public ResponseEntity<?> resetPassword(@RequestBody Map<String, String> request) {
-    String code = request.get("code");  // Le code reçu
-    String newPassword = request.get("newPassword");  // Le nouveau mot de passe
-
-    try {
-        // Vérifier le code envoyé
-        Optional<VerificationCode> verificationCodeOptional = codeRepository.findByCode(code);
-        if (verificationCodeOptional.isEmpty()) {
-            return ResponseEntity.badRequest().body(Map.of("message", "Code incorrect ou expiré"));
-        }
-
-        VerificationCode verificationCode = verificationCodeOptional.get();
-
-        // Vérifier l'expiration du code
-        if (verificationCode.getExpirationTime().isBefore(LocalDateTime.now())) {
-            return ResponseEntity.badRequest().body(Map.of("message", "Code expiré"));
-        }
-
-        // Récupérer l'utilisateur associé au code (par l'email dans la table VerificationCode)
-        Optional<User> userOptional = userRepository.findByEmail(verificationCode.getEmail());
-        if (userOptional.isEmpty()) {
-            return ResponseEntity.badRequest().body(Map.of("message", "Utilisateur non trouvé"));
-        }
-
-        User user = userOptional.get();
-
-        // Hacher le nouveau mot de passe
-        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-        String hashedPassword = passwordEncoder.encode(newPassword);
-
-        // Mettre à jour le mot de passe de l'utilisateur
-        user.setPassword(hashedPassword);
-        userRepository.save(user);
-
-        // Optionnel : Supprimer le code de vérification après son utilisation (si nécessaire)
-        codeRepository.delete(verificationCode);
-
-        // Réponse succès
-        return ResponseEntity.ok(Map.of("message", "Mot de passe réinitialisé avec succès"));
-    } catch (Exception e) {
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body(Map.of("message", "Une erreur s'est produite", "error", e.getMessage()));
-    }
-}
-
+/*
+ * @PostMapping("/forgot-password")
+ * public ResponseEntity<?> forgotPassword(@RequestBody Map<String, String>
+ * request) {
+ * String email = request.get("email").toLowerCase().trim(); // Normaliser et
+ * trimmer l'email
+ * 
+ * try {
+ * // 1️⃣ Vérifier si email existe
+ * Optional<User> userOptional = userRepository.findByEmail(email);
+ * 
+ * if (userOptional.isEmpty()) {
+ * return ResponseEntity
+ * .badRequest()
+ * .body(Map.of("message", "Email n'existe pas"));
+ * }
+ * 
+ * // 2️⃣ Générer code 6 chiffres
+ * String code = String.format("%06d", new Random().nextInt(1000000)); // Génère
+ * de 000000 à 999999
+ * 
+ * // 3️⃣ Supprimer ancien code si existe
+ * codeRepository.findByCode(code)
+ * .ifPresent(existingCode -> codeRepository.delete(existingCode));
+ * 
+ * // 4️⃣ Sauvegarder nouveau code
+ * VerificationCode verificationCode = new VerificationCode();
+ * verificationCode.setEmail(email);
+ * verificationCode.setCode(code);
+ * verificationCode.setExpirationTime(LocalDateTime.now().plusMinutes(10));
+ * 
+ * codeRepository.save(verificationCode);
+ * 
+ * // 5️⃣ Envoyer email
+ * emailService.sendVerificationCode(email, code);
+ * 
+ * return ResponseEntity.ok(Map.of("message", "Code envoyé à votre email"));
+ * } catch (Exception e) {
+ * // Gérer l'exception ici pour renvoyer des informations d'erreur plus
+ * précises
+ * e.printStackTrace();
+ * return ResponseEntity
+ * .status(HttpStatus.INTERNAL_SERVER_ERROR)
+ * .body(Map.of("message", "Une erreur s'est produite", "error",
+ * e.getMessage()));
+ * }
+ * }
+ * 
+ * 
+ * 
+ * 
+ * @PostMapping("/verify-code")
+ * public ResponseEntity<?> verifyCode(@RequestBody Map<String, String> request)
+ * {
+ * String code = request.get("code"); // Récupère uniquement le code
+ * 
+ * // Recherche du code dans la base de données
+ * Optional<VerificationCode> verificationCodeOptional =
+ * codeRepository.findByCode(code); // Utilisation de findByCode
+ * 
+ * if (verificationCodeOptional.isEmpty()) {
+ * return ResponseEntity
+ * .badRequest()
+ * .body(Map.of("message", "Code est incorrect"));
+ * }
+ * 
+ * VerificationCode verificationCode = verificationCodeOptional.get();
+ * 
+ * // Vérifier l'expiration du code
+ * if (verificationCode.getExpirationTime().isBefore(LocalDateTime.now())) {
+ * return ResponseEntity
+ * .badRequest()
+ * .body(Map.of("message", "Code expiré"));
+ * }
+ * 
+ * // Code valide
+ * return ResponseEntity.ok(Map.of("message", "Code valide"));
+ * }
+ * 
+ * 
+ * 
+ * 
+ * 
+ * 
+ * @PostMapping("/reset-password")
+ * public ResponseEntity<?> resetPassword(@RequestBody Map<String, String>
+ * request) {
+ * String code = request.get("code"); // Le code reçu
+ * String newPassword = request.get("newPassword"); // Le nouveau mot de passe
+ * 
+ * try {
+ * // Vérifier le code envoyé
+ * Optional<VerificationCode> verificationCodeOptional =
+ * codeRepository.findByCode(code);
+ * if (verificationCodeOptional.isEmpty()) {
+ * return ResponseEntity.badRequest().body(Map.of("message",
+ * "Code incorrect ou expiré"));
+ * }
+ * 
+ * VerificationCode verificationCode = verificationCodeOptional.get();
+ * 
+ * // Vérifier l'expiration du code
+ * if (verificationCode.getExpirationTime().isBefore(LocalDateTime.now())) {
+ * return ResponseEntity.badRequest().body(Map.of("message", "Code expiré"));
+ * }
+ * 
+ * // Récupérer l'utilisateur associé au code (par l'email dans la table
+ * VerificationCode)
+ * Optional<User> userOptional =
+ * userRepository.findByEmail(verificationCode.getEmail());
+ * if (userOptional.isEmpty()) {
+ * return ResponseEntity.badRequest().body(Map.of("message",
+ * "Utilisateur non trouvé"));
+ * }
+ * 
+ * User user = userOptional.get();
+ * 
+ * // Hacher le nouveau mot de passe
+ * BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+ * String hashedPassword = passwordEncoder.encode(newPassword);
+ * 
+ * // Mettre à jour le mot de passe de l'utilisateur
+ * user.setPassword(hashedPassword);
+ * userRepository.save(user);
+ * 
+ * // Optionnel : Supprimer le code de vérification après son utilisation (si
+ * nécessaire)
+ * codeRepository.delete(verificationCode);
+ * 
+ * // Réponse succès
+ * return ResponseEntity.ok(Map.of("message",
+ * "Mot de passe réinitialisé avec succès"));
+ * } catch (Exception e) {
+ * return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+ * .body(Map.of("message", "Une erreur s'est produite", "error",
+ * e.getMessage()));
+ * }
+ * }
+ * 
  */

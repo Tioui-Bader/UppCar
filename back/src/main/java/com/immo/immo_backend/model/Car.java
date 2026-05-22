@@ -17,17 +17,22 @@ public class Car {
     private Double price;
     private String fuel;
     private Integer seats;
-    private Integer year;
     private String status;
     private String city;
-    private String color;
     private String startDate;
     private String endDate;
 
-    @ElementCollection
-    @CollectionTable(name = "car_photos", joinColumns = @JoinColumn(name = "car_id"))
-    @Column(name = "photo_url", columnDefinition = "TEXT")
-    private List<String> photos;
+    @Column(name = "image_url1", columnDefinition = "TEXT")
+    private String imageUrl1;
+
+    @Column(name = "image_url2", columnDefinition = "TEXT")
+    private String imageUrl2;
+
+    @Column(name = "image_url3", columnDefinition = "TEXT")
+    private String imageUrl3;
+
+    @Column(name = "image_url4", columnDefinition = "TEXT")
+    private String imageUrl4;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "agency_id", nullable = false)
@@ -35,35 +40,37 @@ public class Car {
 
     public Car() {}
 
-    public Car(String name, String plate, String category, Double price, String fuel, Integer seats, Integer year, String status, String city, String color, List<String> photos, Agency agency) {
+    public Car(String name, String plate, String category, Double price, String fuel, Integer seats, String status, String city, String imageUrl1, String imageUrl2, String imageUrl3, String imageUrl4, Agency agency) {
         this.name = name;
         this.plate = plate;
         this.category = category;
         this.price = price;
         this.fuel = fuel;
         this.seats = seats;
-        this.year = year;
         this.status = status;
         this.city = city;
-        this.color = color;
-        this.photos = photos;
+        this.imageUrl1 = imageUrl1;
+        this.imageUrl2 = imageUrl2;
+        this.imageUrl3 = imageUrl3;
+        this.imageUrl4 = imageUrl4;
         this.agency = agency;
         this.startDate = "";
         this.endDate = "";
     }
 
-    public Car(String name, String plate, String category, Double price, String fuel, Integer seats, Integer year, String status, String city, String color, List<String> photos, Agency agency, String startDate, String endDate) {
+    public Car(String name, String plate, String category, Double price, String fuel, Integer seats, String status, String city, String imageUrl1, String imageUrl2, String imageUrl3, String imageUrl4, Agency agency, String startDate, String endDate) {
         this.name = name;
         this.plate = plate;
         this.category = category;
         this.price = price;
         this.fuel = fuel;
         this.seats = seats;
-        this.year = year;
         this.status = status;
         this.city = city;
-        this.color = color;
-        this.photos = photos;
+        this.imageUrl1 = imageUrl1;
+        this.imageUrl2 = imageUrl2;
+        this.imageUrl3 = imageUrl3;
+        this.imageUrl4 = imageUrl4;
         this.agency = agency;
         this.startDate = startDate;
         this.endDate = endDate;
@@ -92,20 +99,23 @@ public class Car {
     public Integer getSeats() { return seats; }
     public void setSeats(Integer seats) { this.seats = seats; }
 
-    public Integer getYear() { return year; }
-    public void setYear(Integer year) { this.year = year; }
-
     public String getStatus() { return status; }
     public void setStatus(String status) { this.status = status; }
 
     public String getCity() { return city; }
     public void setCity(String city) { this.city = city; }
 
-    public String getColor() { return color; }
-    public void setColor(String color) { this.color = color; }
+    public String getImageUrl1() { return imageUrl1; }
+    public void setImageUrl1(String imageUrl1) { this.imageUrl1 = imageUrl1; }
 
-    public List<String> getPhotos() { return photos; }
-    public void setPhotos(List<String> photos) { this.photos = photos; }
+    public String getImageUrl2() { return imageUrl2; }
+    public void setImageUrl2(String imageUrl2) { this.imageUrl2 = imageUrl2; }
+
+    public String getImageUrl3() { return imageUrl3; }
+    public void setImageUrl3(String imageUrl3) { this.imageUrl3 = imageUrl3; }
+
+    public String getImageUrl4() { return imageUrl4; }
+    public void setImageUrl4(String imageUrl4) { this.imageUrl4 = imageUrl4; }
 
     public Agency getAgency() { return agency; }
     public void setAgency(Agency agency) { this.agency = agency; }

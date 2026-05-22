@@ -109,9 +109,16 @@ export const translations = {
     useRate: "Taux utilisation",
     avgRevInResv: "Revenu moyen/résa",
     vsLastYear: "vs 2023",
-    monthlyRevChart: "Chiffre d'affaires mensuel",
+    monthlyRevChart: "Chiffre D'affaires Mensuel (MAD)",
     monthlyResvChart: "Réservations par mois",
     topCars: "Voitures les plus louées",
+    profitableCars: "Voitures les plus rentables",
+    rentedBrands: "Marques les plus louées",
+    bookingsQuarter: "Réservations par trimestre",
+    toggleChronological: "Chronologique",
+    toggleSorted: "Trié par CA",
+    topClients: "TOP clients",
+    maintenanceByModel: "Nb Maintenance par Nom_Mois et modèle",
 
     // Settings Page
     settingsGeneral: "Général",
@@ -314,6 +321,13 @@ export const translations = {
     monthlyRevChart: "Monthly Revenue",
     monthlyResvChart: "Monthly Reservations",
     topCars: "Most rented cars",
+    profitableCars: "Most profitable cars",
+    rentedBrands: "Most rented brands",
+    bookingsQuarter: "Bookings by Quarter",
+    toggleChronological: "Chronological",
+    toggleSorted: "Sorted by Revenue",
+    topClients: "TOP Customers",
+    maintenanceByModel: "Maintenances by Month & Model",
 
     // Settings Page
     settingsGeneral: "General",
@@ -496,7 +510,7 @@ export const translations = {
     topSpenders: "الأكثر إنفاقاً",
 
     // Analytics Page
-    totalRevYear: "إجمالي الإيرادات 2024",
+    totalRevYear: "إجمالي الإيرادات 2026",
     totalResv: "إجمالي الحجوزات",
     useRate: "معدل الاستخدام",
     avgRevInResv: "متوسط الإيرادات/حجز",
@@ -504,6 +518,13 @@ export const translations = {
     monthlyRevChart: "الإيرادات الشهرية",
     monthlyResvChart: "الحجوزات الشهرية",
     topCars: "السيارات الأكثر تأجيراً",
+    profitableCars: "السيارات الأكثر ربحية",
+    rentedBrands: "العلامات التجارية الأكثر تأجيراً",
+    bookingsQuarter: "الحجوزات حسب الربع",
+    toggleChronological: "تسلسل زمني",
+    toggleSorted: "مرتبة حسب الإيرادات",
+    topClients: "أفضل العملاء",
+    maintenanceByModel: "عدد عمليات الصيانة حسب الشهر والموديل",
 
     // Settings Page
     settingsGeneral: "عام",

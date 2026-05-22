@@ -55,7 +55,7 @@ function LanguageIcon() {
 }
 export default function LoginUser() {
     const navigate = useNavigate();
-    const [isDarkMode, setIsDarkMode] = useState(localStorage.getItem("appTheme") === "dark");
+    const isDarkMode = true;
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [showPass, setShowPass] = useState(false);
@@ -91,13 +91,12 @@ export default function LoginUser() {
     }, []);
 
     useEffect(() => {
-        const theme = isDarkMode ? "dark" : "light";
-        document.documentElement.setAttribute("data-theme", theme);
-        localStorage.setItem("appTheme", theme);
+        document.documentElement.setAttribute("data-theme", "dark");
+        localStorage.setItem("appTheme", "dark");
 
         document.documentElement.dir = selectedLang === "AR" ? "rtl" : "ltr";
         localStorage.setItem("appLang", selectedLang);
-    }, [isDarkMode, selectedLang]);
+    }, [selectedLang]);
 
     // Fermer si clic dehors
     useEffect(() => {
@@ -283,13 +282,6 @@ export default function LoginUser() {
                                 )}
                             </div>
 
-                            <button className="icon-btn" onClick={() => {
-                                const nextMode = !isDarkMode ? "dark" : "light";
-                                localStorage.setItem("appTheme", nextMode);
-                                window.location.reload();
-                            }}>
-                                {isDarkMode ? <SunIcon /> : <MoonIcon />}
-                            </button>
                         </div>
                         <div style={{ flex: 1, display: 'flex', justifyContent: 'flex-end', alignItems: 'center', gap: isMobile ? 8 : 12 }}>
                             {!isMobile && <div style={{ width: 1, height: 24, background: "var(--nav-border)", margin: "0 4px" }} />}

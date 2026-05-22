@@ -58,7 +58,7 @@ export const FR = {
         searchBtn: "Rechercher",
         startFree: "Commencer gratuitement",
         browseFleet: "Parcourir la flotte",
-        number1: "La plateforme n°1 au Maroc",
+        number1: "La plateforme N°1 au Maroc",
         pills: [
             "Sans caution",
             "Livraison sans contact",

@@ -28,3 +28,5 @@ export const LOGIN_AR = {
   decoLabel3: "الحجوزات",
   decoMonth: "شهر",
 };
+
+//je veux une voiture Dacia Logan 2024 de 550 dirhams de 5 places

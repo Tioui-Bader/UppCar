@@ -862,7 +862,7 @@ export default function UppCarLanding() {
     const endDateRef = useRef(null);
 
     const [lightBgIndex, setLightBgIndex] = useState(0);
-    const [isDarkMode, setIsDarkMode] = useState(() => localStorage.getItem("appTheme") === "dark");
+    const isDarkMode = true;
     const [showScrollButton, setShowScrollButton] = useState(false);
     const [isMobile, setIsMobile] = useState(false);
     const [activeFeature, setActiveFeature] = useState(0);
@@ -1036,24 +1036,219 @@ export default function UppCarLanding() {
         setHasSearched(false);
 
         try {
-            // 1. Appel au service IA
+            // 1. Appel au service IA (Google Gemini)
             let category = "";
             let searchKeyword = query;
+            let maxPrice = null;
+            let seatsCount = null;
+            let yearFilter = null;
             try {
-                const aiRes = await fetch(`http://localhost:5000/predict?query=${encodeURIComponent(query)}`);
-                if (aiRes.ok) {
-                    const aiData = await aiRes.json();
-                    category = aiData.prediction;
-                    searchKeyword = aiData.clean_keyword || query;
-                    console.log("AI Prediction (Guest):", category, "Keyword:", searchKeyword);
+                // Vous pouvez mettre votre vraie clé API dans un fichier .env (REACT_APP_GEMINI_API_KEY=...)
+                const GEMINI_API_KEY = process.env.REACT_APP_GEMINI_API_KEY || "VOTRE_CLE_API_GEMINI";
+
+                // 1. Récupération dynamique de la flotte réelle depuis l'API en base de données
+                let dbCarsList = [];
+                try {
+                    const fleetRes = await fetch("http://localhost:8080/api/cars");
+                    if (fleetRes.ok) {
+                        const fleetData = await fleetRes.json();
+                        dbCarsList = [...new Set(fleetData.map(c => c.name))];
+                    }
+                } catch (err) {
+                    console.warn("Impossible de charger la flotte en temps réel, utilisation de la liste de secours.", err);
+                }
+
+                // Liste de secours au cas où l'API backend ne répondrait pas temporairement
+                if (dbCarsList.length === 0) {
+                    dbCarsList = [
+                        "Dacia Logan", "Renault Clio", "Ford Transit Connect", "Honda Civic", "Kia Carens",
+                        "Peugeot Traveller", "Renault Koleos", "Dacia Spring", "Ford Tourneo Connect", "Honda HR-V",
+                        "Kia Stonic", "Peugeot 508", "Renault Arkana", "Dacia Jogger", "Ford Puma",
+                        "Honda Accord", "Kia Cerato", "Peugeot 2008", "Renault Express", "Hyndai Tucson",
+                        "Dacia Lodgy", "Ford EcoSport", "Honda Jazz", "Kia Rio", "Peugeot Partner",
+                        "Toyota Corolla", "Renault Captur", "Dacia Dokker", "Ford Focus", "Kia Sportage",
+                        "Peugeot 208", "Honda City", "Kia Picanto", "Volkswagen Golf", "BMW Serie 3",
+                        "Peugeot 301", "Mercedes Classe C", "Audi A4", "Nissan Qashqai", "Renault Symbol",
+                        "Dacia Sandero", "Seat Ibiza", "Skoda Octavia", "Fiat 500", "Dacia Stepway",
+                        "Range Rover", "Renault Kango", "Dacia Duster"
+                    ];
+                }
+
+                const prompt = `
+Tu es l'assistant de recherche intelligent d'UppCar.
+L'utilisateur a tapé cette requête: "${query}".
+
+Voici les voitures réellement disponibles dans notre flotte :
+${dbCarsList.join(", ")}
+
+Voici les seules catégories (transmissions) acceptées par le backend :
+- "automatique"
+- "manuel"
+
+IMPORTANT : L'utilisateur peut écrire en français, en anglais, en arabe classique ou en Darija (dialecte marocain). Tu dois comprendre toutes ces langues.
+Exemples de Darija :
+- "بغيت" = je veux
+- "داسيا لوغان" = Dacia Logan
+- "رونو كابتور" = Renault Captur
+- "ب 550 درهم" = à 550 DH (prix)
+- "ب كار أوتوماتيك" = voiture automatique
+- "ديها" = elle a / c'est
+Si la requête est en Darija, traduis mentalement les noms de voitures arabes vers leur équivalent latin de la liste.
+
+Ton but est d'extraire :
+1. "prediction" : "automatique" ou "manuel" si l'utilisateur demande explicitement une boîte de vitesse. Sinon, laisse vide "".
+2. "clean_keyword" : le nom exact de la marque ou du modèle de voiture parmi la liste ci-dessus qui correspond le mieux à sa demande.
+   - IMPORTANT : Le "clean_keyword" ne doit JAMAIS contenir la ville, le prix (ex: "de 863 DH", "ب 550 درهم"), la transmission ou le nombre de places. Il doit contenir UNIQUEMENT le modèle ou la marque choisi (ex: "Dacia Logan" ou "Dacia").
+   - Si l'utilisateur mentionne une voiture qui n'est PAS dans notre flotte (ex: "Clio"), cherche si la marque existe chez nous (ex: "Peugeot"). Si la marque existe, renvoie UNIQUEMENT le nom de la marque.
+   - Si la demande est générale pour un type de carrosserie (ex: "grosse voiture", "SUV", "4x4", "كبيرة", "فاميلية"), choisis un modèle adapté (ex: "Duster", "Range Rover", "Sportage", "Qashqai").
+   - Si la demande est "luxe", "sportive" ou "هاي كلاس", choisis "BMW", "Mercedes", "Audi" ou "Range Rover".
+   - Si la demande est "économique", "petite", "رخيصة" ou "pas cher", choisis "Picanto", "Fiat 500", "Jazz", "Rio" ou "Sandero".
+   - Si l'utilisateur mentionne directement une marque ou modèle de la liste, écris précisément ce nom de modèle.
+   - S'il n'y a aucune correspondance logique, laisse vide "".
+3. "city" : la ville mentionnée si elle correspond à l'une de nos villes de service (ex: "Casablanca", "الدار البيضاء", "Fés", "فاس"). Sinon, laisse vide "".
+4. "max_price" : le prix maximum spécifié. Reconnaître toutes les formes : "de 863 DH" -> "863", "400 dirhams" -> "400", "ب 550 درهم" -> "550", "550 درهم" -> "550", "max 500 mad" -> "500". S'il n'y a pas de limite de prix, laisse vide "".
+5. "seats" : le nombre de places (ex: "5 places" -> "5", "7 places" -> "7", "5 places" -> "5"). S'il n'y a pas de nombre de places spécifié, laisse vide "".
+6. "year" : l'année de la voiture si elle est mentionnée (ex: "2021", "2019"). Sinon, laisse vide "".
+
+Réponds UNIQUEMENT au format JSON strict, sans aucun texte autour :
+{
+  "prediction": "automatique ou manuel ou vide",
+  "clean_keyword": "marque ou modèle choisi ou vide",
+  "city": "ville extraite ou vide",
+  "max_price": "nombre ou vide",
+  "seats": "nombre ou vide",
+  "year": "nombre ou vide"
+}`;
+
+                const geminiRes = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${GEMINI_API_KEY}`, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        contents: [{ parts: [{ text: prompt }] }],
+                        generationConfig: { responseMimeType: "application/json" }
+                    })
+                });
+
+                if (geminiRes.ok) {
+                    const geminiData = await geminiRes.json();
+                    let resultText = geminiData.candidates[0].content.parts[0].text;
+                    // Clean markdown wrappers if Gemini adds them
+                    resultText = resultText.replace(/```json/gi, "").replace(/```/gi, "").trim();
+                    const aiData = JSON.parse(resultText);
+
+                    category = aiData.prediction || "";
+                    searchKeyword = aiData.clean_keyword !== undefined ? aiData.clean_keyword : query;
+                    maxPrice = aiData.max_price ? parseFloat(aiData.max_price) : null;
+                    seatsCount = aiData.seats ? parseInt(aiData.seats) : null;
+                    yearFilter = aiData.year ? parseInt(aiData.year) : null;
+
+                    // Si l'IA trouve une ville dans la phrase, on l'applique à l'état React de la recherche
+                    if (aiData.city) {
+                        setCity(aiData.city);
+                    }
+
+                    console.log("Gemini AI Prediction:", category, "Keyword:", searchKeyword, "City:", aiData.city, "MaxPrice:", maxPrice, "Seats:", seatsCount);
+                } else {
+                    throw new Error("HTTP error " + geminiRes.status);
                 }
             } catch (aiErr) {
-                console.warn("AI Service not available, falling back to normal search.");
+                console.warn("AI Service not available, falling back to smart normal search.", aiErr);
+
+                // Table de traduction Arabe/Darija -> Nom Latin pour le backend Java
+                const ARABIC_TO_LATIN = {
+                    "داسيا لوغان": "Dacia Logan", "داسيا دوستر": "Dacia Duster",
+                    "داسيا ساندرو": "Dacia Sandero", "داسيا ستيبواي": "Dacia Stepway",
+                    "داسيا دوكر": "Dacia Dokker", "داسيا لودجي": "Dacia Lodgy",
+                    "داسيا جوجر": "Dacia Jogger", "داسيا سبرينغ": "Dacia Spring",
+                    "رونو كليو": "Renault Clio", "رونو كابتور": "Renault Captur",
+                    "رونو سيمبول": "Renault Symbol", "رونو كانغو": "Renault Kango",
+                    "رونو أركانا": "Renault Arkana", "رونو كولييوس": "Renault Koleos",
+                    "رونو إكسبريس": "Renault Express",
+                    "بيجو 208": "Peugeot 208", "بيجو 301": "Peugeot 301",
+                    "بيجو 2008": "Peugeot 2008", "بيجو 508": "Peugeot 508",
+                    "فورد فوكس": "Ford Focus", "فورد إيكوسبورت": "Ford EcoSport",
+                    "فورد بوما": "Ford Puma",
+                    "هوندا سيتي": "Honda City", "هوندا جاز": "Honda Jazz",
+                    "هوندا سيفيك": "Honda Civic",
+                    "كيا ريو": "Kia Rio", "كيا سبورتاج": "Kia Sportage",
+                    "كيا بيكانتو": "Kia Picanto", "كيا ستونيك": "Kia Stonic",
+                    "فولكسواغن غولف": "Volkswagen Golf",
+                    "بي إم دبليو": "BMW Serie 3", "مرسيدس": "Mercedes Classe C",
+                    "أودي": "Audi A4", "نيسان قاشقاي": "Nissan Qashqai",
+                    "رانج روفر": "Range Rover", "هيونداي توكسون": "Hyndai Tucson",
+                    "فيات 500": "Fiat 500", "سيات إيبيزا": "Seat Ibiza",
+                    "سكودا أوكتافيا": "Skoda Octavia", "تويوتا كورولا": "Toyota Corolla",
+                    "داسيا": "Dacia", "رونو": "Renault", "بيجو": "Peugeot",
+                    "فورد": "Ford", "هوندا": "Honda", "كيا": "Kia",
+                };
+
+                // Appliquer la traduction si le mot-clé est en arabe
+                let translated = false;
+                for (const [arabic, latin] of Object.entries(ARABIC_TO_LATIN)) {
+                    if (query.includes(arabic)) {
+                        searchKeyword = latin;
+                        translated = true;
+                        break;
+                    }
+                }
+
+                // Si aucune traduction trouvée, nettoyer la phrase normalement
+                if (!translated) {
+                    searchKeyword = query
+                        .replace(/je cherche/gi, "")
+                        .replace(/je veux/gi, "")
+                        .replace(/louer/gi, "")
+                        .replace(/une voiture/gi, "")
+                        .replace(/ب\s*\d+\s*(دره?م?|درهم)/g, "")
+                        .replace(/de\s+\d+\s*(dh|mad|dirhams?|درهم)/gi, "")
+                        .replace(/[àا]\s*\d+\s*(dh|mad|dirhams?|درهم)/gi, "")
+                        .replace(/\d+\s*(dh|mad|dirhams?|درهم)/gi, "")
+                        .replace(/\d+\s*places?/gi, "")
+                        .replace(/\b(بغيت|بغا|كنبغي|جي|je cherche|je veux|louer|une voiture|un|une|le|la|les|à|de|dans)\b/gi, "")
+                        .replace(/\s+/g, " ")
+                        .trim();
+                }
+
+                // Regex de secours pour les places (ex: "5 places" -> seatsCount = 5)
+                const seatsMatch = query.match(/(\d+)\s*places?/i);
+                if (seatsMatch) seatsCount = parseInt(seatsMatch[1]);
+
+                // Regex de secours pour l'année (ex: "2021" -> yearFilter = 2021)
+                const yearMatch = query.match(/\b(19|20)\d{2}\b/);
+                if (yearMatch) yearFilter = parseInt(yearMatch[0]);
+
+                // Regex de secours pour le budget, supporte Darija "ب 550 درهم"
+                const priceMatchDarija = query.match(/ب\s*(\d+)\s*(دره?م?|درهم)/);
+                const priceMatchLatin = query.match(/(\d+)\s*(dh|mad|dirhams?|درهم)/i);
+                if (priceMatchDarija) maxPrice = parseFloat(priceMatchDarija[1]);
+                else if (priceMatchLatin) maxPrice = parseFloat(priceMatchLatin[1]);
             }
 
-            // 2. Appel au backend Java avec la catégorie et le mot-clé nettoyé
-            const res = await fetch(`http://localhost:8080/api/cars/search?query=${encodeURIComponent(searchKeyword)}&category=${category}`);
-            const data = await res.json();
+            // 2. Appel au backend Java avec la catégorie et le mot-clé nettoyé (sans concaténer la ville pour éviter le bug SQL)
+            const finalQuery = searchKeyword ? searchKeyword.trim() : (city ? city : "");
+            const res = await fetch(`http://localhost:8080/api/cars/search?query=${encodeURIComponent(finalQuery)}&category=${category}`);
+            let data = await res.json();
+
+            // 3. Filtrage intelligent côté Frontend (Ville, Budget et Places)
+            if (city) {
+                const lowerCity = city.toLowerCase().trim();
+                data = data.filter(car => car.city && car.city.toLowerCase().trim().includes(lowerCity));
+            }
+
+            // Filtrage par budget (Prix maximum)
+            if (maxPrice && !isNaN(maxPrice)) {
+                data = data.filter(car => car.price !== null && car.price <= maxPrice);
+            }
+
+            // Filtrage par nombre de places
+            if (seatsCount && !isNaN(seatsCount)) {
+                data = data.filter(car => car.seats !== null && car.seats === seatsCount);
+            }
+
+            // Filtrage par année
+            if (yearFilter && !isNaN(yearFilter)) {
+                data = data.filter(car => car.plate !== null && parseInt(car.plate) === yearFilter);
+            }
 
             setSearchResults(data);
             setHasSearched(true);
@@ -1347,9 +1542,7 @@ export default function UppCarLanding() {
                         <div style={{ display: "flex", alignItems: "center", gap: isMobile ? 8 : 12 }}>
                             {isMobile ? (
                                 <div style={{ display: "flex", alignItems: "center", gap: 8, position: "relative" }}>
-                                    <button className="icon-btn" onClick={() => setIsDarkMode(!isDarkMode)}>
-                                        {isDarkMode ? <SunIcon /> : <MoonIcon />}
-                                    </button>
+
                                     <div className="mobile-menu-wrap" style={{ position: "relative" }}>
                                         <button className="icon-btn" onClick={() => setMobileMenuOpen(p => !p)} style={{ background: mobileMenuOpen ? "var(--text-main)" : "transparent", color: mobileMenuOpen ? "var(--bg-color)" : "var(--text-main)" }}>
                                             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
@@ -1495,10 +1688,10 @@ export default function UppCarLanding() {
                                             </div>
                                         )}
                                     </div>
-                                    <button className="icon-btn" onClick={() => setIsDarkMode(!isDarkMode)}>
+                                    {/*    <button className="icon-btn" onClick={() => setIsDarkMode(!isDarkMode)}>
 
                                         {isDarkMode ? <SunIcon /> : <MoonIcon />}
-                                    </button>
+                                    </button> */}
 
                                     {!isMobile && <div style={{ width: 1, height: 24, background: "var(--nav-border)", margin: "0 4px" }} />}
                                     <div className="login-menu-wrap" style={{ position: "relative" }}>
@@ -1885,25 +2078,38 @@ export default function UppCarLanding() {
                                     />
                                 </div>
 
-                                {showCityDropdown && (
-                                    <div className="city-dropdown">
-                                        {["Casablanca", "Fès", "Marrakech", "Tanger", "Oujda", "Rabat", "Nador", "Tétouan"]
-                                            .filter(c => c.toLowerCase().includes(city.toLowerCase()))
-                                            .map(c => (
-                                                <div
-                                                    key={c}
-                                                    className="city-dropdown-item"
-                                                    onClick={(e) => {
-                                                        e.stopPropagation();
-                                                        setCity(c);
-                                                        setShowCityDropdown(false);
-                                                    }}
-                                                >
-                                                    {c}
-                                                </div>
-                                            ))}
-                                    </div>
-                                )}
+                                {showCityDropdown && (() => {
+                                    const CITIES_AR = {
+                                        "Casablanca": "الدار البيضاء",
+                                        "Fés": "فاس",
+                                        "Marrakech": "مراكش",
+                                        "Tanger": "طنجة",
+                                        "Oujda": "وجدة",
+                                        "Rabat": "الرباط",
+                                        "Nador": "الناظور",
+                                        "Tétouan": "تطوان",
+                                    };
+                                    const cities = ["Casablanca", "Fés", "Marrakech", "Tanger", "Oujda", "Rabat", "Nador", "Tétouan"];
+                                    return (
+                                        <div className="city-dropdown">
+                                            {cities
+                                                .filter(c => c.toLowerCase().includes(city.toLowerCase()) || (CITIES_AR[c] && CITIES_AR[c].includes(city)))
+                                                .map(c => (
+                                                    <div
+                                                        key={c}
+                                                        className="city-dropdown-item"
+                                                        onClick={(e) => {
+                                                            e.stopPropagation();
+                                                            setCity(c);
+                                                            setShowCityDropdown(false);
+                                                        }}
+                                                    >
+                                                        {selectedLang === "AR" ? CITIES_AR[c] : c}
+                                                    </div>
+                                                ))}
+                                        </div>
+                                    );
+                                })()}
                             </div>
 
 
@@ -2095,13 +2301,13 @@ export default function UppCarLanding() {
                 {/* ── SEARCH RESULTS ── */}
                 {hasSearched && (
                     <section id="search-results" style={{
-                        width: "100%", maxWidth: "98vw", margin: "0 auto 80px",
+                        width: "100%", maxWidth: "98vw", margin: "0 auto 34px",
                         animation: "fadeUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) both",
                         padding: isMobile ? "0 16px" : "0 40px"
                     }}>
                         <div style={{
                             textAlign: "center", marginBottom: 40,
-                            display: "flex", flexDirection: "column", alignItems: "center", gap: 12, marginTop: 56
+                            display: "flex", flexDirection: "column", alignItems: "center", gap: 12, marginTop: 91
                         }}>
                             {searchResults.length > 0 && (
                                 <div style={{
@@ -2150,9 +2356,9 @@ export default function UppCarLanding() {
                                         <div style={{ padding: 24 }}>
                                             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 16 }}>
                                                 <div>
-                                                    <h3 style={{ fontFamily: "'Syne',sans-serif", fontSize: 20, fontWeight: 800, color: "var(--text-main)", marginBottom: 4 }}>{car.name}</h3>
+                                                    <h3 style={{ fontFamily: "'Syne',sans-serif", fontSize: 20, fontWeight: 800, color: "var(--text-main)", marginBottom: 4 }}>{car.name} {car.plate ? car.plate : ''}</h3>
                                                     <div style={{ fontSize: 13, color: "var(--text-muted)", display: "flex", alignItems: "center", gap: 6 }}>
-                                                        <MapPinIcon size={13} /> {car.plate || "Location available"}
+                                                        <MapPinIcon size={13} /> {car.city || "Location available"}
                                                     </div>
                                                 </div>
                                                 <div style={{ textAlign: "right" }}>
@@ -2295,7 +2501,7 @@ export default function UppCarLanding() {
         </RevealOnScroll> */}
 
                 {/* ── MARQUEE ── */}
-                <section style={{ padding: isMobile ? "32px 0" : "50px 0", position: "relative", top: isMobile ? 40 : 60, paddingTop: isMobile ? "120px" : "20px" }}>
+                <section style={{ padding: isMobile ? "32px 0" : "50px 0", position: "relative", top: isMobile ? 40 : 60, paddingTop: isMobile ? "120px" : "57px" }}>
                     <div style={{ position: "absolute", top: 0, left: 0, width: "15%", height: "100%", zIndex: 2, pointerEvents: "none" }} />
                     <div style={{ position: "absolute", top: 0, right: 0, width: "15%", height: "100%", zIndex: 2, pointerEvents: "none" }} />
                     <div style={{ textAlign: "center", marginBottom: isMobile ? 24 : 40, position: "relative", zIndex: 1 }}>
@@ -2780,7 +2986,7 @@ export default function UppCarLanding() {
                         padding: isMobile ? "0 12px" : "0 40px",
                         position: "relative",
                         zIndex: 10,
-                        marginTop: 80
+                        marginTop: 40
                     }}>
                         <div style={{
                             textAlign: "center", marginBottom: 40,
@@ -2818,7 +3024,9 @@ export default function UppCarLanding() {
                                             <img
                                                 src={car.photos && car.photos.length > 0 ? car.photos[0] : ""}
                                                 alt={car.name}
-                                                style={{ width: "100%", height: "100%", objectFit: "cover" }}
+                                                style={{ width: "100%", height: "100%", objectFit: "cover", transition: "transform 0.4s ease" }}
+                                                onMouseEnter={e => { e.currentTarget.style.transform = "scale(1.05)"; }}
+                                                onMouseLeave={e => { e.currentTarget.style.transform = "scale(1)"; }}
                                             />
                                             {/* City Badge Overlay */}
                                             <div style={{
@@ -2830,13 +3038,52 @@ export default function UppCarLanding() {
                                                 <MapPinIcon size={12} color="var(--accent-color)" />
                                                 {car.city}
                                             </div>
+                                            {/* Category badge */}
+                                            {car.category && (
+                                                <div style={{
+                                                    position: "absolute", top: 12, right: 12,
+                                                    background: "rgba(0,0,0,0.6)", backdropFilter: "blur(8px)",
+                                                    color: "#fff", padding: "4px 12px", borderRadius: 12,
+                                                    fontSize: 12, fontWeight: 800
+                                                }}>
+                                                    {car.category}
+                                                </div>
+                                            )}
                                         </div>
-                                        <div style={{ padding: 20 }}>
-                                            <h3 style={{ fontSize: 18, fontWeight: 800, color: "var(--text-main)", marginBottom: 8 }}>{car.name}</h3>
-                                            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                                                <div style={{ color: "var(--accent-color)", fontWeight: 800, fontSize: 18 }}>{car.price} DH<span style={{ fontSize: 12, opacity: 0.7, fontWeight: 500 }}> /jour</span></div>
-                                                <button className="primary-btnE" style={{ padding: "8px 16px", fontSize: 12 }}>{selectedLang === "AR" ? "احجز الآن" : "Réserver"}</button>
+                                        <div style={{ padding: 24 }}>
+                                            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 16 }}>
+                                                <div>
+                                                    <h3 style={{ fontFamily: "'Syne',sans-serif", fontSize: 20, fontWeight: 800, color: "var(--text-main)", marginBottom: 4 }}>{car.name}</h3>
+                                                    <div style={{ fontSize: 13, color: "var(--text-muted)", display: "flex", alignItems: "center", gap: 6 }}>
+                                                        <MapPinIcon size={13} /> {car.city || "Location available"}
+                                                    </div>
+                                                </div>
+                                                <div style={{ textAlign: "right" }}>
+                                                    <div style={{ fontSize: 22, fontWeight: 900, color: "var(--accent-color)", fontFamily: "'Syne',sans-serif" }}>
+                                                        {car.price} MAD
+                                                    </div>
+                                                    <div style={{ fontSize: 11, color: "var(--text-muted)", fontWeight: 700 }}>/ {selectedLang === "AR" ? "يوم" : selectedLang === "FR" ? "jour" : "day"}</div>
+                                                </div>
                                             </div>
+                                            <div style={{
+                                                display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12,
+                                                marginBottom: 24, borderTop: "1px solid var(--card-border)", paddingTop: 16
+                                            }}>
+                                                <div style={{ fontSize: 13, display: "flex", alignItems: "center", gap: 8, color: "var(--text-muted)" }}>
+                                                    <ZapIcon size={14} color="var(--accent-color)" /> {car.fuel}
+                                                </div>
+                                                <div style={{ fontSize: 13, display: "flex", alignItems: "center", gap: 8, color: "var(--text-muted)" }}>
+                                                    <UsersIcon size={14} color="var(--accent-color)" /> {car.seats} {selectedLang === "AR" ? "مقاعد" : "Seats"}
+                                                </div>
+                                            </div>
+                                            <button
+                                                className="primary-btnDE"
+                                                style={{ width: "100%", padding: "14px", borderRadius: 16, fontSize: 15, display: "flex", alignItems: "center", justifyContent: "center", gap: 10 }}
+                                                onClick={() => navigate(`/booking/${car.id}`)}
+                                            >
+                                                <CalendarIcon size={18} />
+                                                <span>{selectedLang === "AR" ? "احجز الآن" : selectedLang === "FR" ? "Réserver maintenant" : "Book Now"}</span>
+                                            </button>
                                         </div>
                                     </div>
                                 ))}

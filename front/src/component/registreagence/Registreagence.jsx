@@ -75,9 +75,8 @@ export default function RegisterAgence() {
   const canvasRef = useRef(null);
 
   const [isDark, setIsDark] = useState(() => {
-    const saved = localStorage.getItem("theme");
-    if (saved) return saved === "dark";
-    return localStorage.getItem("appTheme") === "dark";
+    const saved = localStorage.getItem("appTheme") || localStorage.getItem("theme");
+    return saved ? saved === "dark" : true; // Default to dark
   });
   const lang = localStorage.getItem("appLang") || "EN";
   const isAr = lang === "AR";
@@ -86,7 +85,8 @@ export default function RegisterAgence() {
   useEffect(() => {
     const themeStr = isDark ? "dark" : "light";
     document.documentElement.setAttribute("data-theme", themeStr);
-    localStorage.setItem("theme", themeStr);
+
+
     document.documentElement.setAttribute("dir", isAr ? "rtl" : "ltr");
     document.documentElement.setAttribute("lang", lang.toLowerCase());
   }, [isDark, isAr, lang]);
@@ -528,7 +528,7 @@ export default function RegisterAgence() {
               background: isDark ? "rgba(255,255,255,0.05)" : "rgba(16,185,129,0.1)",
               border: "1px solid " + (isDark ? "rgba(255,255,255,0.1)" : "rgba(16,185,129,0.2)"),
               color: isDark ? "#facc15" : "#10b981",
-              cursor: "pointer", alignItems: "center", justifyContent: "center",
+              cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center",
               transition: "all 0.3s", zIndex: 10
             }}
           >
@@ -542,7 +542,7 @@ export default function RegisterAgence() {
 
             {/* Logo UppCar */}
             <div style={{ display: "flex", alignItems: "center", gap: 13, marginBottom: 28, animation: "laUp .5s ease both", direction: "ltr" }}>
-              <div onClick={() => navigate("/")} style={{ position: "relative", width: 46, height: 46, borderRadius: 14, background: fg, display: "flex", alignItems: "center", justifyContent: "center", boxShadow: `0 8px 20px ${isDark ? "rgba(0,0,0,0.4)" : "rgba(16,185,129,0.2)"}`, overflow: "hidden", flexShrink: 0, cursor: "pointer" }}>
+              <div onClick={() => { localStorage.setItem("appTheme", "dark"); window.location.href = "/"; }} style={{ position: "relative", width: 46, height: 46, borderRadius: 14, background: fg, display: "flex", alignItems: "center", justifyContent: "center", boxShadow: `0 8px 20px ${isDark ? "rgba(0,0,0,0.4)" : "rgba(16,185,129,0.2)"}`, overflow: "hidden", flexShrink: 0, cursor: "pointer" }}>
                 <div style={{ position: "absolute", top: "-50%", left: "-50%", width: "200%", height: "200%", background: "conic-gradient(from 0deg,transparent 0%,#10b981 30%,transparent 40%)", animation: "laOrb 4s linear infinite" }} />
                 <div style={{ position: "absolute", inset: 2, background: isDark ? "#070b17" : "#fff", borderRadius: 12, zIndex: 1 }} />
                 <svg style={{ zIndex: 2 }} width="22" height="22" viewBox="0 0 24 24" fill="none" stroke={fg} strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
@@ -551,7 +551,7 @@ export default function RegisterAgence() {
                   <circle cx="16.5" cy="16.5" r="2.5" />
                 </svg>
               </div>
-              <div onClick={() => navigate("/")} style={{ position: "relative", fontFamily: "'Syne',sans-serif", fontWeight: 900, fontSize: 28, letterSpacing: "-0.5px", lineHeight: 1, cursor: "pointer" }}>
+              <div onClick={() => { localStorage.setItem("appTheme", "dark"); window.location.href = "/"; }} style={{ position: "relative", fontFamily: "'Syne',sans-serif", fontWeight: 900, fontSize: 28, letterSpacing: "-0.5px", lineHeight: 1, cursor: "pointer" }}>
                 <span style={{ color: fg }}>Upp</span>
                 <span style={{ color: accentGr }}>Car</span>
                 <span style={{ position: "absolute", bottom: 5, right: -10, width: 6, height: 6, borderRadius: "50%", background: accentGr, animation: "laPulse 2s infinite", display: "inline-block" }} />

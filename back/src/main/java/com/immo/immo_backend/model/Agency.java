@@ -21,10 +21,17 @@ public class Agency {
     private String city;
     private String phone;
     private String fleetSize;
+    private String address;
+    private String country;
 
-    public Agency() {}
+    @Column(columnDefinition = "TEXT")
+    private String logo;
 
-    public Agency(String firstName, String lastName, String email, String password, String agencyName, String city, String phone, String fleetSize) {
+    public Agency() {
+    }
+
+    public Agency(String firstName, String lastName, String email, String password, String agencyName, String city,
+            String phone, String fleetSize) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
@@ -107,5 +114,29 @@ public class Agency {
 
     public void setFleetSize(String fleetSize) {
         this.fleetSize = fleetSize;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public String getCountry() {
+        return country;
+    }
+
+    public void setCountry(String country) {
+        this.country = country;
+    }
+
+    public String getLogo() {
+        return logo;
+    }
+
+    public void setLogo(String logo) {
+        this.logo = logo;
     }
 }
