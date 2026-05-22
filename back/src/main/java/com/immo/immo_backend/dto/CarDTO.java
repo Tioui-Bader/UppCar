@@ -10,10 +10,8 @@ public class CarDTO {
     private Double price;
     private String fuel;
     private Integer seats;
-    private Integer year;
     private String status;
     private String city;
-    private String color;
     private List<String> photos;
     private Long agencyId;
     private String startDate;
@@ -42,17 +40,11 @@ public class CarDTO {
     public Integer getSeats() { return seats; }
     public void setSeats(Integer seats) { this.seats = seats; }
 
-    public Integer getYear() { return year; }
-    public void setYear(Integer year) { this.year = year; }
-
     public String getStatus() { return status; }
     public void setStatus(String status) { this.status = status; }
 
     public String getCity() { return city; }
     public void setCity(String city) { this.city = city; }
-
-    public String getColor() { return color; }
-    public void setColor(String color) { this.color = color; }
 
     public List<String> getPhotos() { return photos; }
     public void setPhotos(List<String> photos) { this.photos = photos; }

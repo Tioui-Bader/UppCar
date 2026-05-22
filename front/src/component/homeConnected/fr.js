@@ -27,7 +27,7 @@ export const FR = {
 
     // ── HERO ──
     hero: {
-        liveBadge: "Plus de 500 véhicules disponibles maintenant",
+        liveBadge: "Traitez 50 réservations automatiquement en un clic",
         taglineBadge: "Traitez 50 réservations automatiquement en un clic",
         h1Desktop: <>Le véhicule que vous voulez<br />Au moment où vous en avez besoin</>,
         h1Mobile: <>Le véhicule que vous voulez<br />Prêt à démarrer</>,
@@ -50,7 +50,13 @@ export const FR = {
         searchBtn: "Rechercher",
         startFree: "Commencer gratuitement",
         browseFleet: "Parcourir la flotte",
-        number1: "La plateforme n°1 au Maroc",
+        number1: "La plateforme N°1 au Maroc",
+        dateBar: {
+            pickup: "Départ",
+            dropoff: "Retour",
+            city: "Ville",
+            cityPlaceholder: "Où allez-vous ?"
+        },
         pills: [
             "Sans caution",
             "Livraison sans contact",

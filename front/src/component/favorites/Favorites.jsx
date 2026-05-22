@@ -265,6 +265,16 @@ export default function Favorites() {
     }, [isDarkMode]);
 
     useEffect(() => {
+        const handleClickOutside = (e) => {
+            if (!e.target.closest(".lang-menu-wrap")) {
+                setLangMenuOpen(false);
+            }
+        };
+        document.addEventListener("mousedown", handleClickOutside);
+        return () => document.removeEventListener("mousedown", handleClickOutside);
+    }, []);
+
+    useEffect(() => {
         localStorage.setItem("appLang", selectedLang);
     }, [selectedLang]);
 
@@ -405,11 +415,13 @@ export default function Favorites() {
                                     {langMenuOpen && (
                                         <div style={{
                                             position: "absolute",
-                                            top: "calc(100% + 12px)",
-                                            left: "50%",
-                                            transform: "translateX(-50%)",
+                                            top: "50%",
+                                            right: "calc(100% + 12px)",
+                                            left: "auto",
+                                            transform: "translateY(-50%)",
                                             display: "flex",
                                             flexDirection: "row",
+                                            whiteSpace: "nowrap",
                                             background: isDarkMode ? "rgba(10,14,26,0.97)" : "rgba(255,255,255,0.97)",
                                             borderRadius: "14px",
                                             padding: "6px",
@@ -420,29 +432,37 @@ export default function Favorites() {
                                             backdropFilter: "blur(20px)",
                                             zIndex: 100
                                         }}>
-                                            {["AR", "FR", "EN"].map(code => (
+                                            {[
+                                                { code: "AR", label: "العربية" },
+                                                { code: "FR", label: "Français" },
+                                                { code: "EN", label: "English" }
+                                            ].map(lang => (
                                                 <button
-                                                    key={code}
-                                                    onClick={() => { setSelectedLang(code); setLangMenuOpen(false); }}
+                                                    key={lang.code}
+                                                    onClick={() => { setSelectedLang(lang.code); setLangMenuOpen(false); }}
                                                     style={{
-                                                        background: selectedLang === code ? "var(--text-main)" : "transparent",
-                                                        color: selectedLang === code ? "var(--bg-color)" : "var(--text-muted)",
-                                                        border: "none", borderRadius: "10px", padding: "8px 14px", fontSize: "12px", fontWeight: "800", cursor: "pointer",
-                                                        fontFamily: "'Syne', sans-serif", transition: "all 0.2s cubic-bezier(0.4,0,0.2,1)"
+                                                        display: "flex", alignItems: "center", gap: "6px",
+                                                        background: selectedLang === lang.code ? "var(--text-main)" : "transparent",
+                                                        color: selectedLang === lang.code ? "var(--bg-color)" : "var(--text-muted)",
+                                                        border: "none", borderRadius: "9px", padding: "6px 12px",
+                                                        fontSize: "12px", fontWeight: "800", cursor: "pointer",
+                                                        textTransform: "uppercase", transition: "all 0.3s",
+                                                        fontFamily: "'Syne', sans-serif",
                                                     }}
-                                                    onMouseEnter={e => selectedLang !== code && (e.currentTarget.style.background = isDarkMode ? "rgba(255,255,255,0.05)" : "rgba(0,0,0,0.03)")}
-                                                    onMouseLeave={e => selectedLang !== code && (e.currentTarget.style.background = "transparent")}
+                                                    onMouseEnter={e => { if (selectedLang !== lang.code) e.currentTarget.style.background = isDarkMode ? "rgba(255,255,255,0.06)" : "rgba(0,0,0,0.04)"; }}
+                                                    onMouseLeave={e => { if (selectedLang !== lang.code) e.currentTarget.style.background = "transparent"; }}
                                                 >
-                                                    {code}
+                                                    <span style={{ fontSize: "16px", filter: selectedLang !== lang.code ? "grayscale(40%) opacity(0.8)" : "none", transition: "all 0.3s" }}>{lang.flag}</span>
+                                                    {lang.label}
                                                 </button>
                                             ))}
                                         </div>
                                     )}
                                 </div>
 
-                                <button className="icon-btn" style={{ left: 0 }} onClick={() => setIsDarkMode(!isDarkMode)}>
+                                {/*    <button className="icon-btn" style={{ left: 0 }} onClick={() => setIsDarkMode(!isDarkMode)}>
                                     {isDarkMode ? <SunIcon /> : <MoonIcon />}
-                                </button>
+                                </button> */}
                             </div>
                         )}
 
@@ -883,7 +903,7 @@ export default function Favorites() {
                                                 <div style={{ minWidth: 0, flex: 1, paddingRight: 12 }}>
                                                     <h3 style={{ fontFamily: "'Syne',sans-serif", fontSize: isMobile ? 18 : 24, fontWeight: 900, color: "var(--text-main)", marginBottom: 8, letterSpacing: "-0.5px", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{car.name}</h3>
                                                     <div style={{ fontSize: 14, color: "var(--text-muted)", display: "flex", alignItems: "center", gap: 8, justifyContent: selectedLang === "AR" ? "flex-end" : "flex-start" }}>
-                                                        <MapPinIcon size={14} color="var(--accent-color)" /> {car.plate || t("location")}
+                                                        <MapPinIcon size={14} color="var(--accent-color)" /> {car.city || car.plate || t("location")}
                                                     </div>
                                                 </div>
                                                 <div style={{ textAlign: selectedLang === "AR" ? "left" : "right" }}>

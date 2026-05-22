@@ -58,7 +58,7 @@ function LanguageIcon() {
 
 export default function RegisterUser() {
     const navigate = useNavigate();
-    const [isDarkMode, setIsDarkMode] = useState(localStorage.getItem("appTheme") === "dark");
+    const isDarkMode = true;
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
@@ -91,13 +91,12 @@ export default function RegisterUser() {
     };
 
     useEffect(() => {
-        const theme = isDarkMode ? "dark" : "light";
-        document.documentElement.setAttribute("data-theme", theme);
-        localStorage.setItem("appTheme", theme);
+        document.documentElement.setAttribute("data-theme", "dark");
+        localStorage.setItem("appTheme", "dark");
 
         document.documentElement.dir = selectedLang === "AR" ? "rtl" : "ltr";
         localStorage.setItem("appLang", selectedLang);
-    }, [isDarkMode, selectedLang]);
+    }, [selectedLang]);
 
     useEffect(() => {
         const checkMobile = () => setIsMobile(window.innerWidth <= 768);
@@ -310,9 +309,7 @@ export default function RegisterUser() {
                                 )}
                             </div>
 
-                            <button className="icon-btn" onClick={() => setIsDarkMode(!isDarkMode)}>
-                                {isDarkMode ? <SunIcon /> : <MoonIcon />}
-                            </button>
+
                         </div>
 
                         <div style={{ flex: 1, display: 'flex', justifyContent: 'flex-end', alignItems: 'center', gap: isMobile ? 8 : 12 }}>

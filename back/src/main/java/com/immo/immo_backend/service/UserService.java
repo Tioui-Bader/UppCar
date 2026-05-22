@@ -56,4 +56,28 @@ public class UserService {
 
         return response;
     }
+
+    public User updateUserProfile(Long userId, User updatedData) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("Utilisateur non trouvé"));
+
+        if (updatedData.getFirstName() != null)
+            user.setFirstName(updatedData.getFirstName());
+        if (updatedData.getLastName() != null)
+            user.setLastName(updatedData.getLastName());
+        if (updatedData.getPhone() != null)
+            user.setPhone(updatedData.getPhone());
+        if (updatedData.getAddress() != null)
+            user.setAddress(updatedData.getAddress());
+        if (updatedData.getCity() != null)
+            user.setCity(updatedData.getCity());
+        if (updatedData.getCountry() != null)
+            user.setCountry(updatedData.getCountry());
+
+        // On peut aussi mettre à jour le champ 'name' si besoin
+        if (updatedData.getName() != null)
+            user.setName(updatedData.getName());
+
+        return userRepository.save(user);
+    }
 }

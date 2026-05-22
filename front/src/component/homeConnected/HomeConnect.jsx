@@ -191,6 +191,109 @@ body { background: var(--bg-color); color: var(--text-main); position: relative;
 /* ══════════════════════════════════
    MOBILE STYLES — Ultra Modern
 ══════════════════════════════════ */
+.modern-date-bar {
+  display: flex;
+  align-items: center;
+  background: linear-gradient(-45deg, rgba(11, 38, 99, 0.85) 0%, rgba(15, 23, 42, 0.85) 33%, rgb(50 53 69 / 95%) 33%, rgba(15, 23, 42, 0.85) 100%);
+  background-size: 400% 400%;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 32px;
+  padding: 10px;
+  gap: 6px;
+  box-shadow: 0 30px 60px -12px rgba(0, 0, 0, 0.6), inset 0 1px 1px rgba(255, 255, 255, 0.1);
+  margin: 0 auto 32px auto;
+  max-width: 720px;
+  width: 100%;
+  position: relative;
+  z-index: 20;
+  top: 33px;
+}
+.modern-date-bar:hover { transform: scale(1.02); }
+[data-theme='light'] .modern-date-bar {
+  background: linear-gradient(-45deg, rgba(255,255,255,0.9) 0%, rgba(77,166,255,0.2) 33%, rgba(0,229,160,0.2) 66%, rgba(255,255,255,0.9) 100%);
+  border-color: rgba(16,185,129,0.2);
+  box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+}
+.date-segment {
+  flex: 1; display: flex; align-items: center; gap: 14px;
+  padding: 12px 32px; border-radius: 20px;
+  transition: all 0.3s cubic-bezier(0.4,0,0.2,1);
+  cursor: pointer; position: relative; overflow: hidden;
+}
+.date-segment:hover, .date-segment:focus-within {
+  background: rgba(255,255,255,0.1); transform: translateY(-1px);
+}
+[data-theme='light'] .date-segment:hover { background: rgba(16,185,129,0.05); }
+.date-segment-info { display: flex; flex-direction: column; align-items: flex-start; user-select: none; }
+.date-segment-label {
+  font-size: 11px; font-weight: 800; text-transform: uppercase;
+  letter-spacing: 0.14em; color: var(--accent-color); margin-bottom: 2px; opacity: 0.8;
+}
+.date-input-modern {
+  background: transparent; border: none; outline: none;
+  font-family: 'Syne', sans-serif; font-weight: 700; font-size: 16px;
+  color: var(--text-main); width: 100%; padding: 0; cursor: text;
+  -webkit-appearance: none; -moz-appearance: none; appearance: none;
+}
+.date-input-modern::-webkit-calendar-picker-indicator,
+.date-input-modern::-webkit-inner-spin-button,
+.date-input-modern::-webkit-clear-button { display: none; -webkit-appearance: none; }
+.city-input-modern {
+  background: transparent; border: none; outline: none;
+  font-family: 'Syne', sans-serif; font-weight: 700; font-size: 16px;
+  color: var(--text-main); width: 100%; padding: 0;
+}
+.city-input-modern::placeholder { color: var(--text-muted); opacity: 0.6; }
+.date-sep {
+  width: 1px; height: 44px;
+  background: linear-gradient(to bottom, transparent, var(--nav-border), transparent);
+  opacity: 0.5;
+}
+.date-search-btn {
+  width: 60px; height: 60px; border-radius: 20px;
+  background: var(--accent-gradient); border: none;
+  display: flex; align-items: center; justify-content: center;
+  color: white; cursor: pointer;
+  transition: all 0.4s cubic-bezier(0.175,0.885,0.32,1.275);
+  box-shadow: 0 10px 25px rgba(16,185,129,0.3); flex-shrink: 0;
+}
+.date-search-btn:hover { transform: scale(1.06) rotate(3deg); box-shadow: 0 15px 35px rgba(16,185,129,0.5); }
+.city-dropdown {
+  position: absolute; top: calc(100% + 12px); left: 18px;
+  width: 220px; background: rgba(15,23,42,0.85);
+  backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px);
+  border: 1px solid rgba(255,255,255,0.1); border-radius: 20px;
+  padding: 8px; display: flex; flex-direction: column; gap: 4px;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.3); z-index: 200;
+  animation: fadeUp 0.3s cubic-bezier(0.16,1,0.3,1);
+}
+[data-theme='light'] .city-dropdown {
+  background: rgba(255,255,255,0.95);
+  border: 1px solid rgba(0,0,0,0.05);
+  box-shadow: 0 20px 40px rgba(0,0,0,0.08);
+}
+.city-dropdown-item {
+  padding: 12px 16px; border-radius: 14px; font-family: 'Syne', sans-serif;
+  font-size: 15px; font-weight: 700; color: var(--text-main);
+  cursor: pointer; transition: all 0.2s cubic-bezier(0.4,0,0.2,1);
+}
+.city-dropdown-item:hover { background: var(--accent-gradient); color: white; transform: translateX(4px); }
+
+@media (max-width: 768px) {
+  .modern-date-bar {
+    flex-direction: row; border-radius: 22px; padding: 8px 6px;
+    gap: 0; top: 0 !important; margin: 0 0 20px 0; width: 100%; max-width: 100%;
+  }
+  .date-sep { display: none; }
+  .date-segment { flex: 1; padding: 10px 4px; gap: 4px; border-radius: 12px; min-width: 0; }
+  .date-segment-label { font-size: 9px; letter-spacing: 0.08em; margin-bottom: 1px; }
+  .date-input-modern, .city-input-modern { font-size: 12.5px; font-weight: 700; }
+  .city-input-modern::placeholder { font-size: 12px; }
+  .date-search-btn { width: 44px; height: 44px; border-radius: 14px; flex-shrink: 0; }
+  .city-dropdown { left: 0; right: 0; width: 100%; border-radius: 14px; padding: 5px; }
+  .city-dropdown-item { padding: 8px 12px; }
+}
+
 @media (max-width: 768px) {
 
   /* NAV */
@@ -647,6 +750,12 @@ export default function UppCarLanding() {
     const [searchResults, setSearchResults] = useState([]);
     const [hasSearched, setHasSearched] = useState(false);
     const [showSearchOverlay, setShowSearchOverlay] = useState(false);
+    const [startDate, setStartDate] = useState("");
+    const [endDate, setEndDate] = useState("");
+    const [city, setCity] = useState("");
+    const [showCityDropdown, setShowCityDropdown] = useState(false);
+    const startDateRef = useRef(null);
+    const endDateRef = useRef(null);
     const [favorites, setFavorites] = useState(() => {
         const saved = localStorage.getItem("favoriteCars");
         return saved ? new Set(JSON.parse(saved)) : new Set();
@@ -805,26 +914,203 @@ export default function UppCarLanding() {
         setShowSearchOverlay(true);
         setHasSearched(false);
 
+        let category = "";
+        let searchKeyword = query;
+        let maxPrice = null;
+        let seatsCount = null;
+        let yearFilter = null;
         try {
-            // 1. Appel au service IA pour prédire la catégorie
-            // 1. Appel au service IA pour prédire la catégorie et nettoyer la recherche
-            let category = "";
-            let searchKeyword = query;
+            const GEMINI_API_KEY = process.env.REACT_APP_GEMINI_API_KEY || "VOTRE_CLE_API_GEMINI";
+
+            let dbCarsList = [];
             try {
-                const aiRes = await fetch(`http://localhost:5000/predict?query=${encodeURIComponent(query)}`);
-                if (aiRes.ok) {
-                    const aiData = await aiRes.json();
-                    category = aiData.prediction;
-                    searchKeyword = aiData.clean_keyword || query; // Utiliser le mot-clé nettoyé
-                    console.log("AI Prediction:", category, "Search Keyword:", searchKeyword);
+                const fleetRes = await fetch("http://localhost:8080/api/cars");
+                if (fleetRes.ok) {
+                    const fleetData = await fleetRes.json();
+                    dbCarsList = [...new Set(fleetData.map(c => c.name))];
                 }
-            } catch (aiErr) {
-                console.warn("AI Service not available, falling back to normal search.");
+            } catch (err) {
+                console.warn("Impossible de charger la flotte en temps réel, utilisation de la liste de secours.", err);
             }
 
-            // 2. Appel au backend Java avec le mot-clé nettoyé et la catégorie prédite
-            const res = await fetch(`http://localhost:8080/api/cars/search?query=${encodeURIComponent(searchKeyword)}&category=${category}`);
-            const data = await res.json();
+            if (dbCarsList.length === 0) {
+                dbCarsList = [
+                    "Dacia Logan", "Renault Clio", "Ford Transit Connect", "Honda Civic", "Kia Carens",
+                    "Peugeot Traveller", "Renault Koleos", "Dacia Spring", "Ford Tourneo Connect", "Honda HR-V",
+                    "Kia Stonic", "Peugeot 508", "Renault Arkana", "Dacia Jogger", "Ford Puma",
+                    "Honda Accord", "Kia Cerato", "Peugeot 2008", "Renault Express", "Hyndai Tucson",
+                    "Dacia Lodgy", "Ford EcoSport", "Honda Jazz", "Kia Rio", "Peugeot Partner",
+                    "Toyota Corolla", "Renault Captur", "Dacia Dokker", "Ford Focus", "Kia Sportage",
+                    "Peugeot 208", "Honda City", "Kia Picanto", "Volkswagen Golf", "BMW Serie 3",
+                    "Peugeot 301", "Mercedes Classe C", "Audi A4", "Nissan Qashqai", "Renault Symbol",
+                    "Dacia Sandero", "Seat Ibiza", "Skoda Octavia", "Fiat 500", "Dacia Stepway",
+                    "Range Rover", "Renault Kango", "Dacia Duster"
+                ];
+            }
+
+            const prompt = `
+Tu es l'assistant de recherche intelligent d'UppCar.
+L'utilisateur a tapé cette requête: "${query}".
+
+Voici les voitures réellement disponibles dans notre flotte :
+${dbCarsList.join(", ")}
+
+Voici les seules catégories (transmissions) acceptées par le backend :
+- "automatique"
+- "manuel"
+
+IMPORTANT : L'utilisateur peut écrire en français, en anglais, en arabe classique ou en Darija (dialecte marocain). Tu dois comprendre toutes ces langues.
+Exemples de Darija :
+- "بغيت" = je veux
+- "داسيا لوغان" = Dacia Logan
+- "رونو كابتور" = Renault Captur
+- "ب 550 درهم" = à 550 DH (prix)
+- "ب كار أوتوماتيك" = voiture automatique
+- "ديها" = elle a / c'est
+Si la requête est en Darija, traduis mentalement les noms de voitures arabes vers leur équivalent latin de la liste.
+
+Ton but est d'extraire :
+1. "prediction" : "automatique" ou "manuel" si l'utilisateur demande explicitement une boîte de vitesse. Sinon, laisse vide "".
+2. "clean_keyword" : le nom exact de la marque ou du modèle de voiture parmi la liste ci-dessus qui correspond le mieux à sa demande.
+   - IMPORTANT : Le "clean_keyword" ne doit JAMAIS contenir la ville, le prix (ex: "de 863 DH", "ب 550 درهم"), la transmission ou le nombre de places. Il doit contenir UNIQUEMENT le modèle ou la marque choisi (ex: "Dacia Logan" ou "Dacia").
+   - Si l'utilisateur mentionne une voiture qui n'est PAS dans notre flotte (ex: "Clio"), cherche si la marque existe chez nous (ex: "Peugeot"). Si la marque existe, renvoie UNIQUEMENT le nom de la marque.
+   - Si la demande est générale pour un type de carrosserie (ex: "grosse voiture", "SUV", "4x4", "كبيرة", "فاميلية"), choisis un modèle adapté (ex: "Duster", "Range Rover", "Sportage", "Qashqai").
+   - Si la demande est "luxe", "sportive" ou "هاي كلاس", choisis "BMW", "Mercedes", "Audi" ou "Range Rover".
+   - Si la demande est "économique", "petite", "رخيصة" ou "pas cher", choisis "Picanto", "Fiat 500", "Jazz", "Rio" ou "Sandero".
+   - Si l'utilisateur mentionne directement une marque ou modèle de la liste, écris précisément ce nom de modèle.
+   - S'il n'y a aucune correspondance logique, laisse vide "".
+3. "city" : la ville mentionnée si elle correspond à l'une de nos villes de service (ex: "Casablanca", "الدار البيضاء", "Fés", "فاس"). Sinon, laisse vide "".
+4. "max_price" : le prix maximum spécifié. Reconnaître toutes les formes : "de 863 DH" -> "863", "400 dirhams" -> "400", "ب 550 درهم" -> "550", "550 درهم" -> "550", "max 500 mad" -> "500". S'il n'y a pas de limite de prix, laisse vide "".
+5. "seats" : le nombre de places (ex: "5 places" -> "5", "7 places" -> "7", "5 places" -> "5"). S'il n'y a pas de nombre de places spécifié, laisse vide "".
+6. "year" : l'année de la voiture si elle est mentionnée (ex: "2021", "2019"). Sinon, laisse vide "".
+
+Réponds UNIQUEMENT au format JSON strict, sans aucun texte autour :
+{
+  "prediction": "automatique ou manuel ou vide",
+  "clean_keyword": "marque ou modèle choisi ou vide",
+  "city": "ville extraite ou vide",
+  "max_price": "nombre ou vide",
+  "seats": "nombre ou vide",
+  "year": "nombre ou vide"
+}`;
+
+            const geminiRes = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${GEMINI_API_KEY}`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    contents: [{ parts: [{ text: prompt }] }],
+                    generationConfig: { responseMimeType: "application/json" }
+                })
+            });
+
+            if (geminiRes.ok) {
+                const geminiData = await geminiRes.json();
+                let resultText = geminiData.candidates[0].content.parts[0].text;
+                resultText = resultText.replace(/```json/gi, "").replace(/```/gi, "").trim();
+                const aiData = JSON.parse(resultText);
+
+                category = aiData.prediction || "";
+                searchKeyword = aiData.clean_keyword !== undefined ? aiData.clean_keyword : query;
+                maxPrice = aiData.max_price ? parseFloat(aiData.max_price) : null;
+                seatsCount = aiData.seats ? parseInt(aiData.seats) : null;
+                yearFilter = aiData.year ? parseInt(aiData.year) : null;
+
+                if (aiData.city) {
+                    setCity(aiData.city);
+                }
+
+                console.log("Gemini AI Prediction:", category, "Keyword:", searchKeyword, "City:", aiData.city, "MaxPrice:", maxPrice, "Seats:", seatsCount);
+            } else {
+                throw new Error("HTTP error " + geminiRes.status);
+            }
+        } catch (aiErr) {
+            console.warn("AI Service not available, falling back to smart normal search.", aiErr);
+
+            const ARABIC_TO_LATIN = {
+                "داسيا لوغان": "Dacia Logan", "داسيا دوستر": "Dacia Duster",
+                "داسيا ساندرو": "Dacia Sandero", "داسيا ستيبواي": "Dacia Stepway",
+                "داسيا دوكر": "Dacia Dokker", "داسيا لودجي": "Dacia Lodgy",
+                "داسيا جوجر": "Dacia Jogger", "داسيا سبرينغ": "Dacia Spring",
+                "رونو كليو": "Renault Clio", "رونو كابتور": "Renault Captur",
+                "رونو سيمبول": "Renault Symbol", "رونو كانغو": "Renault Kango",
+                "رونو أركانا": "Renault Arkana", "رونو كولييوس": "Renault Koleos",
+                "رونو إكسبريس": "Renault Express",
+                "بيجو 208": "Peugeot 208", "بيجو 301": "Peugeot 301",
+                "بيجو 2008": "Peugeot 2008", "بيجو 508": "Peugeot 508",
+                "فورد فوكس": "Ford Focus", "فورد إيكوسبورت": "Ford EcoSport",
+                "فورد بوما": "Ford Puma",
+                "هوندا سيتي": "Honda City", "هوندا جاز": "Honda Jazz",
+                "هوندا سيفيك": "Honda Civic",
+                "كيا ريو": "Kia Rio", "كيا سبورتاج": "Kia Sportage",
+                "كيا بيكانتو": "Kia Picanto", "كيا ستونيك": "Kia Stonic",
+                "فولكسواغن غولف": "Volkswagen Golf",
+                "بي إم دبليو": "BMW Serie 3", "مرسيدس": "Mercedes Classe C",
+                "أودي": "Audi A4", "نيسان قاشقاي": "Nissan Qashqai",
+                "رانج روفر": "Range Rover", "هيونداي توكسون": "Hyndai Tucson",
+                "فيات 500": "Fiat 500", "سيات إيبيزا": "Seat Ibiza",
+                "سكودا أوكتافيا": "Skoda Octavia", "تويوتا كورولا": "Toyota Corolla",
+                "داسيا": "Dacia", "رونو": "Renault", "بيجو": "Peugeot",
+                "فورد": "Ford", "هوندا": "Honda", "كيا": "Kia",
+            };
+
+            let translated = false;
+            for (const [arabic, latin] of Object.entries(ARABIC_TO_LATIN)) {
+                if (query.includes(arabic)) {
+                    searchKeyword = latin;
+                    translated = true;
+                    break;
+                }
+            }
+
+            if (!translated) {
+                searchKeyword = query
+                    .replace(/je cherche/gi, "")
+                    .replace(/je veux/gi, "")
+                    .replace(/louer/gi, "")
+                    .replace(/une voiture/gi, "")
+                    .replace(/ب\s*\d+\s*(دره?م?|درهم)/g, "")
+                    .replace(/de\s+\d+\s*(dh|mad|dirhams?|درهم)/gi, "")
+                    .replace(/[àا]\s*\d+\s*(dh|mad|dirhams?|درهم)/gi, "")
+                    .replace(/\d+\s*(dh|mad|dirhams?|درهم)/gi, "")
+                    .replace(/\d+\s*places?/gi, "")
+                    .replace(/\b(بغيت|بغا|كنبغي|جي|je cherche|je veux|louer|une voiture|un|une|le|la|les|à|de|dans)\b/gi, "")
+                    .replace(/\s+/g, " ")
+                    .trim();
+            }
+
+            const seatsMatch = query.match(/(\d+)\s*places?/i);
+            if (seatsMatch) seatsCount = parseInt(seatsMatch[1]);
+
+            const yearMatch = query.match(/\b(19|20)\d{2}\b/);
+            if (yearMatch) yearFilter = parseInt(yearMatch[0]);
+
+            const priceMatchDarija = query.match(/ب\s*(\d+)\s*(دره?م?|درهم)/);
+            const priceMatchLatin = query.match(/(\d+)\s*(dh|mad|dirhams?|درهم)/i);
+            if (priceMatchDarija) maxPrice = parseFloat(priceMatchDarija[1]);
+            else if (priceMatchLatin) maxPrice = parseFloat(priceMatchLatin[1]);
+        }
+
+        try {
+            const finalQuery = searchKeyword ? searchKeyword.trim() : (city ? city : "");
+            const res = await fetch(`http://localhost:8080/api/cars/search?query=${encodeURIComponent(finalQuery)}&category=${category}`);
+            let data = await res.json();
+
+            if (city) {
+                const lowerCity = city.toLowerCase().trim();
+                data = data.filter(car => car.city && car.city.toLowerCase().trim().includes(lowerCity));
+            }
+
+            if (maxPrice && !isNaN(maxPrice)) {
+                data = data.filter(car => car.price !== null && car.price <= maxPrice);
+            }
+
+            if (seatsCount && !isNaN(seatsCount)) {
+                data = data.filter(car => car.seats !== null && car.seats === seatsCount);
+            }
+
+            if (yearFilter && !isNaN(yearFilter)) {
+                data = data.filter(car => car.plate !== null && parseInt(car.plate) === yearFilter);
+            }
 
             setSearchResults(data);
             setHasSearched(true);
@@ -836,7 +1122,6 @@ export default function UppCarLanding() {
                 });
             }
 
-            // Delay for animation
             setTimeout(() => {
                 setAiLoading(false);
                 setShowSearchOverlay(false);
@@ -1899,8 +2184,10 @@ export default function UppCarLanding() {
                 {/* ══ HERO ══ */}
                 <section style={{
                     display: "flex", flexDirection: "column", alignItems: "center", textAlign: "center",
-                    padding: isMobile ? "60px 16px 48px" : "90px 20px 70px",
+                    padding: isMobile ? "56px 16px 40px" : "90px 20px 70px",
                     position: "relative",
+                    minHeight: isMobile ? "auto" : "100vh",
+                    zIndex: 1,
                 }}>
                     {isDarkMode && (
                         <div style={{
@@ -1913,349 +2200,395 @@ export default function UppCarLanding() {
                         }} />
                     )}
 
-                    {/* Mobile live badge (Removed) */}
+                    <div style={{ position: "relative", zIndex: 10, width: "100%", display: "flex", flexDirection: "column", alignItems: "center" }}>
 
-                    <div style={{
-                        display: "inline-flex", alignItems: "center", gap: isMobile ? 5 : 10,
-                        padding: isMobile ? "10px 17px" : "10.7px 20px", borderRadius: 50,
-                        fontFamily: "'DM Sans', sans-serif", fontSize: isMobile ? 11 : 14, fontWeight: 500,
-                        whiteSpace: "nowrap",
-                        background: "rgba(10, 14, 26, 0.6)",
-                        backdropFilter: "blur(10px)", WebkitBackdropFilter: "blur(10px)",
-                        border: `1px solid ${isDarkMode ? "rgba(255,255,255,0.15)" : "rgba(255,255,255,0.2)"}`,
-                        color: "var(--accent-color)",
-                        position: "relative", bottom: isMobile ? 22 : 24, left: isMobile ? 6 : 23,
-                        boxShadow: isDarkMode
-                            ? "0 0 0 2px rgba(96,165,250,0.2), 0 4px 20px rgba(96,165,250,0.15), 0 0 40px rgba(96,165,250,0.08)"
-                            : "0 0 0 2px rgba(16,185,129,0.2), 0 4px 20px rgba(16,185,129,0.15), 0 0 40px rgba(16,185,129,0.08)",
-                    }}>
-                        <span style={{
-                            width: 8, height: 8, borderRadius: "50%", flexShrink: 0,
-                            background: isDarkMode ? "#60a5fa" : "#10b981",
-                            animation: "pulse 2s ease-in-out infinite",
-                        }} />
-                        {t("hero.taglineBadge", "Up to 50 bookings processed automatically in 1 click")}
-                    </div>
-                    {/* ── H1 ── */}
-                    <h1 style={{
-                        fontFamily: "'Syne',sans-serif",
-                        fontSize: isMobile
-                            ? (selectedLang === "AR" ? "clamp(40px,9.5vw,42px)" : "clamp(36px,9vw,37px)")
-                            : (selectedLang === "AR" ? "clamp(60px,5vw,95px)" : "clamp(50px,4.8vw,90px)"),
-                        fontWeight: 800,
-                        letterSpacing: isMobile ? -2 : -3,
-                        lineHeight: isMobile ? (selectedLang === "AR" ? 1.2 : 1.1) : (selectedLang === "AR" ? 1.2 : 1),
-                        marginBottom: isMobile ? 16 : 20,
-                        paddingBottom: selectedLang === "AR" ? 10 : 0,
-                        background: "var(--accent-gradientee)",
-                        WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent",
-                        animation: "fadeUp 0.7s 0.1s ease both",
-                        position: "relative", top: isMobile ? 0 : (selectedLang === "AR" ? -1 : 10),
-                        maxWidth: "100%",
-                        marginTop: 0,
-                    }}>
-                        {isMobile
-                            ? t("hero.h1Mobile", <>The Car You Want Ready To Drive<br /></>)
-                            : t("hero.h1Desktop", <>The Car You Want Second<br />You Need It</>)
-                        }
-                    </h1>
-
-                    {/* ── Typewriter ── */}
-                    <div style={{
-                        fontFamily: "'Syne',sans-serif",
-                        fontSize: isMobile
-                            ? (selectedLang === "AR" ? "clamp(20px,5.5vw,26px)" : "clamp(16px,5vw,24px)")
-                            : (selectedLang === "AR" ? "clamp(40px,3.8vw,60px)" : "clamp(37px,3.5vw,55px)"),
-                        fontWeight: selectedLang === "AR" ? 600 : 700,
-                        color: "var(--accent-color)",
-                        marginBottom: isMobile ? 29 : 12,
-                        height: "1.5em", width: "100%",
-                        maxWidth: isMobile ? "100%" : 999,
-                        display: "flex", alignItems: "center", justifyContent: "center", gap: 4,
-                        animation: "fadeUp 0.7s 0.2s ease both",
-                        position: "relative", bottom: isMobile ? "1px" : 0,
-                        top: isMobile ? 0 : (selectedLang === "AR" ? 0 : 27),
-                    }}>
-                        <span style={{
-                            background: isDarkMode ? "none" : "linear-gradient(135deg, #15ebfcff 0%, #15ebfcff 20%, #15ebfcff 50%)",
-                            WebkitBackgroundClip: isDarkMode ? "none" : "text",
-                            WebkitTextFillColor: isDarkMode ? "currentColor" : "transparent",
-                            textShadow: isDarkMode ? "none" : "0px 2px 10px rgba(255,255,255,0.2)",
-                        }}>{displayed}</span>
-                        <span style={{ display: "inline-block", width: 2, height: "0.85em", background: isDarkMode ? "var(--accent-color)" : "#064e3b", animation: "blink 1s infinite", flexShrink: 0, boxShadow: `0 0 6px ${isDarkMode ? "var(--accent-color)" : "#064e3b"}` }} />
-                    </div>
-
-                    {/* ══ AI VIDEO / IMAGE INPUT ══ */}
-                    <div style={{
-                        width: "100%", maxWidth: isMobile ? "100%" : (selectedLang === "AR" ? 780 : 700),
-                        marginBottom: isMobile ? 38 : 48,
-                        animation: "fadeUp 0.7s 0.4s ease both",
-                        position: "relative", zIndex: 1,
-                        bottom: isMobile ? 7 : 0,
-                    }}>
-                        <div style={{
-                            display: "flex", alignItems: "center",
-                            background: isDarkMode ? "rgba(255,255,255,0.04)" : "rgba(255,255,255,0.85)",
-                            border: `1.5px solid ${aiFocused
-                                ? (isDarkMode ? "rgba(96,165,250,0.55)" : "rgba(4,120,87,0.5)")
-                                : (isDarkMode ? "rgba(255,255,255,0.09)" : "rgba(6,78,59,0.13)")}`,
-                            borderRadius: 50,
-                            height: selectedLang === "AR" ? (isMobile ? 65 : 76) : (isMobile ? 60 : 70),
-                            padding: isMobile
-                                ? (selectedLang === "AR" ? "0 24px 0 0" : "0 0 0 24px")
-                                : (selectedLang === "AR" ? "0 30px 0 6px" : "0 6px 0 30px"),
-                            overflow: "hidden",
-                            backdropFilter: "blur(20px)", WebkitBackdropFilter: "blur(20px)",
-                            boxShadow: isMobile
-                                ? (aiFocused
-                                    ? (isDarkMode
-                                        ? "0 0 0 3px rgba(96,165,250,0.3), 0 12px 50px rgba(37,99,235,0.4), inset 0 1px 2px rgba(255,255,255,0.1)"
-                                        : "0 0 0 3px rgba(16,185,129,0.3), 0 12px 50px rgba(16,185,129,0.35), inset 0 1px 2px rgba(255,255,255,0.2)")
-                                    : (isDarkMode
-                                        ? "0 8px 32px rgba(37,99,235,0.2), 0 0 60px rgba(14,165,233,0.08)"
-                                        : "0 8px 32px rgba(16,185,129,0.15), 0 0 60px rgba(74,222,128,0.06)"))
-                                : (aiFocused
-                                    ? (isDarkMode
-                                        ? "0 0 0 3.2px rgba(96,165,250,0.25), 0 8px 40px rgba(37,99,235,0.3), 0 0 80px rgba(14,165,233,0.15)"
-                                        : "0 0 0 3.2px rgba(16,185,129,0.25), 0 8px 40px rgba(5,150,105,0.25), 0 0 60px rgba(16,185,129,0.12)")
-                                    : (isDarkMode
-                                        ? "0 0 0 3.2px rgba(96,165,250,0.15), 0 8px 40px rgba(37,99,235,0.25), 0 0 80px rgba(14,165,233,0.1)"
-                                        : "0 0 0 3.2px rgba(16,185,129,0.15), 0 8px 40px rgba(5,150,105,0.2), 0 0 60px rgba(16,185,129,0.08)")),
-                            transition: "border-color 0.3s, box-shadow 0.3s",
-                            width: isMobile ? "100%" : (selectedLang === "AR" ? "100%" : "111%"),
-                            margin: isMobile ? "0 auto" : (selectedLang === "AR" ? "0 5%" : "0 -5.5%"),
-                            position: "relative",
-                            top: isMobile ? 0 : (selectedLang === "AR" ? 10 : 50),
-                            right: isMobile ? "auto" : (selectedLang === "AR" ? "-35px" : "auto"),
-                            boxSizing: "border-box",
-                            animation: aiFocused ? "none" : (isDarkMode ? "glow-pulse-dark 4s infinite alternate" : "glow-pulse-light 4s infinite alternate")
-                        }}>
-                            <input
-                                value={aiValue}
-                                onChange={e => setAiValue(e.target.value)}
-                                onFocus={() => setAiFocused(true)}
-                                onBlur={() => setAiFocused(false)}
-                                onKeyDown={e => e.key === "Enter" && handleGenerate()}
-                                placeholder={aiFocused ? t("hero.searchPlaceholder", "Décrivez votre voiture…") : aiPlaceholder}
-                                style={{
-                                    flex: 1, border: "none", outline: "none", background: "transparent",
-                                    fontFamily: "'DM Sans','Syne',sans-serif",
-                                    fontSize: selectedLang === "AR" ? (isMobile ? 16 : 20) : 17.3,
-                                    fontWeight: 700,
-                                    color: isDarkMode ? "#ffffff" : "var(--text-main)",
-                                    caretColor: isDarkMode ? "#60a5fa" : "#10b981",
-                                    minWidth: 0,
-                                }}
-                            />
-                            <button
-                                aria-label="Entrée vocale"
-                                onClick={startListening}
-                                style={{
-                                    width: selectedLang === "AR" ? (isMobile ? 50 : 54) : 45,
-                                    height: selectedLang === "AR" ? (isMobile ? 50 : 54) : 45,
-                                    borderRadius: "50%",
-                                    background: listening ? "rgba(239,68,68,0.15)" : "none",
-                                    border: "none", cursor: "pointer",
-                                    display: "flex", alignItems: "center", justifyContent: "center",
-                                    color: listening ? "#ef4444" : (isDarkMode ? "rgba(96,165,250,0.6)" : "rgba(4,120,87,0.55)"),
-                                    flexShrink: 0,
-                                    marginRight: isMobile ? 4 : (selectedLang === "AR" ? 0 : 6),
-                                    marginLeft: isMobile ? 4 : (selectedLang === "AR" ? 6 : 0),
-                                    transition: "all 0.2s",
-                                    position: "relative",
-                                }}
-                            >
-                                {listening && (
-                                    <div style={{
-                                        position: "absolute", inset: -4, borderRadius: "50%",
-                                        border: "1.5px solid #ef4444",
-                                        animation: "ping 1s ease-out infinite",
-                                    }} />
-                                )}
-                                <svg width={selectedLang === "AR" ? 20 : 17} height={selectedLang === "AR" ? 20 : 17} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round">
-                                    <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z" />
-                                    <path d="M19 10v2a7 7 0 0 1-14 0v-2" />
-                                    <line x1="12" y1="19" x2="12" y2="23" />
-                                    <line x1="8" y1="23" x2="16" y2="23" />
-                                </svg>
-                            </button>
-                            <button
-                                className="primary-btnDE"
-                                onClick={handleGenerate}
-                                disabled={aiLoading}
-                                style={{
-                                    width: isMobile ? "auto" : "auto",
-                                    height: isMobile ? "100%" : (selectedLang === "AR" ? 76 : 68),
-                                    padding: isMobile ? "0 22px" : (selectedLang === "AR" ? "3px 69px" : "3px 41px"),
-                                    display: "flex", justifyContent: "center", alignItems: "center",
-                                    borderRadius: isMobile
-                                        ? (selectedLang === "AR" ? "50px 0 0 50px" : "0 50px 50px 0")
-                                        : 44,
-                                    fontSize: selectedLang === "AR" ? (isMobile ? 15 : 19) : (isMobile ? 11.5 : 16),
-                                    letterSpacing: (selectedLang === "AR" || isMobile) ? "0" : "0.05em",
-                                    fontFamily: "'DM Sans','Syne',sans-serif",
-                                    fontWeight: 700,
-                                    gap: 7,
-                                    whiteSpace: "nowrap",
-                                    flexShrink: 0,
-                                    alignSelf: isMobile ? "stretch" : "auto",
-                                    position: "relative",
-                                    left: isMobile ? "auto" : (selectedLang === "AR" ? "auto" : "6px"),
-                                    right: isMobile ? "auto" : (selectedLang === "AR" ? "6px" : "auto"),
-                                }}
-                            >
-                                <svg className="hyrakle" width={selectedLang === "AR" ? 25 : (isMobile ? 24 : 23)} height={selectedLang === "AR" ? 25 : (isMobile ? 24 : 23)} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                                    <circle cx="11" cy="11" r="8" /><path d="m21 21-4.35-4.35" />
-                                </svg>
-                                {!isMobile && t("hero.searchBtn", "To research")}
-                            </button>
-                        </div>
-                    </div>
-
-                    {!isMobile && (
-                        <p style={{
-                            color: isDarkMode ? "rgba(255,255,255,0.75)" : "#ffffff",
-                            textShadow: isDarkMode ? "none" : "0px 2px 15px rgba(0,0,0,0.4)",
-                            fontSize: selectedLang === "AR" ? 24 : 25,
-                            maxWidth: selectedLang === "AR" ? 760 : 760,
-                            marginBottom: 32,
-                            animation: "fadeUp 0.7s 0.3s ease both",
-                            position: "relative",
-                            top: isMobile ? 0 : (selectedLang === "AR" ? 15 : 32),
-                            fontWeight: selectedLang === "AR" ? 500 : 500
-                        }}>
-                            {t("hero.subtitle", "The ultimate platform for modern drivers and agencies. Seamless bookings, powerful management.")}
-                        </p>
-                    )}
-
-                    <div style={{
-                        display: "flex", alignItems: "center", justifyContent: "center", gap: isMobile ? 4 : 12,
-                        animation: "fadeUp 0.7s 0.45s ease both",
-                        width: "100%", maxWidth: 600,
-                    }}>
-                        <span style={{
-                            fontSize: isMobile
-                                ? (selectedLang === "AR" ? 17 : 12)
-                                : (selectedLang === "AR" ? 22 : 16),
-                            fontWeight: 800, letterSpacing: selectedLang === "AR" ? "0em" : "0.15em",
-                            fontFamily: "'Syne', sans-serif", whiteSpace: "nowrap",
-                            position: "relative",
-                            top: isMobile ? -15 : (selectedLang === "AR" ? -10 : 35),
-                            bottom: isMobile ? 0 : "43px",
-                            left: "auto",
-                            textAlign: "center",
-                            margin: isMobile ? "-8px 0 0" : "0 auto",
-                            backgroundImage: isDarkMode
-                                ? "linear-gradient(270deg, #60a5fa, #a855f7, #f472b6, #60a5fa)"
-                                : "linear-gradient(270deg, #059669, #10b981, #0ea5e9, #059669)",
-                            backgroundSize: "300% 300%",
-                            backgroundClip: "text",
-                            WebkitBackgroundClip: "text",
-                            color: "transparent",
-                            WebkitTextFillColor: "transparent",
-                            display: "inline-block",
-                            animation: "btnGradientMove 3s ease infinite",
-                        }}>
-                            {t("hero.number1", "Number 1 platform in Morocco")}
-                        </span>
-                    </div>
-
-
-
-
-                    <button
-                        onClick={() => window.scrollTo({ top: document.body.scrollHeight, behavior: "smooth" })}
-                        style={{
-                            width: 35, height: 53, borderRadius: 21,
-                            border: `2px solid ${isDarkMode ? "rgba(96,165,250,0.8)" : "rgba(16,185,129,0.8)"}`,
-                            background: isDarkMode ? "rgba(96,165,250,0.12)" : "rgba(16,185,129,0.12)",
-                            cursor: "pointer",
-                            display: "flex", alignItems: "center", justifyContent: "center",
-                            transition: "transform 0.3s cubic-bezier(0.34,1.56,0.64,1)",
-                            position: "relative",
-                            top: isMobile ? "6px" : (selectedLang === "AR" ? "15px" : "65px"), left: "25px",
-                            transform: "translateX(-50%)",
-                            boxShadow: isDarkMode ? "0 0 30px rgba(96,165,250,0.3)" : "0 0 30px rgba(16,185,129,0.3)",
-                        }}
-                        onMouseEnter={e => e.currentTarget.style.transform = "translateX(-50%) translateY(-3px)"}
-                        onMouseLeave={e => e.currentTarget.style.transform = "translateX(-50%)"}
-                    >
-                        <svg style={{ animation: "arrowFall 1.6s cubic-bezier(0.45,0,0.55,1) infinite" }}
-                            width="14" height="20" viewBox="0 0 14 20" fill="none">
-                            <line x1="7" y1="0" x2="7" y2="12"
-                                stroke={isDarkMode ? "#60a5fa" : "#10b981"}
-                                strokeWidth="2" strokeLinecap="round" />
-                            <polyline points="1,8 7,14 13,8"
-                                stroke={isDarkMode ? "#60a5fa" : "#10b981"}
-                                strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                        </svg>
-                    </button>
-
-                    {/* ── Feature pills ── */}
-                    {!isMobile && <div className={isMobile ? "mobile-scroll" : ""} style={{
-                        display: "flex",
-                        gap: isMobile ? 8 : 28,
-                        flexWrap: isMobile ? "nowrap" : "wrap",
-                        justifyContent: isMobile ? "flex-start" : "center",
-                        overflowX: isMobile ? "auto" : "visible",
-                        width: isMobile ? "calc(100% + 32px)" : "auto",
-                        marginLeft: isMobile ? -16 : 0,
-                        paddingLeft: isMobile ? 16 : 0,
-                        paddingRight: isMobile ? 16 : 0,
-                        paddingBottom: isMobile ? 4 : 0,
-                        animation: "fadeUp 0.7s 0.7s ease both",
-                        position: "relative",
-                        top: selectedLang === "AR" ? (isMobile ? "0px" : "40px") : "90px",
-                        cursor: "pointer",
-
-
-                    }}>
-                        {[
-                            { icon: <CheckIcon />, l: isMobile ? t("hero.feature1Mobile", "No Deposit") : t("hero.feature1", "No Deposit Required") },
-                            { icon: <CrosshairIcon />, l: isMobile ? t("hero.feature2Mobile", "Contactless") : t("hero.feature2", "Contactless Handover") },
-                            { icon: <ShieldIcon />, l: t("hero.feature3", "Fully Insured") },
-                            { icon: <MapPinIcon />, l: isMobile ? t("hero.feature4Mobile", "150+ Locs") : t("hero.feature4", "150+ Locations") },
-                        ].map(({ icon, l }) => (
-                            <div key={l} style={{
-                                display: "flex", alignItems: "center", gap: 7,
-                                color: "var(--text-muted)", fontSize: isMobile ? 12 : 13, fontWeight: 600,
-                                background: "var(--card-bg)", padding: isMobile ? "8px 14px" : "10px 20px",
-                                borderRadius: 20, border: "1px solid var(--card-border)",
-                                flexShrink: 0,
-                                transition: "all 0.2s cubic-bezier(0.34,1.56,0.64,1)",
-                                cursor: "pointer",
-                            }}
-                                onMouseEnter={e => {
-                                    e.currentTarget.style.borderColor = isDarkMode ? "rgba(96,165,250,0.8)" : "rgba(16,185,129,0.8)";
-                                    e.currentTarget.style.background = isDarkMode ? "rgba(96,165,250,0.08)" : "rgba(16,185,129,0.08)";
-                                    e.currentTarget.style.color = isDarkMode ? "#60a5fa" : "#10b981";
-                                    e.currentTarget.style.transform = "translateY(-2px)";
-                                    e.currentTarget.style.boxShadow = isDarkMode ? "0 0 20px rgba(96,165,250,0.2)" : "0 0 20px rgba(16,185,129,0.2)";
-                                }}
-                                onMouseLeave={e => {
-                                    e.currentTarget.style.borderColor = "var(--card-border)";
-                                    e.currentTarget.style.background = "var(--card-bg)";
-                                    e.currentTarget.style.color = "var(--text-muted)";
-                                    e.currentTarget.style.transform = "none";
-                                    e.currentTarget.style.boxShadow = "none";
-                                }}
-                            >
-                                <span style={{ color: "var(--accent-color)", display: "flex", alignItems: "center" }}>{icon}</span>{l}
+                        {/* Live badge */}
+                        {true && (
+                            <div style={{
+                                display: "inline-flex", alignItems: "center", gap: isMobile ? 5 : 10,
+                                padding: isMobile ? "9px 15px" : "10.7px 20px", borderRadius: 50,
+                                fontFamily: "'DM Sans', sans-serif", fontSize: isMobile ? 11 : 14, fontWeight: 500,
+                                whiteSpace: "nowrap",
+                                background: isDarkMode ? "rgba(10,14,26,0.6)" : "rgba(255,255,255,0.7)",
+                                border: isDarkMode ? "1px solid rgba(255,255,255,0.2)" : "1px solid rgba(16,185,129,0.3)",
+                                color: isDarkMode ? "#29aad1" : "#059669",
+                                marginBottom: isMobile ? 16 : 20,
+                                backdropFilter: "blur(10px)",
+                                boxShadow: isDarkMode
+                                    ? "0 0 0 2px rgba(96,165,250,0.2), 0 4px 20px rgba(96,165,250,0.15), 0 0 40px rgba(96,165,250,0.08)"
+                                    : "0 0 0 2px rgba(16,185,129,0.1), 0 4px 20px rgba(16,185,129,0.1), 0 0 40px rgba(16,185,129,0.05)"
+                            }}>
+                                <span style={{
+                                    width: 8, height: 8, borderRadius: "50%", flexShrink: 0,
+                                    background: isDarkMode ? "#60a5fa" : "#10b981",
+                                    animation: "pulse 2s ease-in-out infinite",
+                                }} />
+                                {t("hero.liveBadge", "Up to 50 bookings processed automatically in 1 click")}
                             </div>
-                        ))}
-                    </div>}
+                        )}
 
+                        <h1 key={isDarkMode ? "dark" : "light"} style={{
+                            fontFamily: "'Syne',sans-serif",
+                            fontSize: isMobile
+                                ? (selectedLang === "AR" ? "clamp(34px,8vw,40px)" : "clamp(32px,8.5vw,38px)")
+                                : (selectedLang === "AR" ? "clamp(60px,5vw,95px)" : "clamp(50px,4.8vw,90px)"),
+                            fontWeight: 800,
+                            letterSpacing: isMobile ? -1 : -3,
+                            lineHeight: isMobile ? 1.15 : (selectedLang === "AR" ? 1.2 : 1),
+                            marginBottom: isMobile ? 32 : 20,
+                            paddingBottom: selectedLang === "AR" ? 10 : 0,
+                            color: "#ffffff",
+                            animation: "fadeUp 0.7s 0.1s ease both",
+                            maxWidth: "100%",
+                            marginTop: 0,
+                        }}>
+                            <span style={{
+                                background: isDarkMode
+                                    ? "var(--accent-gradientee)"
+                                    : "linear-gradient(135deg, #ffffffff 0%, #ffffffff 50%, #00ff2aff 100%)",
+                                WebkitBackgroundClip: "text",
+                                backgroundClip: "text",
+                                WebkitTextFillColor: "transparent",
+                                display: "inline-block",
+                            }}>
+                                {isMobile
+                                    ? t("hero.h1Mobile", <>The Car You Want Ready To Drive<br /></>)
+                                    : t("hero.h1Desktop", <>The Car You Want The Second<br />You Need It</>)
+                                }
+                            </span>
+                        </h1>
+
+                        {/* ── Date Bar (Pick-up / Drop-off / City) ── */}
+                        <div className="modern-date-bar" style={{ top: isMobile ? "0px" : (selectedLang === "AR" ? "0px" : "33px"), marginBottom: isMobile ? 20 : 32 }}>
+                            <div className="date-segment" style={{ overflow: 'visible' }}>
+                                <div onClick={() => startDateRef.current?.showPicker()} style={{ display: 'flex', alignItems: 'center', cursor: 'pointer', zIndex: 20 }}>
+                                    <CalendarIcon size={20} color="var(--accent-color)" />
+                                </div>
+                                <div className="date-segment-info" style={{ flex: 1, position: 'relative' }}>
+                                    <span className="date-segment-label">{t("hero.dateBar.pickup", "Pick-up")}</span>
+                                    <input
+                                        type="date"
+                                        className="date-input-modern"
+                                        value={startDate}
+                                        onChange={e => setStartDate(e.target.value)}
+                                    />
+                                </div>
+                                <input type="date" ref={startDateRef} style={{ position: 'absolute', bottom: -10, left: 0, width: '100%', height: '1px', opacity: 0, pointerEvents: 'none', border: 'none', padding: 0 }} value={startDate} onChange={e => setStartDate(e.target.value)} tabIndex={-1} />
+                            </div>
+
+                            <div className="date-sep" />
+
+                            <div className="date-segment" style={{ overflow: 'visible' }}>
+                                <div onClick={() => endDateRef.current?.showPicker()} style={{ display: 'flex', alignItems: 'center', cursor: 'pointer', zIndex: 20 }}>
+                                    <CalendarIcon size={20} color="var(--accent-color)" />
+                                </div>
+                                <div className="date-segment-info" style={{ flex: 1, position: 'relative' }}>
+                                    <span className="date-segment-label">{t("hero.dateBar.dropoff", "Drop-off")}</span>
+                                    <input
+                                        type="date"
+                                        className="date-input-modern"
+                                        value={endDate}
+                                        onChange={e => setEndDate(e.target.value)}
+                                    />
+                                </div>
+                                <input type="date" ref={endDateRef} style={{ position: 'absolute', bottom: -10, left: 0, width: '100%', height: '1px', opacity: 0, pointerEvents: 'none', border: 'none', padding: 0 }} value={endDate} onChange={e => setEndDate(e.target.value)} tabIndex={-1} />
+                            </div>
+
+                            <div className="date-sep" />
+
+                            <div className="date-segment" style={{ flex: 1.2, overflow: "visible" }} onClick={() => setShowCityDropdown(!showCityDropdown)}>
+                                <MapPinIcon size={20} color="var(--accent-color)" />
+                                <div className="date-segment-info" style={{ flex: 1 }}>
+                                    <span className="date-segment-label">{t("hero.dateBar.city", "City")}</span>
+                                    <input
+                                        type="text"
+                                        className="city-input-modern"
+                                        placeholder={t("hero.dateBar.cityPlaceholder", "Where are you going?")}
+                                        value={city}
+                                        onChange={e => { setCity(e.target.value); setShowCityDropdown(true); }}
+                                        onFocus={() => setShowCityDropdown(true)}
+                                        onClick={e => e.stopPropagation()}
+                                    />
+                                </div>
+                                {showCityDropdown && (() => {
+                                    const CITIES_AR = {
+                                        "Casablanca": "الدار البيضاء", "Fés": "فاس", "Marrakech": "مراكش",
+                                        "Tanger": "طنجة", "Oujda": "وجدة", "Rabat": "الرباط",
+                                        "Nador": "الناظور", "Tétouan": "تطوان",
+                                    };
+                                    const cities = ["Casablanca", "Fés", "Marrakech", "Tanger", "Oujda", "Rabat", "Nador", "Tétouan"];
+                                    return (
+                                        <div className="city-dropdown">
+                                            {cities
+                                                .filter(c => c.toLowerCase().includes(city.toLowerCase()) || (CITIES_AR[c] && CITIES_AR[c].includes(city)))
+                                                .map(c => (
+                                                    <div key={c} className="city-dropdown-item" onClick={(e) => { e.stopPropagation(); setCity(c); setShowCityDropdown(false); }}>
+                                                        {selectedLang === "AR" ? CITIES_AR[c] : c}
+                                                    </div>
+                                                ))}
+                                        </div>
+                                    );
+                                })()}
+                            </div>
+                        </div>
+
+                        {!isMobile && (
+                            <p style={{
+                                color: isDarkMode ? "rgba(255,255,255,0.75)" : "#ffffff",
+                                textShadow: isDarkMode ? "none" : "0px 2px 15px rgba(0,0,0,0.4)",
+                                fontSize: selectedLang === "AR" ? 24 : 25,
+                                maxWidth: selectedLang === "AR" ? 760 : 760,
+                                marginBottom: 32,
+                                animation: "fadeUp 0.7s 0.3s ease both",
+                                position: "relative",
+                                top: isMobile ? 0 : (selectedLang === "AR" ? 15 : 32),
+                                fontWeight: selectedLang === "AR" ? 500 : 500
+                            }}>
+                                {t("hero.subtitle", "The ultimate platform for modern drivers and agencies. Seamless bookings, powerful management.")}
+                            </p>
+                        )}
+
+                        {/* ══ AI VIDEO / IMAGE INPUT ══ */}
+                        <div style={{
+                            width: "100%", maxWidth: isMobile ? "100%" : (selectedLang === "AR" ? 780 : 700),
+                            marginBottom: isMobile ? 32 : 48,
+                            marginTop: isMobile ? 16 : 0,
+                            animation: "fadeUp 0.7s 0.4s ease both",
+                            position: "relative", zIndex: 1,
+                        }}>
+                            <div style={{
+                                display: "flex", alignItems: "center",
+                                background: isDarkMode ? "rgba(255,255,255,0.04)" : "rgba(255,255,255,0.85)",
+                                border: `1.5px solid ${aiFocused
+                                    ? (isDarkMode ? "rgba(96,165,250,0.55)" : "rgba(4,120,87,0.5)")
+                                    : (isDarkMode ? "rgba(255,255,255,0.09)" : "rgba(6,78,59,0.13)")}`,
+                                borderRadius: 50,
+                                height: selectedLang === "AR" ? (isMobile ? 65 : 76) : (isMobile ? 60 : 70),
+                                padding: isMobile
+                                    ? (selectedLang === "AR" ? "0 24px 0 0" : "0 0 0 24px")
+                                    : (selectedLang === "AR" ? "0 30px 0 6px" : "0 6px 0 30px"),
+                                overflow: "hidden",
+                                backdropFilter: "blur(20px)", WebkitBackdropFilter: "blur(20px)",
+                                boxShadow: isDarkMode
+                                    ? "0 0 0 2px rgba(96,165,250,0.3), 0 15px 50px rgba(37,99,235,0.4), 0 0 80px rgba(59,130,246,0.25)"
+                                    : "0 0 0 2px rgba(16,185,129,0.3), 0 15px 50px rgba(16,185,129,0.35), 0 0 80px rgba(16,185,129,0.2)",
+                                transition: "border-color 0.3s, box-shadow 0.3s",
+                                width: isMobile ? "100%" : (selectedLang === "AR" ? "100%" : "111%"),
+                                margin: isMobile ? "0 auto" : (selectedLang === "AR" ? "0 5%" : "0 -5.5%"),
+                                position: "relative",
+                                top: isMobile ? 0 : (selectedLang === "AR" ? 10 : 34),
+                                right: isMobile ? "auto" : (selectedLang === "AR" ? "-35px" : "auto"),
+                                boxSizing: "border-box",
+                                animation: "none"
+                            }}>
+                                <input
+                                    value={aiValue}
+                                    onChange={e => setAiValue(e.target.value)}
+                                    onFocus={() => setAiFocused(true)}
+                                    onBlur={() => setAiFocused(false)}
+                                    onKeyDown={e => e.key === "Enter" && handleGenerate()}
+                                    placeholder={aiFocused ? t("hero.searchPlaceholder", "Décrivez votre voiture…") : aiPlaceholder}
+                                    style={{
+                                        flex: 1, border: "none", outline: "none", background: "transparent",
+                                        fontFamily: "'DM Sans','Syne',sans-serif",
+                                        fontSize: selectedLang === "AR" ? (isMobile ? 16 : 20) : 17.3,
+                                        fontWeight: 700, color: "var(--text-main)",
+                                        caretColor: isDarkMode ? "#60a5fa" : "#10b981",
+                                        minWidth: 0,
+                                    }}
+                                />
+                                <button
+                                    aria-label="Entrée vocale"
+                                    onClick={startListening}
+                                    style={{
+                                        width: selectedLang === "AR" ? (isMobile ? 50 : 54) : 45,
+                                        height: selectedLang === "AR" ? (isMobile ? 50 : 54) : 45,
+                                        borderRadius: "50%",
+                                        background: listening ? "rgba(239,68,68,0.15)" : "none",
+                                        border: "none", cursor: "pointer",
+                                        display: "flex", alignItems: "center", justifyContent: "center",
+                                        color: listening ? "#ef4444" : (isDarkMode ? "rgba(255,255,255,0.85)" : "rgba(4,120,87,0.85)"),
+                                        flexShrink: 0,
+                                        marginRight: isMobile ? 4 : (selectedLang === "AR" ? 0 : 6),
+                                        marginLeft: isMobile ? 4 : (selectedLang === "AR" ? 6 : 0),
+                                        transition: "all 0.2s",
+                                        position: "relative",
+                                    }}
+                                >
+                                    {listening && (
+                                        <div style={{
+                                            position: "absolute", inset: -4, borderRadius: "50%",
+                                            border: "1.5px solid #ef4444",
+                                            animation: "ping 1s ease-out infinite",
+                                        }} />
+                                    )}
+                                    <svg width={selectedLang === "AR" ? 20 : 17} height={selectedLang === "AR" ? 20 : 17} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round">
+                                        <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z" />
+                                        <path d="M19 10v2a7 7 0 0 1-14 0v-2" />
+                                        <line x1="12" y1="19" x2="12" y2="23" />
+                                        <line x1="8" y1="23" x2="16" y2="23" />
+                                    </svg>
+                                </button>
+                                <button
+                                    className="primary-btnDE"
+                                    onClick={handleGenerate}
+                                    disabled={aiLoading}
+                                    style={{
+                                        width: isMobile ? "auto" : "auto",
+                                        height: isMobile ? "100%" : (selectedLang === "AR" ? 76 : 68),
+                                        padding: isMobile ? "0 22px" : (selectedLang === "AR" ? "3px 69px" : "3px 41px"),
+                                        display: "flex", justifyContent: "center", alignItems: "center",
+                                        borderRadius: isMobile
+                                            ? (selectedLang === "AR" ? "50px 0 0 50px" : "0 50px 50px 0")
+                                            : 44,
+                                        fontSize: selectedLang === "AR" ? (isMobile ? 15 : 19) : (isMobile ? 11.5 : 16),
+                                        letterSpacing: (selectedLang === "AR" || isMobile) ? "0" : "0.05em",
+                                        fontFamily: "'DM Sans','Syne',sans-serif",
+                                        fontWeight: 700,
+                                        gap: 7,
+                                        whiteSpace: "nowrap",
+                                        flexShrink: 0,
+                                        alignSelf: isMobile ? "stretch" : "auto",
+                                        position: "relative",
+                                        left: isMobile ? "auto" : (selectedLang === "AR" ? "auto" : "6px"),
+                                        right: isMobile ? "auto" : (selectedLang === "AR" ? "6px" : "auto"),
+                                    }}
+                                >
+                                    <svg className="hyrakle" width={selectedLang === "AR" ? 25 : (isMobile ? 24 : 23)} height={selectedLang === "AR" ? 25 : (isMobile ? 24 : 23)} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                        <circle cx="11" cy="11" r="8" /><path d="m21 21-4.35-4.35" />
+                                    </svg>
+                                    {!isMobile && t("hero.searchBtn", "To research")}
+                                </button>
+                            </div>
+                        </div>
+
+                        <div style={{
+                            display: "flex", alignItems: "center", justifyContent: "center", gap: isMobile ? 4 : 12,
+                            animation: "fadeUp 0.7s 0.45s ease both",
+                            width: "100%", maxWidth: 600,
+                            marginBottom: isMobile ? 32 : 0,
+                        }}>
+                            <span style={{
+                                fontSize: isMobile
+                                    ? (selectedLang === "AR" ? 15 : 12)
+                                    : (selectedLang === "AR" ? 22 : 16),
+                                fontWeight: 800, letterSpacing: selectedLang === "AR" ? "0em" : "0.15em",
+                                fontFamily: "'Syne', sans-serif", whiteSpace: "nowrap",
+                                textAlign: "center",
+                                position: "relative",
+                                top: isMobile ? 0 : (selectedLang === "AR" ? -15 : 12),
+                                backgroundImage: isDarkMode
+                                    ? "linear-gradient(270deg, #60a5fa, #a855f7, #f472b6, #60a5fa)"
+                                    : "linear-gradient(270deg, #ffffff, #10b981, #ffffff, #10b981)",
+                                backgroundSize: "200% 200%",
+                                backgroundClip: "text",
+                                WebkitBackgroundClip: "text",
+                                color: "transparent",
+                                WebkitTextFillColor: "transparent",
+                                display: "inline-block",
+                                animation: "btnGradientMove 3s ease infinite",
+                            }}>
+                                {t("hero.number1", "Number 1 platform in Morocco")}
+                            </span>
+                        </div>
+
+
+
+
+                        <button
+                            onClick={() => window.scrollTo({ top: document.body.scrollHeight, behavior: "smooth" })}
+                            style={{
+                                width: 35, height: 53, borderRadius: 21,
+                                border: `2px solid ${isDarkMode ? "rgba(96,165,250,0.8)" : "rgba(16,185,129,0.8)"}`,
+                                background: isDarkMode ? "rgba(96,165,250,0.12)" : "rgba(16,185,129,0.12)",
+                                cursor: "pointer",
+                                display: "flex", alignItems: "center", justifyContent: "center",
+                                transition: "transform 0.3s cubic-bezier(0.34,1.56,0.64,1)",
+                                position: "relative",
+                                top: isMobile ? "6px" : (selectedLang === "AR" ? "1px" : "34px"), left: "25px",
+                                transform: "translateX(-50%)",
+                                boxShadow: isDarkMode ? "0 0 30px rgba(96,165,250,0.3)" : "0 0 30px rgba(16,185,129,0.3)",
+                            }}
+                            onMouseEnter={e => e.currentTarget.style.transform = "translateX(-50%) translateY(-3px)"}
+                            onMouseLeave={e => e.currentTarget.style.transform = "translateX(-50%)"}
+                        >
+                            <svg style={{ animation: "arrowFall 1.6s cubic-bezier(0.45,0,0.55,1) infinite" }}
+                                width="14" height="20" viewBox="0 0 14 20" fill="none">
+                                <line x1="7" y1="0" x2="7" y2="12"
+                                    stroke={isDarkMode ? "#60a5fa" : "#10b981"}
+                                    strokeWidth="2" strokeLinecap="round" />
+                                <polyline points="1,8 7,14 13,8"
+                                    stroke={isDarkMode ? "#60a5fa" : "#10b981"}
+                                    strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                            </svg>
+                        </button>
+
+                        {/* ── Feature pills ── */}
+                        {!isMobile && <div className={isMobile ? "mobile-scroll" : ""} style={{
+                            display: "flex",
+                            gap: isMobile ? 8 : 28,
+                            flexWrap: isMobile ? "nowrap" : "wrap",
+                            justifyContent: isMobile ? "flex-start" : "center",
+                            overflowX: isMobile ? "auto" : "visible",
+                            width: isMobile ? "calc(100% + 32px)" : "auto",
+                            marginLeft: isMobile ? -16 : 0,
+                            paddingLeft: isMobile ? 16 : 0,
+                            paddingRight: isMobile ? 16 : 0,
+                            paddingBottom: isMobile ? 4 : 0,
+                            animation: "fadeUp 0.7s 0.7s ease both",
+                            position: "relative",
+                            top: selectedLang === "AR" ? (isMobile ? "0px" : "18px") : "56px",
+                            cursor: "pointer",
+
+
+                        }}>
+                            {[
+                                { icon: <CheckIcon />, l: isMobile ? t("hero.feature1Mobile", "No Deposit") : t("hero.feature1", "No Deposit Required") },
+                                { icon: <CrosshairIcon />, l: isMobile ? t("hero.feature2Mobile", "Contactless") : t("hero.feature2", "Contactless Handover") },
+                                { icon: <ShieldIcon />, l: t("hero.feature3", "Fully Insured") },
+                                { icon: <MapPinIcon />, l: isMobile ? t("hero.feature4Mobile", "150+ Locs") : t("hero.feature4", "150+ Locations") },
+                            ].map(({ icon, l }) => (
+                                <div key={l} style={{
+                                    display: "flex", alignItems: "center", gap: 7,
+                                    color: "var(--text-muted)", fontSize: isMobile ? 12 : 13, fontWeight: 600,
+                                    background: "var(--card-bg)", padding: isMobile ? "8px 14px" : "10px 20px",
+                                    borderRadius: 20, border: "1px solid var(--card-border)",
+                                    flexShrink: 0,
+                                    transition: "all 0.2s cubic-bezier(0.34,1.56,0.64,1)",
+                                    cursor: "pointer",
+                                }}
+                                    onMouseEnter={e => {
+                                        e.currentTarget.style.borderColor = isDarkMode ? "rgba(96,165,250,0.8)" : "rgba(16,185,129,0.8)";
+                                        e.currentTarget.style.background = isDarkMode ? "rgba(96,165,250,0.08)" : "rgba(16,185,129,0.08)";
+                                        e.currentTarget.style.color = isDarkMode ? "#60a5fa" : "#10b981";
+                                        e.currentTarget.style.transform = "translateY(-2px)";
+                                        e.currentTarget.style.boxShadow = isDarkMode ? "0 0 20px rgba(96,165,250,0.2)" : "0 0 20px rgba(16,185,129,0.2)";
+                                    }}
+                                    onMouseLeave={e => {
+                                        e.currentTarget.style.borderColor = "var(--card-border)";
+                                        e.currentTarget.style.background = "var(--card-bg)";
+                                        e.currentTarget.style.color = "var(--text-muted)";
+                                        e.currentTarget.style.transform = "none";
+                                        e.currentTarget.style.boxShadow = "none";
+                                    }}
+                                >
+                                    <span style={{ color: "var(--accent-color)", display: "flex", alignItems: "center" }}>{icon}</span>{l}
+                                </div>
+                            ))}
+                        </div>}
+
+                    </div>{/* end zIndex:10 content wrapper */}
                 </section>
 
                 {/* ── SEARCH RESULTS ── */}
                 {hasSearched && (
                     <section id="search-results" style={{
-                        width: "100%", maxWidth: "98vw", margin: "0 auto 80px",
+                        width: "100%", maxWidth: "98vw", margin: "0 auto 120px",
                         animation: "fadeUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) both",
                         padding: isMobile ? "0 12px" : "0 40px",
                         position: "relative",
                         top: isMobile ? 0 : 90,
-                        marginTop: 85
+                        marginTop: 5
                     }}>
                         <div style={{
                             textAlign: "center", marginBottom: 40,
@@ -2342,9 +2675,9 @@ export default function UppCarLanding() {
                                         <div style={{ padding: 24 }}>
                                             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 16 }}>
                                                 <div>
-                                                    <h3 style={{ fontFamily: "'Syne',sans-serif", fontSize: 20, fontWeight: 800, color: "var(--text-main)", marginBottom: 4 }}>{car.name}</h3>
+                                                    <h3 style={{ fontFamily: "'Syne',sans-serif", fontSize: 20, fontWeight: 800, color: "var(--text-main)", marginBottom: 4 }}>{car.name} {car.plate ? car.plate : ''}</h3>
                                                     <div style={{ fontSize: 13, color: "var(--text-muted)", display: "flex", alignItems: "center", gap: 6 }}>
-                                                        <MapPinIcon size={13} /> {car.plate || "Location available"}
+                                                        <MapPinIcon size={13} /> {car.city || "Location available"}
                                                     </div>
                                                 </div>
                                                 <div style={{ textAlign: "right" }}>
@@ -2369,7 +2702,19 @@ export default function UppCarLanding() {
                                                 className="primary-btnDE"
                                                 style={{ width: "100%", padding: "14px", borderRadius: 16, fontSize: 15, display: "flex", alignItems: "center", justifyContent: "center", gap: 10 }}
                                                 onClick={() => {
-                                                    navigate(`/booking/${car.id}`);
+                                                    const isComplete = currentUser &&
+                                                        currentUser.firstName &&
+                                                        currentUser.lastName &&
+                                                        (currentUser.number || currentUser.phone) &&
+                                                        currentUser.address &&
+                                                        currentUser.city;
+
+                                                    if (!isComplete) {
+                                                        // Redirection vers profil avec état "incomplet"
+                                                        navigate('/profile', { state: { incomplete: true } });
+                                                    } else {
+                                                        navigate(`/booking/${car.id}`);
+                                                    }
                                                 }}
                                             >
                                                 {selectedLang === "AR" ? (
@@ -2411,7 +2756,7 @@ export default function UppCarLanding() {
                 )}
 
                 {/* ══ MARQUEE ══ */}
-                <section style={{ padding: isMobile ? "32px 0" : "50px 0", position: "relative", top: isMobile ? 20 : 80, paddingTop: isMobile ? "30px" : "166px" }}>
+                <section style={{ padding: isMobile ? "32px 0" : "50px 0", position: "relative", top: isMobile ? 20 : 80, paddingTop: isMobile ? "30px" : "40px" }}>
                     <div style={{ position: "absolute", top: 0, left: 0, width: "15%", height: "100%", zIndex: 2, pointerEvents: "none" }} />
                     <div style={{ position: "absolute", top: 0, right: 0, width: "15%", height: "100%", zIndex: 2, pointerEvents: "none" }} />
                     <div style={{ textAlign: "center", marginBottom: isMobile ? 24 : 40, position: "relative", zIndex: 1 }}>

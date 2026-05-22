@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import bgImageDark from "../../asset/eeeee.png";
 import bgImageLight from "../../asset/ee.png";
 import { TrashIcon } from "lucide-react";
@@ -331,7 +331,9 @@ label:hover .camera-overlay { opacity: 1; }
 
 export default function Profile() {
     const navigate = useNavigate();
-    const [selectedLang] = useState(localStorage.getItem("appLang") || "FR");
+    const location = useLocation();
+    const [selectedLang, setSelectedLang] = useState(localStorage.getItem("appLang") || "FR");
+    const [langMenuOpen, setLangMenuOpen] = useState(false);
 
     const t = (path, defaultText) => {
         if (selectedLang !== "AR" && selectedLang !== "FR") return defaultText;
@@ -346,6 +348,7 @@ export default function Profile() {
 
     useEffect(() => {
         document.documentElement.dir = selectedLang === "AR" ? "rtl" : "ltr";
+        localStorage.setItem("appLang", selectedLang);
     }, [selectedLang]);
     const [isDarkMode, setIsDarkMode] = useState(
         () => localStorage.getItem("appTheme") === "dark"
@@ -423,19 +426,41 @@ export default function Profile() {
         }
     }, []);
     useEffect(() => {
-        const storedUser = localStorage.getItem("user");
-        if (storedUser) {
-            try {
-                const pUser = JSON.parse(storedUser);
-                setFirstName(pUser.firstName || "");
-                setLastName(pUser.lastName || "");
-                setEmail(pUser.email || "");
-                setPhone(pUser.number || pUser.phone || "");
-                setCurrentUser(pUser);
-            } catch (e) {
-                console.error("Error parsing user data", e);
-            }
+        if (location.state?.incomplete) {
+            setActiveTab("settings");
+            setIsEditing(true);
         }
+    }, [location]);
+
+    useEffect(() => {
+        const fetchUser = async () => {
+            const token = localStorage.getItem("accessToken");
+            if (!token) return;
+
+            try {
+                const response = await fetch("http://localhost:8080/api/auth/me", {
+                    headers: { "Authorization": `Bearer ${token}` }
+                });
+                if (response.ok) {
+                    const data = await response.json();
+                    setFirstName(data.firstName || "");
+                    setLastName(data.lastName || "");
+                    setEmail(data.email || "");
+                    setPhone(data.phone || "");
+                    setAddress(data.address || "");
+                    setCity(data.city || "");
+                    setCountry(data.country || "");
+                    setCurrentUser(data);
+
+                    // Sync localStorage just in case other components use it
+                    localStorage.setItem("user", JSON.stringify(data));
+                }
+            } catch (error) {
+                console.error("Error fetching user data", error);
+            }
+        };
+
+        fetchUser();
     }, []);
     const handleRemoveImage = () => {
         setProfileImage(null);
@@ -454,14 +479,50 @@ export default function Profile() {
             if (userMenuRef.current && !userMenuRef.current.contains(e.target)) {
                 setUserMenuOpen(false);
             }
+            if (!e.target.closest(".lang-menu-wrap")) {
+                setLangMenuOpen(false);
+            }
         };
         document.addEventListener("mousedown", handleClickOutside);
         return () => document.removeEventListener("mousedown", handleClickOutside);
     }, []);
 
-    const handleSave = () => {
+    const handleSave = async () => {
         setIsEditing(false);
-        // Implement save logic to backend here
+        const updatedData = {
+            firstName,
+            lastName,
+            email,
+            phone,
+            address,
+            city,
+            country,
+            name: `${firstName} ${lastName}`.trim() || currentUser.name
+        };
+
+        const token = localStorage.getItem("accessToken");
+        try {
+            const response = await fetch("http://localhost:8080/api/auth/update-profile", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`
+                },
+                body: JSON.stringify(updatedData)
+            });
+
+            if (response.ok) {
+                const savedUser = await response.json();
+                setCurrentUser(savedUser);
+                localStorage.setItem("user", JSON.stringify(savedUser));
+
+            } else {
+                alert("Erreur lors de la sauvegarde du profil.");
+            }
+        } catch (error) {
+            console.error("Error saving profile", error);
+            alert("Erreur réseau lors de la sauvegarde.");
+        }
     };
 
     const tabs = [
@@ -511,8 +572,8 @@ export default function Profile() {
                         <div style={{ display: "flex", alignItems: "center", gap: isMobile ? 8 : 12 }}>
                             {isMobile ? (
                                 <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                                    <button className="icon-btn" onClick={() => setIsDarkMode(!isDarkMode)}>
-                                        {isDarkMode ? <SunIcon /> : <MoonIcon />}
+                                    <button className="icon-btn" onClick={() => setSelectedLang(selectedLang === "FR" ? "AR" : "FR")} title={selectedLang === "FR" ? "Switch to Arabic" : "Switch to French"}>
+                                        <GlobeIcon size={18} />
                                     </button>
                                     <button
                                         className="icon-btn"
@@ -529,9 +590,82 @@ export default function Profile() {
                                 </div>
                             ) : (
                                 <>
-                                    <button className="icon-btn" onClick={() => setIsDarkMode(!isDarkMode)}>
-                                        {isDarkMode ? <SunIcon /> : <MoonIcon />}
-                                    </button>
+                                    <div className="lang-menu-wrap" style={{ position: "relative" }}>
+                                        <button
+                                            className="icon-btn"
+                                            style={{
+                                                position: "relative",
+                                                background: langMenuOpen ? "var(--text-main)" : "transparent",
+                                                color: langMenuOpen ? "var(--bg-color)" : "var(--text-main)",
+                                                transition: "all 0.3s cubic-bezier(0.16,1,0.3,1)",
+                                            }}
+                                            onClick={() => setLangMenuOpen(p => !p)}
+                                            aria-label="Changer de langue"
+                                        >
+                                            <svg
+                                                style={{
+                                                    transition: "transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1)",
+                                                    transform: langMenuOpen ? "rotate(-180deg) scale(1.15)" : "rotate(0deg) scale(1)"
+                                                }}
+                                                width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.1" strokeLinecap="round" strokeLinejoin="round"
+                                            >
+                                                <path d="m5 8 6 6" /><path d="m4 14 6-6 2-3" /><path d="M2 5h12" /><path d="M7 2h1" /><path d="m22 22-5-10-5 10" /><path d="M14 18h6" />
+                                            </svg>
+                                            <span style={{
+                                                position: "absolute", top: -4, right: -4,
+                                                background: "var(--accent-color)", color: "#fff",
+                                                fontSize: 9, fontWeight: 800, padding: "2px 5px", borderRadius: 6,
+                                                lineHeight: 1, boxShadow: "0 2px 8px rgba(0,0,0,0.3)",
+                                                pointerEvents: "none"
+                                            }}>{selectedLang}</span>
+                                        </button>
+
+                                        {langMenuOpen && (
+                                            <div style={{
+                                                position: "absolute",
+                                                top: "50%",
+                                                right: "calc(100% + 12px)",
+                                                left: "auto",
+                                                transform: "translateY(-50%)",
+                                                display: "flex",
+                                                flexDirection: "row",
+                                                background: isDarkMode ? "rgba(10,14,26,0.97)" : "rgba(255,255,255,0.97)",
+                                                borderRadius: "14px",
+                                                padding: "6px",
+                                                border: `1px solid ${isDarkMode ? "rgba(255,255,255,0.08)" : "rgba(16,185,129,0.15)"}`,
+                                                gap: "4px",
+                                                alignItems: "center",
+                                                boxShadow: isDarkMode ? "0 10px 30px rgba(0,0,0,0.4)" : "0 10px 25px rgba(0,0,0,0.1)",
+                                                backdropFilter: "blur(20px)",
+                                                zIndex: 100
+                                            }}>
+                                                {[
+                                                    { code: "AR", label: "العربية" },
+                                                    { code: "FR", label: "Français" },
+                                                    { code: "EN", label: "English" }
+                                                ].map(lang => (
+                                                    <button
+                                                        key={lang.code}
+                                                        onClick={() => { setSelectedLang(lang.code); setLangMenuOpen(false); }}
+                                                        style={{
+                                                            display: "flex", alignItems: "center", gap: "6px",
+                                                            background: selectedLang === lang.code ? "var(--text-main)" : "transparent",
+                                                            color: selectedLang === lang.code ? "var(--bg-color)" : "var(--text-muted)",
+                                                            border: "none", borderRadius: "9px", padding: "6px 12px",
+                                                            fontSize: "12px", fontWeight: "800", cursor: "pointer",
+                                                            textTransform: "uppercase", transition: "all 0.3s",
+                                                            fontFamily: "'Syne', sans-serif",
+                                                        }}
+                                                        onMouseEnter={e => { if (selectedLang !== lang.code) e.currentTarget.style.background = isDarkMode ? "rgba(255,255,255,0.06)" : "rgba(0,0,0,0.04)"; }}
+                                                        onMouseLeave={e => { if (selectedLang !== lang.code) e.currentTarget.style.background = "transparent"; }}
+                                                    >
+                                                        <span style={{ fontSize: "16px", filter: selectedLang !== lang.code ? "grayscale(40%) opacity(0.8)" : "none", transition: "all 0.3s" }}>{lang.flag}</span>
+                                                        {lang.label}
+                                                    </button>
+                                                ))}
+                                            </div>
+                                        )}
+                                    </div>
                                     <div style={{ width: 1, height: 24, background: "var(--nav-border)", margin: "0 4px" }} />
                                     <div className="login-menu-wrap" style={{ position: "relative" }}>
                                         {currentUser ? (
@@ -996,6 +1130,25 @@ export default function Profile() {
                         </div>
 
                         {/* Overview Content */}
+                        {location.state?.incomplete && activeTab === "settings" && (
+                            <div style={{
+                                padding: "16px 24px",
+                                borderRadius: 16,
+                                background: "rgba(239, 68, 68, 0.1)",
+                                border: "1px solid rgba(239, 68, 68, 0.2)",
+                                color: "#ef4444",
+                                display: "flex",
+                                alignItems: "center",
+                                gap: 12,
+                                animation: "fadeUp 0.4s ease",
+                                marginBottom: 16
+                            }}>
+                                <ShieldIcon size={20} />
+                                <span style={{ fontWeight: 700, fontSize: 14 }}>
+                                    {selectedLang === "AR" ? "يرجى إكمال ملفك الشخصي للمتابعة مع الحجز." : "Veuillez compléter votre profil pour continuer la réservation."}
+                                </span>
+                            </div>
+                        )}
                         {activeTab === "overview" && (
                             <div style={{ display: "flex", flexDirection: "column", gap: 32, animation: "fadeUp 0.4s ease" }}>
                                 <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "repeat(auto-fit, minmax(240px, 1fr))", gap: 24 }}>

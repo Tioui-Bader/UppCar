@@ -60,6 +60,13 @@ public class CarController {
                 });
     }
 
+    @GetMapping("/agency-details/{id}")
+    public ResponseEntity<Agency> getAgencyDetails(@PathVariable Long id) {
+        return agencyRepository.findById(id)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+    }
+
     @GetMapping("/debug/all-ids")
     public List<Long> getAllIds() {
         List<Long> ids = carService.getAllCars().stream().map(Car::getId).collect(Collectors.toList());
@@ -96,11 +103,13 @@ public class CarController {
         existing.setPrice(carDTO.getPrice());
         existing.setFuel(carDTO.getFuel());
         existing.setSeats(carDTO.getSeats());
-        existing.setYear(carDTO.getYear());
         existing.setStatus(carDTO.getStatus());
         existing.setCity(carDTO.getCity());
-        existing.setColor(carDTO.getColor());
-        existing.setPhotos(carDTO.getPhotos());
+        List<String> photos = carDTO.getPhotos();
+        existing.setImageUrl1(photos != null && photos.size() > 0 ? photos.get(0) : null);
+        existing.setImageUrl2(photos != null && photos.size() > 1 ? photos.get(1) : null);
+        existing.setImageUrl3(photos != null && photos.size() > 2 ? photos.get(2) : null);
+        existing.setImageUrl4(photos != null && photos.size() > 3 ? photos.get(3) : null);
         existing.setAgency(agency);
         existing.setStartDate(carDTO.getStartDate());
         existing.setEndDate(carDTO.getEndDate());
@@ -124,11 +133,14 @@ public class CarController {
         dto.setPrice(car.getPrice());
         dto.setFuel(car.getFuel());
         dto.setSeats(car.getSeats());
-        dto.setYear(car.getYear());
         dto.setStatus(car.getStatus());
         dto.setCity(car.getCity());
-        dto.setColor(car.getColor());
-        dto.setPhotos(car.getPhotos());
+        List<String> photos = new java.util.ArrayList<>();
+        if (car.getImageUrl1() != null) photos.add(car.getImageUrl1());
+        if (car.getImageUrl2() != null) photos.add(car.getImageUrl2());
+        if (car.getImageUrl3() != null) photos.add(car.getImageUrl3());
+        if (car.getImageUrl4() != null) photos.add(car.getImageUrl4());
+        dto.setPhotos(photos);
         dto.setAgencyId(car.getAgency().getId());
         dto.setStartDate(car.getStartDate());
         dto.setEndDate(car.getEndDate());
@@ -143,11 +155,13 @@ public class CarController {
         car.setPrice(dto.getPrice());
         car.setFuel(dto.getFuel());
         car.setSeats(dto.getSeats());
-        car.setYear(dto.getYear());
         car.setStatus(dto.getStatus());
         car.setCity(dto.getCity());
-        car.setColor(dto.getColor());
-        car.setPhotos(dto.getPhotos());
+        List<String> photos = dto.getPhotos();
+        car.setImageUrl1(photos != null && photos.size() > 0 ? photos.get(0) : null);
+        car.setImageUrl2(photos != null && photos.size() > 1 ? photos.get(1) : null);
+        car.setImageUrl3(photos != null && photos.size() > 2 ? photos.get(2) : null);
+        car.setImageUrl4(photos != null && photos.size() > 3 ? photos.get(3) : null);
         car.setStartDate(dto.getStartDate());
         car.setEndDate(dto.getEndDate());
         return car;

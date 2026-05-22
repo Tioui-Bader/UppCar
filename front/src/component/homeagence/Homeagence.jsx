@@ -304,7 +304,7 @@ background: linear-gradient(135deg, rgb(5, 150, 105), rgb(25, 117, 83));
 
 /* SECTION HEADERS */
 .section-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;}
-.section-title{font-family:'Syne',sans-serif;font-size:18px;font-weight:900;letter-spacing:-.4px;position:relative;display:inline-block;}
+.section-title{font-family:'Syne',sans-serif;font-size:20px;font-weight:900;letter-spacing:-.4px;position:relative;display:inline-block;}
 .section-title-line{position:absolute;bottom:-6px;left:0;width:40px;height:3px;background:var(--grad);border-radius:2px;}
 .section-pill{display:flex;align-items:center;gap:6px;font-size:11px;font-weight:700;color:var(--muted2);background:var(--surface2);border:1px solid var(--border);padding:5px 12px;border-radius:20px;cursor:pointer;transition:all .25s;}
 .section-pill:hover{border-color:var(--accent);color:var(--accent);}
@@ -365,8 +365,8 @@ tr:last-child td{border-bottom:none;}
 .form-row{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
 
 /* MODAL */
-.modal-overlay{position:fixed;inset:0;backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);z-index:1000;display:flex;align-items:center;justify-content:center;animation:fadeIn .2s ease;padding: 10px;}
-.modal{background:var(--card);border:1px solid var(--border);border-radius:24px;padding:32px;width:100%;max-width:600px;max-height:90vh;overflow-y:auto;animation:slideUp .3s cubic-bezier(.16,1,.3,1);position:relative;box-shadow:0 25px 50px -12px rgba(0,0,0,0.25);scrollbar-width: thin; transition: all 0.3s ease;position: relative;bottom: 3px;}
+.modal-overlay{position:fixed;inset:0;backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);z-index:1000;display:flex;justify-content:center;overflow-y:auto;animation:fadeIn .2s ease;padding: 40px 10px;}
+.modal{margin:auto;background:var(--card);border:1px solid var(--border);border-radius:24px;padding:32px;width:100%;max-width:600px;animation:slideUp .3s cubic-bezier(.16,1,.3,1);position:relative;box-shadow:0 25px 50px -12px rgba(0,0,0,0.25);transition: all 0.3s ease;position: relative;bottom: 3px;}
 .modal-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:28px;transition:margin .3s;}
 @media(max-width:900px){ .modal-header{margin-bottom:14px !important;} }
 .modal-title{font-family:'Syne',sans-serif;font-size:24px;font-weight:900;letter-spacing:-.6px;}
@@ -532,7 +532,7 @@ tr:last-child td{border-bottom:none;}
   .modal { 
     padding: 12px 18px 24px; 
     border-radius: 24px; 
-    max-height: 98vh; 
+    max-height: none !important; 
     width: 100% !important;
     max-width: 100% !important;
     margin: 0;
@@ -760,7 +760,7 @@ const icons = {
     cars: "M14 16H9m10 0h3v-3.15a1 1 0 0 0-.84-.99L16 11l-2.7-3.6a2 2 0 0 0-1.6-.8H9.3a2 2 0 0 0-1.6.8L5 11l-5.16.86A1 1 0 0 0 1 12.85V16h3",
     reservations: ["M8 2v3M16 2v3M3 8h18M5 4h14a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2z"],
     customers: ["M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2", "M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"],
-    map: ["M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"],
+    mapPin: ["M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"],
     messages: "M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z",
     finance: ["M12 1v22", "M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"],
     analytics: ["M18 20V10", "M12 20V4", "M6 20v-6"],
@@ -791,14 +791,201 @@ const icons = {
 };
 
 /* ─────────────────────────────── DATA ─────────────────────────────── */
+const IS_MOCK = (() => {
+    try {
+        const d = JSON.parse(localStorage.getItem("agencyData"));
+        return d && d.email === "badrtiwi493@gmail.com";
+    } catch (e) { return false; }
+})();
+
 const CARS = [];
-const RESERVATIONS = [];
-const CLIENTS = [];
-const MONTHS = ["Jan", "Fév", "Mar", "Avr", "Mai", "Jun", "Jul"];
+const MOCK_RESERVATIONS = [
+    {
+        id: "RES-8392",
+        client: "Yassine El Fassi",
+        avatar: "Y",
+        color: "#3b82f6",
+        car: "Mercedes-Benz Classe G",
+        from: "12 Mai 2026",
+        to: "15 Mai 2026",
+        amount: 8500,
+        status: "pending",
+        idCardFront: "https://images.unsplash.com/photo-1621981386829-9b458a2cddde?auto=format&fit=crop&q=80&w=800",
+        drivingLicense: "https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?auto=format&fit=crop&q=80&w=800"
+    },
+    {
+        id: "RES-8391",
+        client: "Sarah Bennani",
+        avatar: "S",
+        color: "#10b981",
+        car: "Range Rover Sport",
+        from: "08 Mai 2026",
+        to: "10 Mai 2026",
+        amount: 4200,
+        status: "confirmed",
+        idCardFront: "https://images.unsplash.com/photo-1589829085413-56de8ae18c73?auto=format&fit=crop&q=80&w=800",
+        drivingLicense: "https://images.unsplash.com/photo-1620063259954-46c650bd8212?auto=format&fit=crop&q=80&w=800"
+    },
+    {
+        id: "RES-8390",
+        client: "Mehdi Tazi",
+        avatar: "M",
+        color: "#8b5cf6",
+        car: "Porsche 911 Carrera",
+        from: "01 Mai 2026",
+        to: "03 Mai 2026",
+        amount: 12000,
+        status: "cancelled",
+        idCardFront: "https://images.unsplash.com/photo-1621981386829-9b458a2cddde?auto=format&fit=crop&q=80&w=800",
+        drivingLicense: "https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?auto=format&fit=crop&q=80&w=800"
+    },
+    {
+        id: "RES-8393",
+        client: "Amine Chraibi",
+        avatar: "A",
+        color: "#f59e0b",
+        car: "BMW Série 4",
+        from: "18 Mai 2026",
+        to: "22 Mai 2026",
+        amount: 6000,
+        status: "pending",
+        idCardFront: "https://images.unsplash.com/photo-1589829085413-56de8ae18c73?auto=format&fit=crop&q=80&w=800",
+        drivingLicense: "https://images.unsplash.com/photo-1620063259954-46c650bd8212?auto=format&fit=crop&q=80&w=800"
+    }
+];
+const MOCK_CLIENTS = [
+    {
+        name: "Yassine Benali",
+        email: "yassine.benali@email.com",
+        spend: "28 400 Dh",
+        spendVal: 28400,
+        tier: "Platinum",
+        initials: "YB",
+        color: "#bf7fff",
+        phone: "+212 6 61 23 45 67",
+        city: "Marrakech",
+        totalRentals: 14,
+        cin: "AB123456",
+        license: "01/12345"
+    },
+    {
+        name: "Sara Alami",
+        email: "sara.alami@email.com",
+        spend: "19 200 Dh",
+        spendVal: 19200,
+        tier: "Gold",
+        initials: "SA",
+        color: "#f59e0b",
+        phone: "+212 6 62 34 56 78",
+        city: "Casablanca",
+        totalRentals: 8,
+        cin: "CD345678",
+        license: "02/23456"
+    },
+    {
+        name: "Karim Hajji",
+        email: "karim.hajji@email.com",
+        spend: "15 600 Dh",
+        spendVal: 15600,
+        tier: "Gold",
+        initials: "KH",
+        color: "#f59e0b",
+        phone: "+212 6 63 45 67 89",
+        city: "Rabat",
+        totalRentals: 6,
+        cin: "EF567890",
+        license: "03/34567"
+    },
+    {
+        name: "Meryem Naji",
+        email: "meryem.naji@email.com",
+        spend: "9 800 Dh",
+        spendVal: 9800,
+        tier: "Silver",
+        initials: "MN",
+        color: "#9ca3af",
+        phone: "+212 6 64 56 78 90",
+        city: "Tangier",
+        totalRentals: 4,
+        cin: "GH789012",
+        license: "04/45678"
+    },
+    {
+        name: "Amine Boussif",
+        email: "amine.boussif@email.com",
+        spend: "8 400 Dh",
+        spendVal: 8400,
+        tier: "Silver",
+        initials: "AB",
+        color: "#9ca3af",
+        phone: "+212 6 65 67 89 01",
+        city: "Agadir",
+        totalRentals: 3,
+        cin: "IJ901234",
+        license: "05/56789"
+    },
+    {
+        name: "Omar Moufid",
+        email: "omar.moufid@email.com",
+        spend: "6 200 Dh",
+        spendVal: 6200,
+        tier: "Silver",
+        initials: "OM",
+        color: "#9ca3af",
+        phone: "+212 6 66 78 90 12",
+        city: "Fes",
+        totalRentals: 2,
+        cin: "KL123456",
+        license: "06/67890"
+    }
+];
+const MONTHS = ["Jan", "Fév", "Mar", "Avr", "Mai", "Jun", "Jul", "Aoû", "Sep", "Oct", "Nov", "Déc"];
+const CHART_MONTHS = ["Avr 25", "Mai 25", "Jun 25", "Jul 25", "Aoû 25", "Sep 25", "Oct 25", "Nov 25", "Déc 25", "Jan 26", "Fév 26", "Mar 26", "Avr 26"];
 const DAYS_OF_WEEK = ["Lun", "Mar", "Mer", "Jeu", "Ven", "Sam", "Dim"];
-const REVENUE = [0, 0, 0, 0, 0, 0, 0];
-const WEEKLY_REVENUE = [0, 0, 0, 0, 0, 0, 0];
-const BOOKINGS_PER_MONTH = [0, 0, 0, 0, 0, 0, 0];
+// Power BI — CA mensuel (total ≈ 3 985 000 MAD)
+const MOCK_REVENUE = [290000, 320000, 380000, 410000, 350000, 450000, 320000, 280000, 250000, 310000, 330000, 295000, 340000];
+const MOCK_WEEKLY_REVENUE = [52000, 48000, 61000, 57000, 64000, 70000, 68000];
+const MOCK_MONTHLY_REVENUE = Array.from({ length: 31 }, (_, i) => 9000 + Math.sin(i * 0.45) * 3500 + i * 120);
+// Power BI — Réservations par mois (total = 500)
+const MOCK_BOOKINGS_PER_MONTH = [39, 36, 45, 48, 40, 52, 37, 38, 33, 42, 44, 46, 50];
+// Power BI — Voitures les plus rentables
+const MOCK_PROFITABLE_CARS_DATA = [395000, 340000, 310000, 298000, 270000, 250000, 245000, 235000, 200000, 180000, 170000, 160000];
+const MOCK_PROFITABLE_CARS_LABELS = ["Octavia", "Corolla", "A4", "208", "500", "Classe C", "Qashqai", "Clio", "Tucson", "Logan", "Focus", "Série 3"];
+// Power BI — Marques les plus louées
+const MOCK_RENTED_BRANDS_DATA = [48, 44, 41, 39, 37, 36, 34, 33, 32, 31, 30, 30, 26, 25, 23];
+const MOCK_RENTED_BRANDS_LABELS = ["Ford", "Peugeot", "Seat", "BMW", "Hyundai", "Skoda", "Nissan", "Mercedes", "Toyota", "Renault", "Audi", "VW", "Dacia", "Kia", "Fiat"];
+// Power BI — Réservations par trimestre
+const MOCK_QUARTER_DATA = [119, 136, 115, 130];
+const MOCK_QUARTER_LABELS = ["T1", "T2", "T3", "T4"];
+// Power BI — TOP clients
+const MOCK_TOP_CLIENTS_DATA = [390000, 310000, 290000, 270000, 240000, 220000, 200000, 185000, 170000, 155000, 140000, 130000, 118000, 110000, 100000];
+const MOCK_TOP_CLIENTS_LABELS = ["Nora", "Sophia", "Ali", "Karim", "Aya", "Lina", "Hugo", "Ilyas", "Lucas", "Emily", "Omar", "John", "Noah", "Ahmed", "Sara"];
+// Power BI — Maintenance par mois et modèle
+const MOCK_MAINT_MONTHS = ["Jun", "Nov", "Dec", "Jan", "Mar", "Mai", "Aug", "Sep", "Oct", "Apr", "Jul", "Feb"];
+const MOCK_MAINT_SERIES = [
+    { label: "500", color: "#f59e0b", values: [4, 3, 2, 3, 2, 3, 2, 2, 2, 2, 1, 1] },
+    { label: "Classe C", color: "#a855f7", values: [3, 4, 3, 2, 2, 2, 2, 2, 2, 1, 2, 1] },
+    { label: "Focus", color: "#ef4444", values: [5, 4, 4, 3, 3, 2, 2, 2, 2, 2, 2, 1] },
+    { label: "Ibiza", color: "#ec4899", values: [4, 4, 3, 3, 2, 2, 2, 2, 2, 2, 1, 1] },
+    { label: "Tucson", color: "#3b82f6", values: [6, 5, 5, 4, 3, 3, 3, 2, 2, 2, 2, 1] },
+];
+
+const RESERVATIONS = IS_MOCK ? MOCK_RESERVATIONS : [];
+const CLIENTS = IS_MOCK ? MOCK_CLIENTS : [];
+const QUARTER_DATA = IS_MOCK ? MOCK_QUARTER_DATA : [0, 0, 0, 0];
+const QUARTER_LABELS = IS_MOCK ? MOCK_QUARTER_LABELS : ["T1", "T2", "T3", "T4"];
+const TOP_CLIENTS_DATA = IS_MOCK ? MOCK_TOP_CLIENTS_DATA : [];
+const TOP_CLIENTS_LABELS = IS_MOCK ? MOCK_TOP_CLIENTS_LABELS : [];
+const MAINT_MONTHS = IS_MOCK ? MOCK_MAINT_MONTHS : ["Jan", "Feb", "Mar", "Apr", "Mai", "Jun"];
+const MAINT_SERIES = IS_MOCK ? MOCK_MAINT_SERIES : [];
+const REVENUE = IS_MOCK ? MOCK_REVENUE : Array(13).fill(0);
+const WEEKLY_REVENUE = IS_MOCK ? MOCK_WEEKLY_REVENUE : Array(7).fill(0);
+const MONTHLY_REVENUE = IS_MOCK ? MOCK_MONTHLY_REVENUE : Array(31).fill(0);
+const BOOKINGS_PER_MONTH = IS_MOCK ? MOCK_BOOKINGS_PER_MONTH : Array(13).fill(0);
+const PROFITABLE_CARS_DATA = IS_MOCK ? MOCK_PROFITABLE_CARS_DATA : [];
+const PROFITABLE_CARS_LABELS = IS_MOCK ? MOCK_PROFITABLE_CARS_LABELS : [];
+const RENTED_BRANDS_DATA = IS_MOCK ? MOCK_RENTED_BRANDS_DATA : [];
+const RENTED_BRANDS_LABELS = IS_MOCK ? MOCK_RENTED_BRANDS_LABELS : [];
 
 /* ─────────────────────────────── COMPONENTS ─────────────────────────────── */
 
@@ -885,47 +1072,196 @@ function StatCard({ label, value, change, up, color, icon }) {
         </div>
     );
 }
+/* ─────────── CENTRALIZED MONTH DATA GENERATOR ─────────── */
+/* Deterministic pseudo-random: same (m,y) always returns same data */
+function getMonthData(m, y) {
+    if (!IS_MOCK) {
+        return {
+            baseRental: 0, discounts: 0, insurance: 0, serviceFees: 0, taxes: 0, netRevenue: 0, totalRevenue: 0,
+            reservations: 0, activeClients: 0, revenueChange: "+0%", revenueUp: true,
+            resChange: "+0", resUp: true, cliChange: "+0", cliUp: true,
+            bookingData: Array.from({ length: new Date(y, m, 0).getDate() }, () => 0),
+            daysInMonth: new Date(y, m, 0).getDate(),
+            demoReservations: [], pendingCount: 0,
+            fmt: (n) => "0.00",
+        };
+    }
 
-function RevenueSummary({ dark, t, lang, currency }) {
+    const seed = m * 31 + (y - 2024) * 397;
+    const r = (offset) => { const x = Math.sin(seed + offset) * 43758.5453; return x - Math.floor(x); };
+
+    // Seasonal factor: peak in summer (jul-aug), low in jan
+    const seasonal = 0.65 + 0.55 * Math.sin((m - 1) * Math.PI / 6 - 0.3);
+
+    const baseRental = Math.round((10000 + r(1) * 12000) * seasonal);
+    const discountPct = 0.04 + r(2) * 0.06;
+    const discounts = -Math.round(baseRental * discountPct);
+    const insurance = Math.round(baseRental * (0.09 + r(3) * 0.06));
+    const serviceFees = Math.round(baseRental * (0.02 + r(4) * 0.04));
+    const netRevenue = baseRental + discounts + insurance + serviceFees;
+    const taxes = Math.round(netRevenue * (0.07 + r(5) * 0.04));
+    const totalRevenue = netRevenue + taxes;
+
+    // Previous month for % change
+    const pm = m === 1 ? 12 : m - 1;
+    const py = m === 1 ? y - 1 : y;
+    const ps = pm * 31 + (py - 2024) * 397;
+    const pr = (o) => { const x = Math.sin(ps + o) * 43758.5453; return x - Math.floor(x); };
+    const prevSeasonal = 0.65 + 0.55 * Math.sin((pm - 1) * Math.PI / 6 - 0.3);
+    const prevBase = Math.round((10000 + pr(1) * 12000) * prevSeasonal);
+    const prevNet = Math.round(prevBase * (1 + pr(3) * 0.15 - pr(2) * 0.05));
+    const prevTotal = Math.round(prevNet * 1.08);
+    const revChangePct = ((totalRevenue - prevTotal) / prevTotal * 100);
+    const revenueChange = (revChangePct >= 0 ? '+' : '') + revChangePct.toFixed(1) + '%';
+    const revenueUp = revChangePct >= 0;
+
+    // Reservations & clients
+    const reservations = Math.round((22 + r(6) * 40) * seasonal);
+    const activeClients = Math.round((15 + r(7) * 25) * seasonal);
+    const resChange = (r(8) > 0.5 ? '+' : '') + Math.round((r(8) - 0.3) * 14);
+    const resUp = r(8) > 0.3;
+    const cliChange = (r(9) > 0.5 ? '+' : '') + Math.round((r(9) - 0.3) * 8);
+    const cliUp = r(9) > 0.3;
+
+    // Daily booking counts (bar chart) — truly varies per month
+    const daysInMonth = new Date(y, m, 0).getDate();
+    const peakDay = Math.round(5 + r(10) * 20); // peak booking day varies
+    const avgBooks = Math.round((3 + r(11) * 6) * seasonal);
+    const bookingData = Array.from({ length: daysInMonth }, (_, i) => {
+        const dist = Math.abs(i - peakDay);
+        const wave = avgBooks + Math.sin(i * 0.5 + m * 0.7) * 2.5 + Math.cos(i * 0.3 + m) * 1.5;
+        const peak = Math.max(0, (1 - dist / 15) * avgBooks * 0.7);
+        return Math.max(1, Math.round(wave + peak + r(20 + i) * 2 - 1));
+    });
+
+    // Latest reservations — 5 to 8 per month, completely unique combinations
+    const FIRST_NAMES = ["Yassine", "Sara", "Karim", "Meryem", "Amine", "Fatima", "Omar", "Leila", "Mehdi", "Nadia", "Ayoub", "Hajar", "Zakaria", "Kenza", "Ilias", "Imane", "Bilal", "Chaimae", "Hamza", "Salma", "Othmane", "Soukaina", "Adil", "Asmaa"];
+    const LAST_NAMES = ["Benali", "Alami", "Hajji", "Naji", "Boussif", "Zahra", "Moufid", "Lazrak", "Salah", "Aouad", "Tazi", "Bennani", "El Fassi", "Chraibi", "Amrani", "Tahiri", "Lahlou", "Mansouri", "Kabbaj", "Berrada", "Alaoui", "Bensouda"];
+    const CARS_POOL = ["Dacia Logan", "Renault Clio", "Hyundai Tucson", "Peugeot 208", "Toyota Corolla", "Dacia Sandero", "Seat Ibiza", "Ford Focus", "Porsche 911", "Range Rover", "Mercedes-Benz G", "BMW Série 4", "VW Golf", "Audi A3", "Fiat 500", "Kia Sportage", "Jeep Renegade"];
+    const COLORS = ["#10b981", "#f59e0b", "#3b82f6", "#ef4444", "#a855f7", "#06b6d4", "#f97316", "#8b5cf6", "#ec4899", "#14b8a6"];
+    const STATUSES = ["confirmed", "pending", "confirmed", "cancelled", "pending", "confirmed", "pending", "confirmed"];
+
+    // Pick 5 to 8 unique clients per month
+    const numRes = Math.floor(5 + r(100) * 4); // 5 to 8
+
+    const demoReservations = Array.from({ length: numRes }).map((_, i) => {
+        const fn = FIRST_NAMES[Math.floor(r(110 + i) * FIRST_NAMES.length)];
+        const ln = LAST_NAMES[Math.floor(r(120 + i) * LAST_NAMES.length)];
+        const car = CARS_POOL[Math.floor(r(130 + i) * CARS_POOL.length)];
+        const color = COLORS[Math.floor(r(140 + i) * COLORS.length)];
+        const clientName = `${fn} ${ln}`;
+        const avatar = `${fn[0]}${ln[0]}`.toUpperCase();
+        const dayFrom = 1 + Math.floor(r(60 + i) * (daysInMonth - 5));
+        const nights = 2 + Math.floor(r(70 + i) * 5);
+        const dayTo = Math.min(dayFrom + nights, daysInMonth);
+        const mm = String(m).padStart(2, '0');
+        const amount = Math.round((400 + r(80 + i) * 2600) / 10) * 10;
+        return {
+            id: `RES-${8390 + i + (m * 10)}`,
+            avatar: avatar,
+            client: clientName,
+            car: car,
+            from: `${String(dayFrom).padStart(2, '0')} ${MONTHS[m - 1]} ${y}`,
+            to: `${String(dayTo).padStart(2, '0')} ${MONTHS[m - 1]} ${y}`,
+            amount,
+            status: STATUSES[i],
+            color: color,
+            idCardFront: "https://images.unsplash.com/photo-1589758438368-0ad531db3366?auto=format&fit=crop&q=80&w=800",
+            idCardBack: "https://images.unsplash.com/photo-1621981386829-9b458a2cddde?auto=format&fit=crop&q=80&w=800",
+            drivingLicenseFront: "https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?auto=format&fit=crop&q=80&w=800",
+            drivingLicenseBack: "https://images.unsplash.com/photo-1506784983877-45594efa4cbe?auto=format&fit=crop&q=80&w=800"
+        };
+    });
+    const pendingCount = demoReservations.filter(r => r.status === 'pending').length;
+
+    const fmt = (n) => Math.abs(n).toLocaleString('fr-FR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+
+    return {
+        baseRental, discounts, insurance, serviceFees, taxes, netRevenue, totalRevenue,
+        reservations, activeClients, revenueChange, revenueUp,
+        resChange, resUp, cliChange, cliUp,
+        bookingData, daysInMonth, demoReservations, pendingCount, fmt,
+    };
+}
+
+function RevenueSummary({ dark, t, lang, currency, currentMonth, currentYear, onPrev, onNext }) {
+    const md = getMonthData(currentMonth, currentYear);
+    const { baseRental, discounts, insurance, serviceFees, taxes, netRevenue, totalRevenue,
+        revenueChange, revenueUp } = md;
+
+    // Apply real currency conversion
+    const rate = getRate(currency);
+    const cvt = (madVal) => madVal * rate;
+    const fmtC = (madVal) => Math.abs(cvt(madVal)).toLocaleString('fr-FR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+
     const breakdown = [
-        { key: "baseRental", val: "0.00" },
-        { key: "discounts", val: "0.00" },
-        { key: "insuranceOptions", val: "0.00" },
-        { key: "serviceFees", val: "0.00" },
-        { key: "taxes", val: "0.00" },
-        { key: "netRevenue", val: "0.00" },
+        { key: "baseRental", val: fmtC(baseRental), color: "var(--text)" },
+        { key: "discounts", val: fmtC(discounts), color: "#ef4444", neg: true },
+        { key: "insuranceOptions", val: fmtC(insurance), color: "var(--text)" },
+        { key: "serviceFees", val: fmtC(serviceFees), color: "var(--text)" },
+        { key: "taxes", val: fmtC(taxes), color: "var(--text)" },
+        { key: "netRevenue", val: fmtC(netRevenue), color: "var(--accent)" },
     ];
 
-    const localizedDays = lang === 'ar'
-        ? ["إثنين", "ثلاثاء", "أربعاء", "خميس", "جمعة", "سبت", "أحد"]
-        : lang === 'fr'
-            ? ["Lun", "Mar", "Mer", "Jeu", "Ven", "Sam", "Dim"]
-            : ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+    const daysInMonth = new Date(currentYear, currentMonth, 0).getDate();
+    const chartLabels = Array.from({ length: daysInMonth }, (_, i) => `${i + 1}/${currentMonth}/${currentYear}`);
+
+    // Original smooth organic revenue curve — DO NOT change
+    const getDailyData = (m, y, len) => {
+        const base = [
+            75, 150, 300, 525, 800, 1075, 1200, 1250, 1350, 1375,
+            1200, 1450, 1800, 2000, 1825, 1975, 1750, 1950, 1625, 1300,
+            1075, 1250, 1450, 1700, 2000, 2175, 2250, 2200, 2050, 1500
+        ];
+        const shift = (m * 7) % base.length;
+        const ref = [...base.slice(shift), ...base.slice(0, shift)];
+        const scale = 0.85 + ((m * 3 + y) % 8) * 0.04;
+        const res = [];
+        for (let i = 0; i < len; i++) {
+            const tt = (i / (len - 1)) * (ref.length - 1);
+            const k = Math.min(Math.floor(tt), ref.length - 2);
+            const f = tt - k;
+            const s = (1 - Math.cos(f * Math.PI)) / 2;
+            const v = ref[k] * (1 - s) + ref[k + 1] * s;
+            res.push(Math.round(Math.max(50, v * scale)));
+        }
+        return res;
+    };
+    const chartData = IS_MOCK ? getDailyData(currentMonth, currentYear, daysInMonth) : Array(daysInMonth).fill(0);
 
     return (
         <div className="grid-revenue" style={{ animation: "fadeUp .6s ease" }}>
-            {/* Chart Part */}
             <div className="card" style={{ padding: 0, position: "relative", overflow: "hidden" }}>
                 <div style={{ padding: "18px 24px", borderBottom: "1px solid var(--border)", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                    <div className="section-title" style={{ fontSize: 14, color: "var(--muted2)" }}>{t.weeklyRevenue}</div>
+                    <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+                        <button onClick={onPrev} className="nav-btn" style={{ border: "none", background: "transparent", cursor: "pointer", color: "var(--text)" }}><div style={{ transform: lang === 'ar' ? 'scaleX(-1)' : 'none', display: 'flex' }}><Icon d={["M15 18l-6-6 6-6"]} size={14} /></div></button>
+                        <div className="section-title" style={{ fontSize: 14, color: "var(--muted2)" }}>{MONTHS[currentMonth - 1]} {currentYear}</div>
+                        <button onClick={onNext} className="nav-btn" style={{ border: "none", background: "transparent", cursor: "pointer", color: "var(--text)" }}><div style={{ transform: lang === 'ar' ? 'scaleX(-1)' : 'none', display: 'flex' }}><Icon d={["M9 18l6-6-6-6"]} size={14} /></div></button>
+                    </div>
                     <div style={{ color: "var(--muted2)", cursor: "pointer" }}><Icon d={icons.info} size={16} /></div>
                 </div>
                 <div style={{ padding: "24px 32px" }}>
                     <div style={{ marginBottom: 20 }}>
-                        <div style={{ fontSize: 27, fontWeight: 900, color: "var(--text)" }}>{currency} 0.00 —</div>
+                        <div style={{ fontSize: 13, color: "var(--muted2)", fontWeight: 600, marginBottom: 4 }}>{t.revenueMonth || "Chiffre d'affaires ce mois"}</div>
+                        <div style={{ fontSize: 27, fontWeight: 900, color: dark ? "#60a5fa" : "#10b981" }}>{currency} {fmtC(totalRevenue)}</div>
+                        <div style={{ fontSize: 12, color: revenueUp ? "#10b981" : "#ef4444", fontWeight: 700, marginTop: 6, display: "flex", alignItems: "center", gap: 4 }}>
+                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+                                {revenueUp
+                                    ? <><polyline points="17 11 12 6 7 11" /><line x1="12" y1="6" x2="12" y2="18" /></>
+                                    : <><polyline points="7 13 12 18 17 13" /><line x1="12" y1="18" x2="12" y2="6" /></>}
+                            </svg>
+                            {revenueChange} vs mois précédent
+                        </div>
                     </div>
-                    {/* Desktop Version */}
                     <div className="mobile-hide">
-                        <LineChart data={WEEKLY_REVENUE} labels={localizedDays} color={dark ? "#60a5fa" : "#10b981"} simplified height={220} t={t} lang={lang} showLegend />
+                        <LineChart data={chartData} labels={chartLabels} color={dark ? "#60a5fa" : "#10b981"} simplified height={220} t={t} lang={lang} showLegend showYAxis unit={currency} />
                     </div>
-                    {/* Mobile Version */}
                     <div className="desktop-hide">
-                        <LineChart data={WEEKLY_REVENUE} labels={localizedDays} color={dark ? "#60a5fa" : "#10b981"} simplified height={340} t={t} lang={lang} showLegend />
+                        <LineChart data={chartData} labels={chartLabels} color={dark ? "#60a5fa" : "#10b981"} simplified height={340} t={t} lang={lang} showLegend showYAxis unit={currency} />
                     </div>
                 </div>
             </div>
 
-            {/* Breakdown Part */}
             <div className="card" style={{ padding: 0 }}>
                 <div style={{ padding: "18px 24px", borderBottom: "1px solid var(--border)", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                     <div className="section-title" style={{ fontSize: 14, color: "var(--muted2)" }}>{t.revenueBreakdown}</div>
@@ -936,14 +1272,15 @@ function RevenueSummary({ dark, t, lang, currency }) {
                         <div key={i} className="settings-row" style={{ padding: "14px 24px", border: "none", background: i % 2 === 0 ? "rgba(128,128,128,0.03)" : "transparent" }}>
                             <div style={{ fontSize: 13, fontWeight: 600, color: i === breakdown.length - 1 ? "var(--accent)" : "var(--muted2)" }}>{t[item.key]}</div>
                             <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-                                <div style={{ fontSize: 13, fontWeight: 800 }}>{currency} {item.val}</div>
-                                <div style={{ width: 12, height: 1, background: "var(--border2)" }} />
+                                <div style={{ fontSize: 13, fontWeight: 800, color: item.color }}>
+                                    {item.neg ? `- ${currency} ${item.val}` : `${currency} ${item.val}`}
+                                </div>
                             </div>
                         </div>
                     ))}
                     <div style={{ padding: "16px 24px", marginTop: 4, borderTop: "1px solid var(--border)", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                         <div style={{ fontSize: 14, fontWeight: 900, color: "var(--accent)" }}>{t.totalRevenue}</div>
-                        <div style={{ fontSize: 15, fontWeight: 900 }}>{currency} 0.00 —</div>
+                        <div style={{ fontSize: 15, fontWeight: 900, color: dark ? "#60a5fa" : "#10b981" }}>{currency} {fmtC(totalRevenue)}</div>
                     </div>
                 </div>
             </div>
@@ -951,10 +1288,14 @@ function RevenueSummary({ dark, t, lang, currency }) {
     );
 }
 
-function LineChart({ data, labels, color = "#10b981", title, height = 200, simplified = false, t, lang, showLegend = false }) {
+function LineChart({ data, labels, color = "#10b981", title, height = 200, simplified = false, t, lang, showLegend = false, showYAxis = false, unit = "" }) {
     const isAllZero = data.every(v => v === 0);
-    const W = 680, H = height, PX = 16, PY = 16;
-    const max = isAllZero ? 1 : Math.max(...data);
+    const W = 1000, H = height, PY = 16;
+    const rawMax = isAllZero ? 0 : Math.max(...data);
+    const max = Math.max(2500, Math.ceil(rawMax / 500) * 500);
+    const PX = showYAxis ? 75 : 45;
+    const viewBoxX = showYAxis ? 15 : 0;
+    const viewBoxW = showYAxis ? 985 : 1000;
     const gradId = `fill-${(title || 'chart' + Math.random()).replace(/\s+/g, '-')}`;
 
     const [hoverIndex, setHoverIndex] = useState(null);
@@ -980,7 +1321,7 @@ function LineChart({ data, labels, color = "#10b981", title, height = 200, simpl
     const handleMouseLeave = () => setHoverIndex(null);
 
     const pts = data.map((v, i) => ({
-        x: PX + (i / (data.length - 1)) * (W - PX * 2),
+        x: PX + (i / (data.length - 1)) * (W - PX - 16),
         y: PY + (1 - v / max) * (H - PY)
     }));
 
@@ -1002,9 +1343,9 @@ function LineChart({ data, labels, color = "#10b981", title, height = 200, simpl
         const activeX = pts.length > 0 ? pts[activeIndex].x : W / 2;
 
         return (
-            <div style={{ width: "100%", position: "relative" }}>
+            <div style={{ width: "100%", position: "relative" }} dir="ltr">
                 <svg
-                    viewBox={`0 -10 680 ${H + 40}`}
+                    viewBox={`${viewBoxX} -10 ${viewBoxW} ${H + 40}`}
                     width="100%"
                     xmlns="http://www.w3.org/2000/svg"
                     style={{ overflow: "visible", display: "block", cursor: "crosshair" }}
@@ -1034,10 +1375,25 @@ function LineChart({ data, labels, color = "#10b981", title, height = 200, simpl
                             <stop offset="100%" stopColor={color} stopOpacity="0" />
                         </linearGradient>
                     </defs>
-                    {/* Horizontal grid lines */}
-                    {[0, 1, 2].map(i => (
-                        <line key={i} x1="0" y1={(H / 2) * i} x2="680" y2={(H / 2) * i} stroke="var(--border)" strokeWidth="0.5" strokeDasharray="4 4" />
-                    ))}
+                    {/* Horizontal grid lines and Y labels - steps of 500 */}
+                    {(() => {
+                        const tks = [];
+                        for (let v = 0; v <= max; v += 500) tks.push(v);
+                        return tks;
+                    })().map(val => {
+                        const i = 1 - (val / max);
+                        const y = PY + i * (H - PY);
+                        return (
+                            <g key={val}>
+                                <line x1={PX} y1={y} x2={W - 16} y2={y} stroke="var(--border)" strokeWidth="0.5" strokeDasharray="4 4" />
+                                {showYAxis && (
+                                    <text x={PX - 12} y={y} textAnchor="end" dominantBaseline="middle" style={{ fontSize: 11, fill: "var(--muted2)", fontWeight: 700 }}>
+                                        {Math.round(val).toLocaleString()} {unit}
+                                    </text>
+                                )}
+                            </g>
+                        );
+                    })}
 
                     {isAllZero ? (
                         <>
@@ -1067,8 +1423,8 @@ function LineChart({ data, labels, color = "#10b981", title, height = 200, simpl
                                     <circle cx={pts[hoverIndex].x} cy={pts[hoverIndex].y} r="4" fill={color} stroke="var(--surface)" strokeWidth="1.5" style={{ transition: "cx 0.1s ease, cy 0.1s ease" }} />
 
                                     <g style={{ transition: "transform 0.1s ease" }} transform={`translate(${pts[hoverIndex].x}, ${pts[hoverIndex].y - 20})`}>
-                                        <rect x="-30" y="-14" width="60" height="22" rx="4" fill="var(--surface2)" stroke="var(--border)" />
-                                        <text x="0" y="2" textAnchor="middle" fill="var(--text)" fontSize="11" fontWeight="bold">{data[hoverIndex]}</text>
+                                        <rect x="-40" y="-14" width="80" height="22" rx="4" fill="var(--surface2)" stroke="var(--border)" />
+                                        <text x="0" y="2" textAnchor="middle" fill="var(--text)" fontSize="11" fontWeight="bold">{data[hoverIndex].toLocaleString()} {unit}</text>
                                     </g>
                                 </>
                             )}
@@ -1077,9 +1433,13 @@ function LineChart({ data, labels, color = "#10b981", title, height = 200, simpl
 
                     {/* X Axis Labels */}
                     <g>
-                        {labels.map((l, i) => (
-                            <text key={i} x={PX + (i / (labels.length - 1)) * (W - PX * 2)} y={H + 24} textAnchor="middle" style={{ transition: "all 0.2s", fontSize: 11, fill: hoverIndex === i ? color : "var(--muted2)", fontWeight: hoverIndex === i ? 800 : 600 }}>{l}</text>
-                        ))}
+                        {labels.map((l, i) => {
+                            // Only show some labels if there are many (e.g. 31 days)
+                            if (labels.length > 10 && i % 5 !== 0 && i !== labels.length - 1) return null;
+                            return (
+                                <text key={i} x={pts[i].x} y={H + 24} textAnchor="middle" style={{ transition: "all 0.2s", fontSize: 11.5, fill: hoverIndex === i ? color : "var(--muted2)", fontWeight: hoverIndex === i ? 800 : 600 }}>{l}</text>
+                            );
+                        })}
                     </g>
                 </svg>
                 {showLegend && (
@@ -1099,7 +1459,7 @@ function LineChart({ data, labels, color = "#10b981", title, height = 200, simpl
     }
 
     return (
-        <div className="card" style={{ padding: 0 }}>
+        <div className="card" style={{ padding: 0, overflow: "hidden" }}>
             <div style={{ padding: "18px 24px 14px", borderBottom: "1px solid var(--border)", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
                 <span className="section-title">{title}</span>
                 <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
@@ -1111,65 +1471,698 @@ function LineChart({ data, labels, color = "#10b981", title, height = 200, simpl
                     )}
                 </div>
             </div>
-            <div style={{ padding: "24px 28px 16px" }}>
-                <svg viewBox={`0 0 680 ${H} `} width="100%" height={H} xmlns="http://www.w3.org/2000/svg">
+            <div style={{ padding: "16px 20px 12px" }} dir="ltr">
+                <svg viewBox={`0 0 1000 ${H}`} width="100%" height={H} xmlns="http://www.w3.org/2000/svg"
+                    style={{ overflow: "visible", cursor: "crosshair" }}
+                    onMouseMove={handleMouseMove} onMouseLeave={handleMouseLeave}>
                     <defs>
-                        <pattern id="vgrid" width="97.14" height="40" patternUnits="userSpaceOnUse">
-                            <line x1="97.14" y1="0" x2="97.14" y2={H} stroke="var(--border)" strokeWidth="0.5" />
-                        </pattern>
-                        <pattern id="hgrid" width="680" height="40" patternUnits="userSpaceOnUse">
-                            <line x1="0" y1="40" x2="680" y2="40" stroke="var(--border)" strokeWidth="0.5" />
-                        </pattern>
-                        <linearGradient id={gradId} x1="0" y1="0" x2="0" y2="1">
-                            <stop offset="0%" stopColor={color} stopOpacity="0.18" />
+                        <linearGradient id={`lcg-${(title || '').replace(/[^a-zA-Z0-9]/g, '')}`} x1="0" y1="0" x2="0" y2="1">
+                            <stop offset="0%" stopColor={color} stopOpacity="0.30" />
+                            <stop offset="80%" stopColor={color} stopOpacity="0.04" />
                             <stop offset="100%" stopColor={color} stopOpacity="0" />
                         </linearGradient>
                     </defs>
-                    <rect width="680" height={H} fill="url(#hgrid)" />
-                    <rect width="680" height={H} fill="url(#vgrid)" />
-                    <line x1="0" y1={H - 0.5} x2="680" y2={H - 0.5} stroke="var(--border2)" strokeWidth="0.5" />
+
+                    {/* Horizontal grid lines + Y-axis labels */}
+                    {[0, 0.25, 0.5, 0.75, 1].map(pct => {
+                        const gy = PY + (1 - pct) * (H - PY - 8);
+                        const gv = Math.round(pct * max);
+                        const label = gv >= 1000000 ? `${(gv / 1000000).toFixed(1)}M`
+                            : gv >= 1000 ? `${(gv / 1000).toFixed(0)}K`
+                                : `${gv}`;
+                        return (
+                            <g key={pct}>
+                                <line x1={PX} y1={gy} x2={1000} y2={gy}
+                                    stroke="var(--border)"
+                                    strokeWidth={pct === 0 ? 1 : 0.4}
+                                    strokeDasharray={pct === 0 ? undefined : "5 8"} />
+                                <text x={PX - 8} y={gy} textAnchor="end" dominantBaseline="middle"
+                                    style={{ fontSize: 11, fill: "var(--muted2)", fontWeight: 700 }}>
+                                    {label}
+                                </text>
+                            </g>
+                        );
+                    })}
+
                     {isAllZero ? (
-                        <text x="340" y={H / 2} textAnchor="middle" dominantBaseline="middle"
+                        <text x="500" y={H / 2} textAnchor="middle" dominantBaseline="middle"
                             style={{ fontSize: 13, fill: "var(--muted2)", fontWeight: 500 }}>
                             {t.noDataPeriod}
                         </text>
                     ) : (
                         <>
-                            <path d={fillPath} fill={`url(#${gradId})`} />
-                            <path d={linePath} fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                            {/* Area fill */}
+                            <path d={fillPath} fill={`url(#lcg-${(title || '').replace(/[^a-zA-Z0-9]/g, '')})`} />
+                            {/* Stroke line */}
+                            <path d={linePath} fill="none" stroke={color} strokeWidth="2.5"
+                                strokeLinecap="round" strokeLinejoin="round" />
+                            {/* Hover crosshair */}
+                            {hoverIndex !== null && (
+                                <line x1={pts[hoverIndex].x} y1={PY}
+                                    x2={pts[hoverIndex].x} y2={H - 4}
+                                    stroke={color} strokeWidth="1"
+                                    strokeDasharray="4 5" opacity="0.5" />
+                            )}
+                            {/* Data points */}
                             {pts.map((p, i) => (
-                                <g key={i}>
-                                    <circle cx={p.x} cy={p.y} r="4" fill={color} opacity="0.2" />
-                                    <circle cx={p.x} cy={p.y} r="2.5" fill="var(--card)" stroke={color} strokeWidth="1.5" />
-                                </g>
+                                <circle key={i} cx={p.x} cy={p.y}
+                                    r={hoverIndex === i ? 6 : 3.5}
+                                    fill={hoverIndex === i ? color : "var(--surface)"}
+                                    stroke={color} strokeWidth="2"
+                                    style={{ transition: "r 0.15s, fill 0.15s" }} />
                             ))}
+                            {/* Tooltip */}
+                            {hoverIndex !== null && (() => {
+                                const tx = Math.min(Math.max(pts[hoverIndex].x, 50), 950);
+                                const ty = pts[hoverIndex].y - 42;
+                                const val = data[hoverIndex];
+                                const valStr = val >= 1000000 ? `${(val / 1000000).toFixed(2)}M`
+                                    : val >= 1000 ? `${(val / 1000).toFixed(0)}K`
+                                        : `${val}`;
+                                return (
+                                    <g style={{ pointerEvents: "none" }}>
+                                        <rect x={tx - 48} y={ty} width={96} height={34} rx={10}
+                                            fill="var(--surface)" stroke={color} strokeWidth="1.5" />
+                                        <text x={tx} y={ty + 14} textAnchor="middle"
+                                            fill={color} fontSize="12" fontWeight="800">{valStr}</text>
+                                        <text x={tx} y={ty + 27} textAnchor="middle"
+                                            fill="var(--muted2)" fontSize="9" fontWeight="600">
+                                            {labels[hoverIndex]}
+                                        </text>
+                                    </g>
+                                );
+                            })()}
                         </>
                     )}
+
+                    {/* X-axis labels */}
+                    {labels.map((l, i) => {
+                        return (
+                            <text key={i} x={pts[i]?.x ?? 0} y={H + 14} textAnchor="middle"
+                                style={{ fontSize: 11.5, fill: hoverIndex === i ? color : "var(--muted2)", fontWeight: hoverIndex === i ? 800 : 600, transition: "fill 0.2s" }}>
+                                {l}
+                            </text>
+                        );
+                    })}
                 </svg>
-                <div style={{ display: "flex", justifyContent: "space-between", marginTop: 10, padding: "0 2px" }}>
-                    {labels.map((l, i) => (
-                        <span key={i} style={{ fontSize: 11, color: "var(--muted2)", fontWeight: 500 }}>{l}</span>
-                    ))}
+            </div>
+        </div>
+    );
+}
+
+
+/* ─────────── BAR CHART — Premium Edition ─────────── */
+function BarChart({ data, labels, color = "#10b981", title, height = 260 }) {
+    const [hovered, setHovered] = useState(null);
+
+    // Smart Y-axis: clean integer ticks
+    const rawMax = Math.max(...data, 1);
+    const step = rawMax <= 5 ? 1 : rawMax <= 10 ? 2 : rawMax <= 20 ? 5 : 10;
+    const maxVal = Math.ceil(rawMax / step) * step;
+    const yTicks = [];
+    for (let v = 0; v <= maxVal; v += step) yTicks.push(v);
+
+    const W = 660, H = height;
+    const PL = 44, PR = 12, PT = 24, PB = 28;
+    const chartW = W - PL - PR;
+    const chartH = H - PT - PB;
+    const n = data.length;
+    const slotW = chartW / n;
+    const barW = Math.max(4, Math.min(14, slotW * 0.55));
+    const gId = `bcg${(title || 'x').replace(/\W/g, '')}`;
+
+    const bx = (i) => PL + i * slotW + slotW / 2 - barW / 2;
+    const by = (val) => PT + chartH - (val / maxVal) * chartH;
+    const bh = (val) => Math.max(3, (val / maxVal) * chartH);
+
+    return (
+        <div className="card" style={{ padding: 0, overflow: "hidden", display: "flex", flexDirection: "column" }}>
+            <div style={{ padding: "18px 24px 14px", borderBottom: "1px solid var(--border)", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+                <span className="section-title">{title}</span>
+                <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                    <div style={{ display: "flex", alignItems: "center", gap: 5, fontSize: 11, fontWeight: 700, color: "var(--muted2)" }}>
+                        <div style={{ width: 10, height: 10, borderRadius: 3, background: color, opacity: 0.85 }} />
+                        Réservations / jour
+                    </div>
+                    <span className="topbar-badge">2026</span>
                 </div>
-                {showLegend && (
-                    <div style={{ marginTop: 20, display: "flex", gap: 20, fontSize: 11, fontWeight: 700 }}>
-                        <div style={{ display: "flex", alignItems: "center", gap: 6, color: "var(--muted2)" }}>
-                            <div style={{ width: 8, height: 8, borderRadius: "50%", background: color }} />
-                            {new Date().toLocaleDateString(lang === 'ar' ? 'ar-MA' : lang === 'fr' ? 'fr-FR' : 'en-US', { day: 'numeric', month: 'short' })}
+            </div>
+            <div style={{ padding: "16px 20px 8px", marginTop: "auto" }} dir="ltr">
+                <svg viewBox={`0 0 ${W} ${H}`} width="100%" xmlns="http://www.w3.org/2000/svg"
+                    style={{ display: "block", overflow: "visible" }}
+                    onMouseLeave={() => setHovered(null)}>
+                    <defs>
+                        <linearGradient id={gId} x1="0" y1="0" x2="0" y2="1">
+                            <stop offset="0%" stopColor={color} stopOpacity="1" />
+                            <stop offset="100%" stopColor={color} stopOpacity="0.28" />
+                        </linearGradient>
+                        <linearGradient id={`${gId}h`} x1="0" y1="0" x2="0" y2="1">
+                            <stop offset="0%" stopColor={color} stopOpacity="1" />
+                            <stop offset="100%" stopColor={color} stopOpacity="0.55" />
+                        </linearGradient>
+                        <filter id={`${gId}f`} x="-40%" y="-40%" width="180%" height="180%">
+                            <feGaussianBlur stdDeviation="3.5" result="blur" />
+                            <feMerge><feMergeNode in="blur" /><feMergeNode in="SourceGraphic" /></feMerge>
+                        </filter>
+                    </defs>
+
+                    {/* Y-axis: integer labels + dashed grid */}
+                    {yTicks.map((val) => {
+                        const y = PT + chartH - (val / maxVal) * chartH;
+                        return (
+                            <g key={val}>
+                                <line x1={PL} y1={y} x2={W - PR} y2={y}
+                                    stroke="var(--border)"
+                                    strokeWidth={val === 0 ? 1 : 0.5}
+                                    strokeDasharray={val === 0 ? undefined : "3 6"} />
+                                <text x={PL - 8} y={y} textAnchor="end" dominantBaseline="middle"
+                                    style={{ fontSize: 10, fill: "var(--muted2)", fontWeight: 600 }}>
+                                    {val}
+                                </text>
+                            </g>
+                        );
+                    })}
+
+                    {/* Bars */}
+                    {data.map((val, i) => {
+                        const x = bx(i), y = by(val), barHeight = bh(val);
+                        const cx = x + barW / 2;
+                        const r = Math.min(barW / 2, 5);
+                        const isHov = hovered === i;
+                        return (
+                            <g key={i} style={{ cursor: "pointer" }} onMouseEnter={() => setHovered(i)}>
+                                {/* Ghost track */}
+                                <rect x={x} y={PT} width={barW} height={chartH} rx={r}
+                                    fill={isHov ? `${color}15` : `${color}07`}
+                                    style={{ transition: "fill 0.2s" }} />
+                                {/* Bar body */}
+                                <rect x={x} y={y} width={barW} height={barHeight} rx={r}
+                                    fill={isHov ? `url(#${gId}h)` : `url(#${gId})`}
+                                    filter={isHov ? `url(#${gId}f)` : undefined}
+                                    style={{ transition: "filter 0.25s" }} />
+                                {/* Bright cap */}
+                                <rect x={x + 1} y={y} width={barW - 2} height={2} rx={1}
+                                    fill={color} opacity={isHov ? 1 : 0.65} />
+                                {/* Tooltip */}
+                                {isHov && (() => {
+                                    const tw = 64, th = 34;
+                                    let tx = cx - tw / 2;
+                                    if (tx < PL) tx = PL;
+                                    if (tx + tw > W - PR) tx = W - PR - tw;
+                                    const ty = y - th - 8;
+                                    return (
+                                        <g style={{ pointerEvents: "none" }}>
+                                            <rect x={tx} y={ty} width={tw} height={th} rx={8} fill={color} opacity={0.97} />
+                                            <polygon points={`${cx - 5},${ty + th} ${cx + 5},${ty + th} ${cx},${ty + th + 6}`} fill={color} opacity={0.97} />
+                                            <text x={tx + tw / 2} y={ty + 13} textAnchor="middle" fill="#fff" fontSize="12" fontWeight="800">{val} rés.</text>
+                                            <text x={tx + tw / 2} y={ty + 26} textAnchor="middle" fill="rgba(255,255,255,0.72)" fontSize="9" fontWeight="600">{labels[i]}</text>
+                                        </g>
+                                    );
+                                })()}
+                            </g>
+                        );
+                    })}
+
+                    {/* X-axis labels (~6 visible) */}
+                    {labels.map((l, i) => {
+                        const every = Math.ceil(n / 6);
+                        if (i % every !== 0 && i !== n - 1) return null;
+                        return (
+                            <text key={i} x={PL + i * slotW + slotW / 2} y={H - 4} textAnchor="middle"
+                                style={{ fontSize: 9.5, fill: hovered === i ? color : "var(--muted2)", fontWeight: hovered === i ? 800 : 500, transition: "fill 0.2s" }}>
+                                {l}
+                            </text>
+                        );
+                    })}
+                </svg>
+            </div>
+        </div>
+    );
+}
+
+/* ══════════ ULTRA MODERN HORIZONTAL BAR CHART ══════════ */
+function HorizontalBarChart({ data, labels, title, color = "#3b82f6", valueSuffix = " MAD" }) {
+    const [hov, setHov] = useState(null);
+    const maxVal = Math.max(...data, 1);
+    const W = 600, rowH = 26, gap = 12, PT = 16, PB = 16;
+    const PL = 130, PR = 90; // Bar track area: x=130 to x=510 (width 380)
+    const H = PT + PB + data.length * (rowH + gap);
+    const gId = `hm-${title?.replace(/\W/g, '')}`;
+
+    return (
+        <div className="card" style={{ padding: 0, overflow: "hidden", display: "flex", flexDirection: "column" }}>
+            {/* Header */}
+            <div style={{ padding: "18px 24px 14px", borderBottom: "1px solid var(--border)", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                    <div style={{ width: 4, height: 16, borderRadius: 2, background: color }} />
+                    <span className="section-title" style={{ fontSize: 20 }}>{title}</span>
+                </div>
+                <span className="topbar-badge">2026</span>
+            </div>
+            {/* Body */}
+            <div style={{ padding: "12px 10px", flex: 1 }} dir="ltr">
+                <svg viewBox={`0 0 ${W} ${H}`} width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <linearGradient id={`${gId}-bar`} x1="0" y1="0" x2="1" y2="0">
+                            <stop offset="0%" stopColor={color} stopOpacity="0.1" />
+                            <stop offset="100%" stopColor={color} stopOpacity="0.9" />
+                        </linearGradient>
+                        <linearGradient id={`${gId}-bar-hov`} x1="0" y1="0" x2="1" y2="0">
+                            <stop offset="0%" stopColor={color} stopOpacity="0.3" />
+                            <stop offset="100%" stopColor={color} stopOpacity="1" />
+                        </linearGradient>
+                        <filter id={`${gId}-glow`}>
+                            <feGaussianBlur stdDeviation="3" result="blur" />
+                            <feMerge><feMergeNode in="blur" /><feMergeNode in="SourceGraphic" /></feMerge>
+                        </filter>
+                    </defs>
+
+                    {/* Vertical Grid Lines for the bar area */}
+                    {[0.25, 0.5, 0.75, 1].map(pct => (
+                        <line key={pct} x1={PL + (W - PL - PR) * pct} y1={PT} x2={PL + (W - PL - PR) * pct} y2={H - PB}
+                            stroke="var(--border)" strokeWidth="0.5" strokeDasharray="3 4" opacity="0.4" />
+                    ))}
+
+                    {data.map((val, i) => {
+                        const y = PT + i * (rowH + gap);
+                        const bw = Math.max(4, (W - PL - PR) * (val / maxVal));
+                        const isH = hov === i;
+                        const isTop3 = i < 3;
+                        const rankColor = i === 0 ? "#fbbf24" : i === 1 ? "#94a3b8" : i === 2 ? "#b45309" : color;
+
+                        return (
+                            <g key={i} style={{ cursor: "pointer" }} onMouseEnter={() => setHov(i)} onMouseLeave={() => setHov(null)}>
+                                {/* Hover background strip */}
+                                <rect x={6} y={y - gap / 2} width={W - 12} height={rowH + gap} rx={8}
+                                    fill={isH ? "var(--surface2)" : "transparent"} style={{ transition: "fill 0.2s" }} />
+
+                                {/* Rank Badge */}
+                                <rect x={14} y={y + 3} width={22} height={20} rx={5}
+                                    fill={isTop3 ? rankColor : "var(--surface2)"}
+                                    opacity={isTop3 ? (isH ? 0.3 : 0.15) : (isH ? 0.8 : 0.5)}
+                                    style={{ transition: "all 0.2s" }} />
+                                <text x={25} y={y + 14} textAnchor="middle" dominantBaseline="middle"
+                                    fill={isTop3 ? rankColor : "var(--muted2)"} fontSize={10} fontWeight="800">
+                                    {i + 1}
+                                </text>
+
+                                {/* Label */}
+                                <text x={46} y={y + 14} textAnchor="start" dominantBaseline="middle"
+                                    fill={isH ? "var(--text)" : "var(--muted)"} fontSize={12} fontWeight={isH ? 700 : 500}
+                                    style={{ transition: "all 0.2s" }}>
+                                    {labels[i]}
+                                </text>
+
+                                {/* Bar Track */}
+                                <rect x={PL} y={y + 8} width={W - PL - PR} height={10} rx={5}
+                                    fill="var(--surface2)" opacity={0.6} />
+
+                                {/* Bar Fill */}
+                                <rect x={PL} y={y + 8} width={bw} height={10} rx={5}
+                                    fill={isH ? `url(#${gId}-bar-hov)` : `url(#${gId}-bar)`}
+                                    filter={isH ? `url(#${gId}-glow)` : undefined}
+                                    style={{ transition: "width 0.6s cubic-bezier(0.16, 1, 0.3, 1), filter 0.2s, fill 0.2s" }} />
+
+                                {/* Bar Highlight Cap */}
+                                {bw > 8 && (
+                                    <rect x={PL + bw - 4} y={y + 8} width={4} height={10} rx={2}
+                                        fill="#fff" opacity={isH ? 0.9 : 0.4} style={{ transition: "opacity 0.2s" }} />
+                                )}
+
+                                {/* Value */}
+                                <text x={W - 14} y={y + 14} textAnchor="end" dominantBaseline="middle"
+                                    fill={isH ? color : "var(--text)"} fontSize={12} fontWeight={800}
+                                    style={{ transition: "all 0.2s" }}>
+                                    {val >= 1000000 ? `${(val / 1000000).toFixed(2)}M` : val >= 1000 ? `${(val / 1000).toFixed(0)}K` : val}{valueSuffix}
+                                </text>
+                            </g>
+                        );
+                    })}
+                </svg>
+            </div>
+        </div>
+    );
+}
+/* ══════════ POLAR AREA CHART (NIGHTINGALE) ══════════ */
+function PolarAreaChart({ data, labels, title, color = "#10b981", valueSuffix = " MAD" }) {
+    const [hov, setHov] = useState(null);
+    const maxVal = Math.max(...data, 1);
+    const W = 600, H = 500;
+    const cx = W / 2, cy = H / 2;
+    const ir = 45;
+    const maxR = 150;
+    const n = data.length;
+    const step = 360 / n;
+
+    const polarToCartesian = (cx, cy, r, deg) => {
+        const rad = (deg - 90) * Math.PI / 180.0;
+        return { x: cx + r * Math.cos(rad), y: cy + r * Math.sin(rad) };
+    };
+
+    const arc = (x, y, ir, or, sa, ea) => {
+        const p1 = polarToCartesian(x, y, or, sa);
+        const p2 = polarToCartesian(x, y, or, ea);
+        const p3 = polarToCartesian(x, y, ir, ea);
+        const p4 = polarToCartesian(x, y, ir, sa);
+        const la = ea - sa <= 180 ? "0" : "1";
+        return `M ${p1.x} ${p1.y} A ${or} ${or} 0 ${la} 1 ${p2.x} ${p2.y} L ${p3.x} ${p3.y} A ${ir} ${ir} 0 ${la} 0 ${p4.x} ${p4.y} Z`;
+    };
+
+    const colors = [
+        "#10b981", "#059669", "#047857",
+        "#0ea5e9", "#0284c7", "#0369a1",
+        "#8b5cf6", "#7c3aed", "#6d28d9",
+        "#f59e0b", "#d97706", "#b45309",
+        "#ec4899", "#db2777", "#be185d"
+    ];
+
+    return (
+        <div className="card" style={{ padding: 0, overflow: "hidden", display: "flex", flexDirection: "column", height: "100%" }}>
+            <div style={{ padding: "18px 24px 14px", borderBottom: "1px solid var(--border)", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                    <div style={{ width: 4, height: 16, borderRadius: 2, background: color }} />
+                    <span className="section-title" style={{ fontSize: 20 }}>{title}</span>
+                </div>
+                <span className="topbar-badge">2026</span>
+            </div>
+            <div style={{ padding: "20px", flex: 1, position: "relative" }} dir="ltr">
+                <svg viewBox={`0 0 ${W} ${H}`} width="100%" height="100%" xmlns="http://www.w3.org/2000/svg" style={{ overflow: "visible" }}>
+                    <defs>
+                        <filter id={`polar-glow-${title?.replace(/\W/g, '')}`}>
+                            <feGaussianBlur stdDeviation="4" result="blur" />
+                            <feMerge><feMergeNode in="blur" /><feMergeNode in="SourceGraphic" /></feMerge>
+                        </filter>
+                    </defs>
+
+                    {[0.25, 0.5, 0.75, 1].map(pct => (
+                        <circle key={pct} cx={cx} cy={cy} r={ir + (maxR - ir) * pct}
+                            fill="none" stroke="var(--border)" strokeWidth="0.5" strokeDasharray="3 4" opacity="0.5" />
+                    ))}
+
+                    {data.map((val, i) => {
+                        const sa = i * step + 0.5;
+                        const ea = (i + 1) * step - 0.5;
+                        const isH = hov === i;
+                        const or = ir + (maxR - ir) * (val / maxVal) + (isH ? 12 : 0);
+                        const sliceColor = colors[i % colors.length];
+
+                        return (
+                            <g key={i} onMouseEnter={() => setHov(i)} onMouseLeave={() => setHov(null)} style={{ cursor: "pointer" }}>
+                                <path d={arc(cx, cy, ir, or, sa, ea)}
+                                    fill={sliceColor} opacity={isH ? 1 : 0.8}
+                                    filter={isH ? `url(#polar-glow-${title?.replace(/\W/g, '')})` : undefined}
+                                    stroke="var(--surface)" strokeWidth="1.5"
+                                    style={{ transition: "all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)" }} />
+                            </g>
+                        );
+                    })}
+
+                    {data.map((val, i) => {
+                        const midA = i * step + step / 2;
+                        const isH = hov === i;
+                        const or = ir + (maxR - ir) * (val / maxVal);
+
+                        const pStart = polarToCartesian(cx, cy, or + 2, midA);
+                        const pMid = polarToCartesian(cx, cy, maxR + 25 + (isH ? 10 : 0), midA);
+                        const isRight = midA < 180;
+                        const pEnd = { x: pMid.x + (isRight ? 16 : -16), y: pMid.y };
+
+                        const align = isRight ? "start" : "end";
+                        const sliceColor = colors[i % colors.length];
+
+                        return (
+                            <g key={`lbl-${i}`} style={{ pointerEvents: "none", opacity: isH || hov === null ? 1 : 0.15, transition: "opacity 0.2s" }}>
+                                <polyline points={`${pStart.x},${pStart.y} ${pMid.x},${pMid.y} ${pEnd.x},${pEnd.y}`}
+                                    fill="none" stroke={isH ? sliceColor : "var(--border)"} strokeWidth="1.5" opacity={isH ? 1 : 0.4} />
+
+                                <text x={pEnd.x + (isRight ? 8 : -8)} y={pEnd.y - 4} textAnchor={align} dominantBaseline="baseline"
+                                    fill={isH ? "var(--text)" : "var(--muted)"} fontSize={12} fontWeight={isH ? 800 : 600}
+                                    style={{ transition: "all 0.2s" }}>
+                                    {labels[i]}
+                                </text>
+                                <text x={pEnd.x + (isRight ? 8 : -8)} y={pEnd.y + 14} textAnchor={align} dominantBaseline="baseline"
+                                    fill={sliceColor} fontSize={11} fontWeight="800">
+                                    {val >= 1000000 ? `${(val / 1000000).toFixed(2)}M` : val >= 1000 ? `${(val / 1000).toFixed(0)}K` : val}{valueSuffix}
+                                </text>
+                            </g>
+                        );
+                    })}
+
+                    <circle cx={cx} cy={cy} r={ir - 5} fill="var(--surface2)" stroke="var(--border)" strokeWidth="1" />
+                    <text x={cx} y={cy - 2} textAnchor="middle" dominantBaseline="middle" fill="var(--text)" fontSize={13} fontWeight="900">
+                        {hov !== null ? "TOP " + (hov + 1) : "CLIENTS"}
+                    </text>
+                    <text x={cx} y={cy + 14} textAnchor="middle" dominantBaseline="middle" fill="var(--muted2)" fontSize={10} fontWeight="700">
+                        {hov !== null ? labels[hov] : `${data.length} total`}
+                    </text>
+                </svg>
+            </div>
+        </div>
+    );
+}
+
+/* ══════════ VERTICAL BAR CHART ══════════ */
+function VerticalBarChart({ data, labels, title, color = "#3b82f6", valueSuffix = "" }) {
+    const [hov, setHov] = useState(null);
+    const maxVal = Math.max(...data, 1);
+    const step = maxVal <= 10 ? 2 : maxVal <= 30 ? 5 : 10;
+    const maxC = Math.ceil(maxVal / step) * step;
+    const ticks = Array.from({ length: Math.floor(maxC / step) + 1 }, (_, i) => i * step);
+    const W = 680, H = 420, PL = 36, PR = 10, PT = 20, PB = 80;
+    const cW = W - PL - PR, cH = H - PT - PB, n = data.length;
+    const slW = cW / n, bW = Math.max(8, Math.min(24, slW * 0.55));
+    const bx = i => PL + i * slW + slW / 2 - bW / 2;
+    const by = v => PT + cH - (v / maxC) * cH;
+    const bh = v => Math.max(3, (v / maxC) * cH);
+    const gId = `vbg-${title?.slice(0, 4)}`;
+    return (
+        <div className="card" style={{ padding: 0, overflow: "hidden" }}>
+            <div style={{ padding: "16px 20px 12px", borderBottom: "1px solid var(--border)", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                <span className="section-title" style={{ fontSize: 20 }}>{title}</span>
+                <span className="topbar-badge">2026</span>
+            </div>
+            <div style={{ padding: "12px 16px 8px" }} dir="ltr">
+                <svg viewBox={`0 0 ${W} ${H}`} width="100%" xmlns="http://www.w3.org/2000/svg" onMouseLeave={() => setHov(null)}>
+                    <defs>
+                        <linearGradient id={gId} x1="0" y1="0" x2="0" y2="1">
+                            <stop offset="0%" stopColor={color} stopOpacity="1" />
+                            <stop offset="100%" stopColor={color} stopOpacity="0.2" />
+                        </linearGradient>
+                        <linearGradient id={`${gId}h`} x1="0" y1="0" x2="0" y2="1">
+                            <stop offset="0%" stopColor={color} stopOpacity="1" />
+                            <stop offset="100%" stopColor={color} stopOpacity="0.55" />
+                        </linearGradient>
+                        <filter id={`${gId}f`}>
+                            <feGaussianBlur stdDeviation="3.5" result="b" />
+                            <feMerge><feMergeNode in="b" /><feMergeNode in="SourceGraphic" /></feMerge>
+                        </filter>
+                    </defs>
+                    {ticks.map(v => {
+                        const y = by(v);
+                        return (
+                            <g key={v}>
+                                <line x1={PL} y1={y} x2={W - PR} y2={y} stroke="var(--border)" strokeWidth={v === 0 ? 1 : 0.5} strokeDasharray={v === 0 ? undefined : "3 6"} />
+                                <text x={PL - 6} y={y} textAnchor="end" dominantBaseline="middle" style={{ fontSize: 11, fill: "var(--muted2)", fontWeight: 700 }}>{v}</text>
+                            </g>
+                        );
+                    })}
+                    {data.map((val, i) => {
+                        const isH = hov === i;
+                        const x = bx(i), y = by(val), h = bh(val), rx = Math.min(bW / 2, 5);
+                        return (
+                            <g key={i} style={{ cursor: "pointer" }} onMouseEnter={() => setHov(i)}>
+                                <rect x={PL + i * slW + 2} y={PT} width={slW - 4} height={cH} rx={7} fill={isH ? "var(--surface2)" : "transparent"} opacity={0.5} style={{ transition: "fill 0.2s" }} />
+                                <rect x={x} y={y} width={bW} height={h} rx={rx} fill={isH ? `url(#${gId}h)` : `url(#${gId})`} filter={isH ? `url(#${gId}f)` : undefined} style={{ transition: "filter 0.25s" }} />
+                                <rect x={x + 1} y={y} width={bW - 2} height={2} rx={1} fill={color} opacity={isH ? 1 : 0.7} />
+                                {isH && (
+                                    <g style={{ pointerEvents: "none" }}>
+                                        <rect x={x + bW / 2 - 28} y={y - 32} width={56} height={24} rx={6} fill={color} />
+                                        <text x={x + bW / 2} y={y - 16} textAnchor="middle" fill="#fff" fontSize={12} fontWeight={800}>{val}{valueSuffix}</text>
+                                    </g>
+                                )}
+                            </g>
+                        );
+                    })}
+                    {labels.map((l, i) => {
+                        const isH = hov === i;
+                        const cx = PL + i * slW + slW / 2;
+                        return (
+                            <text key={i} x={cx} y={H - 8} textAnchor="middle"
+                                style={{ fontSize: 11, fill: isH ? color : "var(--muted2)", fontWeight: isH ? 800 : 600, transform: `rotate(-38deg)`, transformOrigin: `${cx}px ${H - 8}px`, transition: "fill 0.2s" }}>
+                                {l}
+                            </text>
+                        );
+                    })}
+                </svg>
+            </div>
+        </div>
+    );
+}
+
+/* ══════════ DONUT CHART ══════════ */
+function DonutChart({ data, labels, colors, title }) {
+    const [hov, setHov] = useState(null);
+    const total = data.reduce((a, b) => a + b, 0);
+    const toXY = (cx, cy, r, deg) => {
+        const rad = ((deg - 90) * Math.PI) / 180;
+        return { x: cx + r * Math.cos(rad), y: cy + r * Math.sin(rad) };
+    };
+    const arc = (cx, cy, r, s, e) => {
+        const p1 = toXY(cx, cy, r, e - 0.4);
+        const p2 = toXY(cx, cy, r, s + 0.4);
+        const lg = e - s > 180 ? 1 : 0;
+        return `M ${p1.x} ${p1.y} A ${r} ${r} 0 ${lg} 0 ${p2.x} ${p2.y}`;
+    };
+    let acc = 0;
+    const segs = data.map((v, i) => {
+        const pct = ((v / total) * 100).toFixed(1);
+        const s = acc, e = acc + (v / total) * 360;
+        acc = e;
+        return { v, label: labels[i], pct, s, e, color: colors[i] };
+    });
+    const sz = 320, cx = sz / 2, cy = sz / 2, r = 110, sw = 28;
+    return (
+        <div className="card" style={{ padding: 0, overflow: "hidden", display: "flex", flexDirection: "column" }}>
+            <div style={{ padding: "16px 20px 12px", borderBottom: "1px solid var(--border)", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                <span className="section-title" style={{ fontSize: 20 }}>{title}</span>
+                <span className="topbar-badge">2026</span>
+            </div>
+            <div style={{ display: "flex", flex: 1, padding: "20px 16px", alignItems: "center", justifyContent: "space-around", flexWrap: "wrap", gap: 16 }}>
+                <div style={{ position: "relative", width: sz, height: sz, flexShrink: 0 }}>
+                    <svg width={sz} height={sz} viewBox={`0 0 ${sz} ${sz}`} dir="ltr">
+                        <defs>
+                            {segs.map((s, i) => (
+                                <filter key={i} id={`dg${i}`}>
+                                    <feGaussianBlur stdDeviation="6" result="b" />
+                                    <feMerge><feMergeNode in="b" /><feMergeNode in="SourceGraphic" /></feMerge>
+                                </filter>
+                            ))}
+                        </defs>
+                        <circle cx={cx} cy={cy} r={r} fill="none" stroke="var(--border)" strokeWidth={sw} opacity={0.25} />
+                        {segs.map((s, i) => {
+                            const isH = hov === i;
+                            return (
+                                <path key={i} d={arc(cx, cy, r, s.s, s.e)} fill="none"
+                                    stroke={s.color} strokeWidth={isH ? sw + 6 : sw} strokeLinecap="round"
+                                    filter={isH ? `url(#dg${i})` : undefined}
+                                    style={{ opacity: hov !== null && !isH ? 0.4 : 1, transition: "stroke-width 0.25s, opacity 0.25s", cursor: "pointer" }}
+                                    onMouseEnter={() => setHov(i)} onMouseLeave={() => setHov(null)} />
+                            );
+                        })}
+                    </svg>
+                    <div style={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%,-50%)", textAlign: "center", pointerEvents: "none" }}>
+                        <div style={{ fontSize: 11, fontWeight: 700, color: "var(--muted2)", textTransform: "uppercase", letterSpacing: "0.06em" }}>
+                            {hov !== null ? segs[hov].label : "TOTAL"}
                         </div>
-                        <div style={{ display: "flex", alignItems: "center", gap: 6, color: "var(--muted2)", opacity: 0.5 }}>
-                            <div style={{ width: 8, height: 8, borderRadius: "50%", background: "var(--muted2)" }} />
-                            {t.vsYesterday}
+                        <div style={{ fontSize: 32, fontWeight: 900, color: "var(--text)", lineHeight: 1.1 }}>
+                            {hov !== null ? segs[hov].v : total}
+                        </div>
+                        <div style={{ fontSize: 13, fontWeight: 700, color: hov !== null ? segs[hov].color : "var(--muted2)" }}>
+                            {hov !== null ? `${segs[hov].pct}%` : "réservations"}
                         </div>
                     </div>
-                )}
+                </div>
+                <div style={{ display: "flex", flexDirection: "column", gap: 10, minWidth: 130 }}>
+                    {segs.map((s, i) => {
+                        const isH = hov === i;
+                        return (
+                            <div key={i} style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 12, padding: "5px 10px", borderRadius: 8, background: isH ? "var(--surface2)" : "transparent", cursor: "pointer", transition: "all 0.2s" }}
+                                onMouseEnter={() => setHov(i)} onMouseLeave={() => setHov(null)}>
+                                <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                                    <div style={{ width: 14, height: 14, borderRadius: "50%", background: s.color, flexShrink: 0 }} />
+                                    <span style={{ fontSize: 14, fontWeight: isH ? 800 : 600, color: isH ? "var(--text)" : "var(--muted2)" }}>{s.label}</span>
+                                </div>
+                                <span style={{ fontSize: 15, fontWeight: 800, color: "var(--text)" }}>{s.v} ({s.pct}%)</span>
+                            </div>
+                        );
+                    })}
+                </div>
+            </div>
+        </div>
+    );
+}
+
+/* ══════════ STACKED BAR CHART ══════════ */
+function StackedBarChart({ months, series, title }) {
+    const [hov, setHov] = useState(null);
+    const totals = months.map((_, mi) => series.reduce((s, sr) => s + sr.values[mi], 0));
+    const maxVal = Math.max(...totals, 1);
+    const step = maxVal <= 10 ? 2 : maxVal <= 20 ? 5 : 10;
+    const maxC = Math.ceil(maxVal / step) * step;
+    const ticks = Array.from({ length: Math.floor(maxC / step) + 1 }, (_, i) => i * step);
+    const W = 680, H = 420, PL = 36, PR = 10, PT = 20, PB = 70;
+    const cW = W - PL - PR, cH = H - PT - PB, n = months.length;
+    const slW = cW / n, bW = Math.max(10, Math.min(30, slW * 0.6));
+    const bx = i => PL + i * slW + slW / 2 - bW / 2;
+    const by = v => PT + cH - (v / maxC) * cH;
+    return (
+        <div className="card" style={{ padding: 0, overflow: "hidden" }}>
+            <div style={{ padding: "16px 20px 12px", borderBottom: "1px solid var(--border)", display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 8 }}>
+                <span className="section-title" style={{ fontSize: 20 }}>{title}</span>
+                <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
+                    {series.map((s, i) => (
+                        <div key={i} style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 12, fontWeight: 700, color: "var(--muted2)" }}>
+                            <div style={{ width: 10, height: 10, borderRadius: 2, background: s.color }} />
+                            {s.label}
+                        </div>
+                    ))}
+                </div>
+            </div>
+            <div style={{ padding: "12px 16px 8px" }} dir="ltr">
+                <svg viewBox={`0 0 ${W} ${H}`} width="100%" xmlns="http://www.w3.org/2000/svg" onMouseLeave={() => setHov(null)}>
+                    {ticks.map(v => {
+                        const y = by(v);
+                        return (
+                            <g key={v}>
+                                <line x1={PL} y1={y} x2={W - PR} y2={y} stroke="var(--border)" strokeWidth={v === 0 ? 1 : 0.5} strokeDasharray={v === 0 ? undefined : "3 6"} />
+                                <text x={PL - 6} y={y} textAnchor="end" dominantBaseline="middle" style={{ fontSize: 11, fill: "var(--muted2)", fontWeight: 700 }}>{v}</text>
+                            </g>
+                        );
+                    })}
+                    {months.map((mon, mi) => {
+                        const isH = hov === mi;
+                        const x = bx(mi);
+                        let yOff = PT + cH;
+                        return (
+                            <g key={mi} style={{ cursor: "pointer" }} onMouseEnter={() => setHov(mi)}>
+                                <rect x={PL + mi * slW + 1} y={PT} width={slW - 2} height={cH} rx={6} fill={isH ? "var(--surface2)" : "transparent"} opacity={0.4} style={{ transition: "fill 0.2s" }} />
+                                {series.map((sr, si) => {
+                                    const h = Math.max(2, (sr.values[mi] / maxC) * cH);
+                                    yOff -= h;
+                                    const rx = si === series.length - 1 ? Math.min(bW / 2, 4) : 0;
+                                    return (
+                                        <rect key={si} x={x} y={yOff} width={bW} height={h} rx={si === series.length - 1 ? `${rx} ${rx} 0 0` : 0}
+                                            fill={sr.color} opacity={isH ? 1 : 0.82}
+                                            style={{ transition: "opacity 0.2s" }} />
+                                    );
+                                })}
+                                {isH && (
+                                    <g style={{ pointerEvents: "none" }}>
+                                        <rect x={x + bW / 2 - 22} y={PT + cH - (totals[mi] / maxC) * cH - 30} width={44} height={22} rx={6} fill="var(--surface)" stroke="var(--border)" strokeWidth={1} />
+                                        <text x={x + bW / 2} y={PT + cH - (totals[mi] / maxC) * cH - 15} textAnchor="middle" fill="var(--text)" fontSize={10} fontWeight={800}>{totals[mi]}</text>
+                                    </g>
+                                )}
+                            </g>
+                        );
+                    })}
+                    {months.map((mon, mi) => {
+                        const isH = hov === mi;
+                        const cx2 = PL + mi * slW + slW / 2;
+                        return (
+                            <text key={mi} x={cx2} y={H - 8} textAnchor="middle"
+                                style={{ fontSize: 11, fill: isH ? "var(--text)" : "var(--muted2)", fontWeight: isH ? 800 : 600, transform: `rotate(-35deg)`, transformOrigin: `${cx2}px ${H - 8}px`, transition: "fill 0.2s" }}>
+                                {mon}
+                            </text>
+                        );
+                    })}
+                </svg>
             </div>
         </div>
     );
 }
 
 function CarModal({ car, onClose, onSave, t, dark }) {
-    const [form, setForm] = useState(car || { name: "", plate: "", category: "SUV", price: "", fuel: "Essence", seats: 5, status: "available", city: "", photos: [], startDate: "", endDate: "" });
+    const [form, setForm] = useState(car || { name: "", plate: "", category: "Manuel", price: "", fuel: "Essence", seats: 5, status: "available", city: "", photos: [], startDate: "", endDate: "" });
     const [drag, setDrag] = useState(false);
     const handleChange = (k, v) => setForm(f => ({ ...f, [k]: v }));
 
@@ -1256,7 +2249,7 @@ function CarModal({ car, onClose, onSave, t, dark }) {
                     <div className="form-group field-plate"><label className="form-label">{t.plate}</label><input className="form-input" value={form.plate} onChange={e => handleChange("plate", e.target.value)} placeholder="M-GX-0001" /></div>
                 </div>
                 <div className="form-row">
-                    <div className="form-group"><label className="form-label">{t.colCategory}</label><select className="form-input form-select" value={form.category} onChange={e => handleChange("category", e.target.value)}>{["SUV", "Sport", "Berline", "Luxe", "Cabriolet"].map(c => <option key={c}>{c}</option>)}</select></div>
+                    <div className="form-group"><label className="form-label">{t.colCategory}</label><select className="form-input form-select" value={form.category} onChange={e => handleChange("category", e.target.value)}>{["Manuel", "Automatique"].map(c => <option key={c}>{c}</option>)}</select></div>
                     <div className="form-group"><label className="form-label">{t.colFuel}</label><select className="form-input form-select" value={form.fuel} onChange={e => handleChange("fuel", e.target.value)}>{["Essence", "Diesel", "Hybride", "Électrique"].map(c => <option key={c}>{c}</option>)}</select></div>
                 </div>
                 <div className="form-row">
@@ -1311,17 +2304,43 @@ function CarModal({ car, onClose, onSave, t, dark }) {
     );
 }
 
+/* Exchange rates relative to MAD (1 MAD = X foreign) */
+const EXCHANGE_RATES = {
+    MAD: 1,
+    AED: 0.3671,   // 1 MAD ≈ 0.3671 AED
+    USD: 0.0999,   // 1 MAD ≈ 0.10 USD
+    EUR: 0.0919,   // 1 MAD ≈ 0.092 EUR
+    GBP: 0.0789,   // 1 MAD ≈ 0.079 GBP
+    CHF: 0.0892,   // 1 MAD ≈ 0.089 CHF
+    CAD: 0.1365,   // 1 MAD ≈ 0.137 CAD
+    SAR: 0.3748,   // 1 MAD ≈ 0.375 SAR
+    QAR: 0.3639,   // 1 MAD ≈ 0.364 QAR
+    KWD: 0.0307,   // 1 MAD ≈ 0.031 KWD
+    TRY: 3.23,     // 1 MAD ≈ 3.23 TRY
+    AFN: 7.09,     // 1 MAD ≈ 7.09 AFN
+    ALL: 9.36,     // 1 MAD ≈ 9.36 ALL
+    AMD: 38.8,     // 1 MAD ≈ 38.8 AMD
+};
+const getRate = (code) => EXCHANGE_RATES[code] ?? 1;
+
 const CURRENCIES_LIST = [
     { code: "MAD", translations: { fr: "Dirham Marocain", en: "Moroccan Dirham", ar: "درهم مغربي" } },
     { code: "AED", translations: { fr: "Dirham des Émirats", en: "UAE Dirham", ar: "درهم إماراتي" } },
     { code: "USD", translations: { fr: "Dollar US", en: "US Dollar", ar: "دولار أمريكي" }, symbol: "$" },
     { code: "EUR", translations: { fr: "Euro", en: "Euro", ar: "يورو" }, symbol: "€" },
+    { code: "GBP", translations: { fr: "Livre Sterling", en: "British Pound", ar: "جنيه إسترليني" }, symbol: "£" },
+    { code: "CHF", translations: { fr: "Franc Suisse", en: "Swiss Franc", ar: "فرنك سويسري" } },
+    { code: "CAD", translations: { fr: "Dollar Canadien", en: "Canadian Dollar", ar: "دولار كندي" }, symbol: "CA$" },
+    { code: "SAR", translations: { fr: "Riyal Saoudien", en: "Saudi Riyal", ar: "ريال سعودي" } },
+    { code: "QAR", translations: { fr: "Riyal Qatari", en: "Qatari Riyal", ar: "ريال قطري" } },
+    { code: "KWD", translations: { fr: "Dinar Koweïtien", en: "Kuwaiti Dinar", ar: "دينار كويتي" } },
+    { code: "TRY", translations: { fr: "Livre Turque", en: "Turkish Lira", ar: "ليرة تركية" } },
     { code: "AFN", translations: { fr: "Afghani Afghan", en: "Afghan Afghani", ar: "أفغاني أفغانستان" }, symbol: "؋" },
     { code: "ALL", translations: { fr: "Lek Albanais", en: "Albanian Lek", ar: "ليك ألباني" } },
     { code: "AMD", translations: { fr: "Dram Arménien", en: "Armenian Dram", ar: "درام أرميني" }, symbol: "֏" },
 ];
 
-function DashboardPage({ dark, t, lang, cars = [], currency, setCurrency }) {
+function DashboardPage({ dark, t, lang, cars = [], currency, setCurrency, currentMonth, setCurrentMonth, currentYear, setCurrentYear }) {
     const localizedDays = lang === 'ar'
         ? ["إثنين", "ثلاثاء", "أربعاء", "خميس", "جمعة", "سبت", "أحد"]
         : lang === 'fr'
@@ -1331,7 +2350,38 @@ function DashboardPage({ dark, t, lang, cars = [], currency, setCurrency }) {
     const pending = RESERVATIONS.filter(r => r.status === "pending").length;
     const available = cars.filter(c => c.status === "available").length;
 
-    const [activePeriod, setActivePeriod] = useState("thisWeek");
+    const handlePrevMonth = () => {
+        if (currentYear === 2025 && currentMonth === 4) return;
+        if (currentMonth === 1) {
+            setCurrentMonth(12);
+            setCurrentYear(currentYear - 1);
+        } else {
+            setCurrentMonth(currentMonth - 1);
+        }
+    };
+
+    const handleNextMonth = () => {
+        if (currentYear === 2026 && currentMonth === 4) return;
+        if (currentMonth === 12) {
+            setCurrentMonth(1);
+            setCurrentYear(currentYear + 1);
+        } else {
+            setCurrentMonth(currentMonth + 1);
+        }
+    };
+
+    const monthName = MONTHS[currentMonth - 1];
+    const displayMonth = lang === 'ar' ? `شهر ${currentMonth} / ${currentYear}` : `${monthName} ${currentYear}`;
+
+    const daysInMonth = new Date(currentYear, currentMonth, 0).getDate();
+    const md = getMonthData(currentMonth, currentYear);
+    const { bookingData, demoReservations, pendingCount,
+        reservations, activeClients, totalRevenue,
+        revenueChange, revenueUp, resChange, resUp, cliChange, cliUp } = md;
+    // Currency conversion helpers
+    const rate = getRate(currency);
+    const fmtD = (madVal) => Math.abs(madVal * rate).toLocaleString('fr-FR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    const chartLabels = Array.from({ length: daysInMonth }, (_, i) => `${i + 1}/${currentMonth}/${currentYear}`);
     const [isCurrencyOpen, setIsCurrencyOpen] = useState(false);
     const [currencySearch, setCurrencySearch] = useState("");
 
@@ -1398,46 +2448,44 @@ function DashboardPage({ dark, t, lang, cars = [], currency, setCurrency }) {
         boxShadow: "0 2px 8px rgba(16,185,129,0.1), inset 0 1px 0 rgba(255,255,255,0.5)",
     };
 
-    // Simple hover helper logic
-    const handleWeekHoverEntry = (e, targetActive) => {
-        if (targetActive) return; // do not apply hover effect if already active
-        e.currentTarget.style.background = dark ? "linear-gradient(135deg, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0.03) 100%)" : "linear-gradient(135deg, rgba(0,0,0,0.05) 0%, rgba(0,0,0,0.02) 100%)";
-    };
-    const handleWeekHoverLeave = (e, targetActive) => {
-        if (targetActive) return;
-        Object.assign(e.currentTarget.style, inactiveWeekStyle);
-    };
-
     return (
         <div className="page tab-content">
-            <div className="dashboard-filters-row" style={{ display: "flex", justifyContent: "flex-start", gap: "8px", marginBottom: 20, marginTop: -12, position: "relative", zIndex: 999, bottom: "1px" }}>
-                {/* This Week Button */}
-                <button
-                    onClick={() => setActivePeriod("thisWeek")}
-                    style={activePeriod === "thisWeek" ? activeWeekStyle : inactiveWeekStyle}
-                    onMouseEnter={e => handleWeekHoverEntry(e, activePeriod === "thisWeek")}
-                    onMouseLeave={e => handleWeekHoverLeave(e, activePeriod === "thisWeek")}>
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke={activePeriod === "thisWeek" ? "currentColor" : (dark ? "rgba(255,255,255,0.5)" : "rgba(0,0,0,0.5)")} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                        <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
-                        <line x1="16" y1="2" x2="16" y2="6"></line>
-                        <line x1="8" y1="2" x2="8" y2="6"></line>
-                        <line x1="3" y1="10" x2="21" y2="10"></line>
-                    </svg>
-                    <span>{t.thisWeek}</span>
-                </button>
+            <div className="dashboard-filters-row" style={{ display: "flex", justifyContent: "flex-start", gap: "12px", marginBottom: 20, marginTop: -12, position: "relative", zIndex: 999, bottom: "1px" }}>
+                {/* Month Navigator — luminous blue style */}
+                <div style={{
+                    display: "flex", alignItems: "center", gap: "2px",
+                    borderRadius: "12px", padding: "4px",
+                    ...(dark ? {
+                        background: "linear-gradient(135deg, rgba(96,165,250,0.15) 0%, rgba(96,165,250,0.07) 100%)",
+                        border: "1.5px solid rgba(96,165,250,0.35)",
+                        boxShadow: "0 2px 12px rgba(96,165,250,0.22), inset 0 1px 0 rgba(255,255,255,0.06)",
+                    } : {
+                        background: "linear-gradient(135deg, rgba(59,130,246,0.12) 0%, rgba(59,130,246,0.06) 100%)",
+                        border: "1.5px solid rgba(59,130,246,0.4)",
+                        boxShadow: "0 2px 12px rgba(59,130,246,0.18), inset 0 1px 0 rgba(255,255,255,0.5)",
+                    })
+                }}>
+                    <button
+                        onClick={handlePrevMonth}
+                        className="icon-btn"
+                        style={{ width: 30, height: 30, borderRadius: "8px", border: "none", background: "transparent", cursor: "pointer", color: dark ? "#93c5fd" : "#2563eb", display: "flex", alignItems: "center", justifyContent: "center" }}
+                    >
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ transform: lang === 'ar' ? 'scaleX(-1)' : 'none' }}><polyline points="15 18 9 12 15 6" /></svg>
+                    </button>
 
-                {/* Last Week Button */}
-                <button
-                    onClick={() => setActivePeriod("lastWeek")}
-                    style={activePeriod === "lastWeek" ? activeWeekStyle : inactiveWeekStyle}
-                    onMouseEnter={e => handleWeekHoverEntry(e, activePeriod === "lastWeek")}
-                    onMouseLeave={e => handleWeekHoverLeave(e, activePeriod === "lastWeek")}>
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke={activePeriod === "lastWeek" ? "currentColor" : (dark ? "rgba(255,255,255,0.5)" : "rgba(0,0,0,0.5)")} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                        <path d="M3 9h18M9 3v18M21 10.5V19a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v3.5Z"></path>
-                        <circle cx="12" cy="14" r="2"></circle>
-                    </svg>
-                    <span>{t.lastWeek}</span>
-                </button>
+                    <div style={{ padding: "0 10px", fontSize: "13px", fontWeight: "800", minWidth: "110px", textAlign: "center", color: dark ? "#93c5fd" : "#2563eb", letterSpacing: "0.03em" }}>
+                        {displayMonth}
+                    </div>
+
+                    <button
+                        onClick={handleNextMonth}
+                        className="icon-btn"
+                        style={{ width: 30, height: 30, borderRadius: "8px", border: "none", background: "transparent", cursor: "pointer", color: dark ? "#93c5fd" : "#2563eb", display: "flex", alignItems: "center", justifyContent: "center" }}
+                    >
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ transform: lang === 'ar' ? 'scaleX(-1)' : 'none' }}><polyline points="9 18 15 12 9 6" /></svg>
+                    </button>
+                </div>
+
 
                 {/* Currency Dropdown */}
                 <div style={{ position: "relative" }}>
@@ -1525,44 +2573,53 @@ function DashboardPage({ dark, t, lang, cars = [], currency, setCurrency }) {
                 </div>
             </div>
             <div className="stats-grid mobile-hide">
-                <StatCard label={t.revenueMonth} value={`${currency} 0.00 —`} color="#10b981" icon={<Icon d={icons.dollar} size={16} />} />
-                <StatCard label={t.reservations} value="0 —" color="#3b82f6" icon={<Icon d={icons.reservations} size={16} />} />
-                <StatCard label={t.carsAvailable} value={`${available} /${cars.length} —`} color="#a855f7" icon={<Icon d={icons.cars} size={16} />} />
-                <StatCard label={t.activeClients} value="0 —" color="#f59e0b" icon={<Icon d={icons.users} size={16} />} />
+                <StatCard label={t.revenueMonth} value={`${currency} ${fmtD(totalRevenue)}`} change={revenueChange} up={revenueUp} color="#10b981" icon={<Icon d={icons.dollar} size={16} />} />
+                <StatCard label={t.reservations} value={String(reservations)} change={resChange} up={resUp} color="#3b82f6" icon={<Icon d={icons.reservations} size={16} />} />
+                <StatCard label={t.carsAvailable} value={`${available} /${cars.length}`} color="#a855f7" icon={<Icon d={icons.cars} size={16} />} />
+                <StatCard label={t.activeClients} value={String(activeClients)} change={cliChange} up={cliUp} color="#f59e0b" icon={<Icon d={icons.users} size={16} />} />
             </div>
 
-            <RevenueSummary dark={dark} t={t} lang={lang} currency={currency} />
+            <RevenueSummary
+                dark={dark} t={t} lang={lang} currency={currency}
+                currentMonth={currentMonth}
+                currentYear={currentYear}
+                onPrev={handlePrevMonth}
+                onNext={handleNextMonth}
+            />
 
             <div className="grid-3" style={{ marginBottom: "24px" }}>
-                <LineChart data={BOOKINGS_PER_MONTH} labels={lang === 'ar' ? ["يناير", "فبراير", "مارس", "أبريل", "مايو", "يونيو", "يوليو"] : MONTHS} color="#f59e0b" title={t.monthlyBookings} height={300} t={t} lang={lang} />
+                <BarChart data={bookingData} labels={chartLabels} color={dark ? "#60a5fa" : "#10b981"} title={t.monthlyBookings} height={360} t={t} />
 
-                {/* Recent reservations */}
-                <div className="card" style={{ padding: 0, display: "flex", flexDirection: "column" }}>
-                    <div style={{ padding: "18px 20px 12px", borderBottom: "1px solid var(--border)", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-                        <span className="section-title">{t.latestReservations}</span>
-                        {pending > 0 && <span style={{ background: "rgba(245,158,11,.15)", color: "#f59e0b", fontSize: 11, fontWeight: 800, padding: "3px 9px", borderRadius: 20, border: "1px solid rgba(245,158,11,.25)", animation: "badgePulse 2s infinite" }}>{pending} {t.pendingBadge}</span>}
-                    </div>
-                    {RESERVATIONS.length === 0 && <div className="empty-state" style={{ flex: 1, padding: 40 }}><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10" /><line x1="12" y1="8" x2="12" y2="12" /><line x1="12" y1="16" x2="12.01" y2="16" /></svg><div style={{ marginTop: 14, fontSize: 14, fontWeight: 600 }}>{t.emptyResv}</div></div>}
-                    {RESERVATIONS.slice(0, 4).map((r, i) => (
-                        <div key={r.id} style={{ display: "flex", alignItems: "center", gap: 12, padding: "12px 20px", borderBottom: i < 3 ? "1px solid var(--border)" : "none", cursor: "pointer", transition: "background .2s" }}
-                            onMouseEnter={e => e.currentTarget.style.background = "var(--surface2)"}
-                            onMouseLeave={e => e.currentTarget.style.background = "transparent"}>
-                            <div style={{ width: 36, height: 36, borderRadius: 12, background: `${r.color}20`, border: `1px solid ${r.color}40`, display: "flex", alignItems: "center", justifyContent: "center", color: r.color, fontWeight: 900, fontSize: 12, flexShrink: 0 }}>{r.avatar}</div>
-                            <div style={{ flex: 1, minWidth: 0 }}>
-                                <div style={{ fontSize: 13, fontWeight: 700, marginBottom: 2 }}>{r.client}</div>
-                                <div style={{ fontSize: 11, color: "var(--muted2)" }}>{r.car} · {r.from}–{r.to}</div>
+                {/* Recent reservations — vary by month */}
+                {(() => {
+                    return (
+                        <div className="card" style={{ padding: 0, display: "flex", flexDirection: "column" }}>
+                            <div style={{ padding: "18px 20px 12px", borderBottom: "1px solid var(--border)", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+                                <span className="section-title">{t.latestReservations}</span>
+                                {pendingCount > 0 && <span style={{ background: "rgba(245,158,11,.15)", color: "#f59e0b", fontSize: 11, fontWeight: 800, padding: "3px 9px", borderRadius: 20, border: "1px solid rgba(245,158,11,.25)", animation: "badgePulse 2s infinite" }}>{pendingCount} {t.pendingBadge || "en attente"}</span>}
                             </div>
-                            <div style={{ textAlign: "right" }}>
-                                <div style={{ fontSize: 13, fontWeight: 800, marginBottom: 3 }}>{r.amount.toLocaleString()} MAD</div>
-                                <span className={`badge ${r.status}`}><span className="badge-dot" />{r.status}</span>
-                            </div>
+                            {demoReservations.map((r, i) => (
+                                <div key={r.id} style={{ display: "flex", alignItems: "center", gap: 12, padding: "12px 20px", borderBottom: i < demoReservations.length - 1 ? "1px solid var(--border)" : "none", cursor: "pointer", transition: "background .2s" }}
+                                    onMouseEnter={e => e.currentTarget.style.background = "var(--surface2)"}
+                                    onMouseLeave={e => e.currentTarget.style.background = "transparent"}>
+                                    <div style={{ width: 36, height: 36, borderRadius: 12, background: `${r.color}20`, border: `1px solid ${r.color}40`, display: "flex", alignItems: "center", justifyContent: "center", color: r.color, fontWeight: 900, fontSize: 12, flexShrink: 0 }}>{r.avatar}</div>
+                                    <div style={{ flex: 1, minWidth: 0 }}>
+                                        <div style={{ fontSize: 13, fontWeight: 700, marginBottom: 2 }}>{r.client}</div>
+                                        <div style={{ fontSize: 11, color: "var(--muted2)" }}>{r.car} · {r.from}–{r.to}</div>
+                                    </div>
+                                    <div style={{ textAlign: "right" }}>
+                                        <div style={{ fontSize: 13, fontWeight: 800, marginBottom: 3 }}>{currency} {fmtD(r.amount)}</div>
+                                        <span className={`badge ${r.status}`}><span className="badge-dot" />{r.status}</span>
+                                    </div>
+                                </div>
+                            ))}
                         </div>
-                    ))}
-                </div>
+                    );
+                })()}
             </div>
 
             <div className="grid-2">
-                <div className="card" style={{ padding: 0 }}>
+                <div className="card" style={{ padding: 0, alignSelf: "flex-start" }}>
                     <div style={{ padding: "18px 20px 12px", borderBottom: "1px solid var(--border)" }}>
                         <div className="section-title">{t.fleetStatus}</div>
                     </div>
@@ -1589,14 +2646,76 @@ function DashboardPage({ dark, t, lang, cars = [], currency, setCurrency }) {
                 </div>
 
                 {/* Activity feed */}
-                <div className="card" style={{ padding: 0 }}>
-                    <div style={{ padding: "18px 20px 12px", borderBottom: "1px solid var(--border)" }}>
-                        <span className="section-title">{t.recentActivity}</span>
-                    </div>
-                    <div style={{ padding: "8px 20px" }}>
-                        <div className="empty-stateee" style={{ padding: 30 }}><div style={{ marginTop: 10, fontSize: 14, fontWeight: 600 }}>Aucune activité récente</div></div>
-                    </div>
-                </div>
+                {(() => {
+                    /* ── Animated SVG icon components ── */
+                    const IconCar = ({ color }) => (
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ animation: "svg-fly 2s ease-in-out infinite" }}>
+                            <path d="M14 16H9m10 0h3v-3.15a1 1 0 0 0-.84-.99L16 11l-2.7-3.6a2 2 0 0 0-1.6-.8H9.3a2 2 0 0 0-1.6.8L5 11l-5.16.86A1 1 0 0 0 1 12.85V16h3" />
+                            <circle cx="6.5" cy="16.5" r="2.5" style={{ animation: "spin 1.4s linear infinite", transformOrigin: "6.5px 16.5px" }} />
+                            <circle cx="16.5" cy="16.5" r="2.5" style={{ animation: "spin 1.4s linear infinite", transformOrigin: "16.5px 16.5px" }} />
+                        </svg>
+                    );
+                    const IconCheck = ({ color }) => (
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ animation: "svg-pulse 2s ease-in-out infinite" }}>
+                            <circle cx="12" cy="12" r="10" />
+                            <polyline points="9 12 11.5 14.5 16 9.5" />
+                        </svg>
+                    );
+                    const IconCard = ({ color }) => (
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ animation: "svg-shake 3s ease-in-out infinite" }}>
+                            <rect x="1" y="4" width="22" height="16" rx="2" ry="2" />
+                            <line x1="1" y1="10" x2="23" y2="10" />
+                        </svg>
+                    );
+                    const IconWrench = ({ color }) => (
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ animation: "svg-shake 2.5s ease-in-out infinite" }}>
+                            <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z" />
+                        </svg>
+                    );
+                    const IconX = ({ color }) => (
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ animation: "svg-pulse 1.8s ease-in-out infinite" }}>
+                            <circle cx="12" cy="12" r="10" />
+                            <line x1="15" y1="9" x2="9" y2="15" />
+                            <line x1="9" y1="9" x2="15" y2="15" />
+                        </svg>
+                    );
+                    const DEMO_ACTIVITY = IS_MOCK ? [
+                        { SvgIcon: IconCar, bg: "rgba(59,130,246,0.12)", color: "#3b82f6", text: "Nouvelle réservation — Dacia Logan", sub: "Yassine Benali · il y a 12 min", dot: "#3b82f6" },
+                        { SvgIcon: IconCheck, bg: "rgba(16,185,129,0.12)", color: "#10b981", text: "Réservation confirmée — Hyundai Tucson", sub: "Karim Hajji · il y a 35 min", dot: "#10b981" },
+                        { SvgIcon: IconCard, bg: "rgba(168,85,247,0.12)", color: "#a855f7", text: "Paiement reçu — 1 200 MAD", sub: "Sara Alami · il y a 1h", dot: "#a855f7" },
+                        { SvgIcon: IconWrench, bg: "rgba(245,158,11,0.12)", color: "#f59e0b", text: "Véhicule en maintenance — Peugeot 208", sub: "Atelier · il y a 2h", dot: "#f59e0b" },
+                        { SvgIcon: IconX, bg: "rgba(239,68,68,0.1)", color: "#ef4444", text: "Réservation annulée — Peugeot 208", sub: "Meryem Naji · il y a 3h", dot: "#ef4444" },
+                    ] : [];
+                    return (
+                        <div className="card" style={{ padding: 0 }}>
+                            <div style={{ padding: "18px 20px 12px", borderBottom: "1px solid var(--border)" }}>
+                                <span className="section-title">{t.recentActivity}</span>
+                            </div>
+                            <div style={{ padding: "4px 20px 8px" }}>
+                                {DEMO_ACTIVITY.length === 0 ? (
+                                    <div style={{ padding: "30px 20px", textAlign: "center", color: "var(--muted2)", fontSize: "13px" }}>
+                                        {t.noActivity || "Aucune activité récente"}
+                                    </div>
+                                ) : (
+                                    DEMO_ACTIVITY.map((a, i) => (
+                                        <div key={i} className="activity-item" style={{ gap: 12, paddingTop: 14, paddingBottom: 14 }}>
+                                            <div className="activity-icon" style={{ background: a.bg, color: a.color, display: "flex", alignItems: "center", justifyContent: "center" }}>
+                                                <a.SvgIcon color={a.color} />
+                                            </div>
+                                            <div style={{ flex: 1, minWidth: 0 }}>
+                                                <div style={{ fontSize: 13, fontWeight: 700, color: "var(--text)", marginBottom: 2, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{a.text}</div>
+                                                <div style={{ fontSize: 11, color: "var(--muted2)", display: "flex", alignItems: "center", gap: 5 }}>
+                                                    <span style={{ width: 6, height: 6, borderRadius: "50%", background: a.dot, display: "inline-block", flexShrink: 0, animation: "pulse 2s infinite" }} />
+                                                    {a.sub}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    ))
+                                )}
+                            </div>
+                        </div>
+                    );
+                })()}
             </div>
         </div >
     );
@@ -1609,14 +2728,7 @@ function CarsPage({ t, cars, onSave, onDelete, dark }) {
     const [confirm, setConfirm] = useState(null);
 
     useEffect(() => {
-        if (modal || confirm) {
-            document.body.style.overflow = "hidden";
-        } else {
-            document.body.style.overflow = "unset";
-        }
-        return () => {
-            document.body.style.overflow = "unset";
-        };
+        // Scroll lock disabled to ensure modal-overlay behaves correctly on all viewports
     }, [modal, confirm]);
 
     const filtered = cars.filter(c => {
@@ -1830,9 +2942,178 @@ function CarsPage({ t, cars, onSave, onDelete, dark }) {
     );
 }
 
-function ReservationsPage({ t }) {
-    const [reservations, setReservations] = useState(RESERVATIONS);
+function ReservationDetailsModal({ reservation, onClose, t, handle }) {
+    // Use full screen viewing state
+    const [fullScreenImg, setFullScreenImg] = useState(null);
+
+    if (!reservation) return null;
+
+    const idFront = reservation.idCardFront || reservation.idCard;
+    const idBack = reservation.idCardBack || idFront;
+    const licFront = reservation.drivingLicenseFront || reservation.drivingLicense;
+    const licBack = reservation.drivingLicenseBack || licFront;
+
+    return (
+        <>
+            <div className="modal-overlay" style={{ zIndex: 99999, color: "var(--text)" }} onClick={onClose}>
+                <div style={{
+                    width: "100%", maxWidth: 850, margin: "auto",
+                    background: "var(--card)", borderRadius: 24, border: "1px solid var(--border)",
+                    boxShadow: "0 40px 100px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.06)",
+                    display: "flex", flexDirection: "column"
+                }} onClick={e => e.stopPropagation()}>
+                    {/* Header */}
+                    <div style={{ padding: "20px 28px", borderBottom: "1px solid var(--border)", display: "flex", alignItems: "center", justifyContent: "space-between", position: "sticky", top: 0, background: "var(--card)", zIndex: 10 }}>
+                        <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
+                            <div style={{ width: 56, height: 56, borderRadius: 16, background: `${reservation.color}15`, border: `1px solid ${reservation.color}40`, display: "flex", alignItems: "center", justifyContent: "center", color: reservation.color, fontWeight: 900, fontSize: 20 }}>{reservation.avatar}</div>
+                            <div>
+                                <div style={{ fontFamily: "'Syne',sans-serif", fontWeight: 800, fontSize: 22, letterSpacing: "-0.02em" }}>{reservation.client}</div>
+                                <div style={{ fontSize: 13, color: "var(--muted2)", display: "flex", alignItems: "center", gap: 8, marginTop: 4 }}>
+                                    <span style={{ fontFamily: "monospace", opacity: 0.8 }}>{reservation.id}</span>
+                                    <span>•</span>
+                                    <span className={`badge ${reservation.status}`} style={{ display: "inline-flex", padding: "4px 8px" }}><span className="badge-dot" />{reservation.status}</span>
+                                </div>
+                            </div>
+                        </div>
+                        <button onClick={onClose} style={{ width: 40, height: 40, borderRadius: 12, background: "var(--surface2)", border: "1px solid var(--border)", color: "var(--text)", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", transition: "all 0.2s" }} onMouseEnter={e => e.currentTarget.style.background = "var(--border)"} onMouseLeave={e => e.currentTarget.style.background = "var(--surface2)"}>
+                            <Icon d={icons.x} size={18} />
+                        </button>
+                    </div>
+
+                    {/* Content */}
+                    <div style={{ padding: "28px", display: "flex", flexDirection: "column", gap: 32 }}>
+
+                        {/* Reservation Info Grid */}
+                        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: 16 }}>
+                            <div style={{ background: "var(--surface2)", padding: 20, borderRadius: 16, border: "1px solid var(--border)", boxShadow: "inset 0 1px 0 rgba(255,255,255,0.02)" }}>
+                                <div style={{ fontSize: 11, fontWeight: 700, color: "var(--muted2)", textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: 6 }}>Véhicule</div>
+                                <div style={{ fontSize: 16, fontWeight: 800 }}>{reservation.car}</div>
+                            </div>
+                            <div style={{ background: "var(--surface2)", padding: 20, borderRadius: 16, border: "1px solid var(--border)", boxShadow: "inset 0 1px 0 rgba(255,255,255,0.02)" }}>
+                                <div style={{ fontSize: 11, fontWeight: 700, color: "var(--muted2)", textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: 6 }}>Période de location</div>
+                                <div style={{ fontSize: 16, fontWeight: 800 }}>{reservation.from} <span style={{ color: "var(--muted2)", margin: "0 4px" }}>→</span> {reservation.to}</div>
+                            </div>
+                            <div style={{ background: "var(--surface2)", padding: 20, borderRadius: 16, border: "1px solid var(--border)", boxShadow: "inset 0 1px 0 rgba(255,255,255,0.02)" }}>
+                                <div style={{ fontSize: 11, fontWeight: 700, color: "var(--muted2)", textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: 6 }}>Montant Total</div>
+                                <div style={{ fontSize: 20, fontWeight: 900, color: "var(--accent)" }}>{reservation.amount.toLocaleString()} Dh</div>
+                            </div>
+                        </div>
+
+                        {/* Documents Section */}
+                        <div>
+                            <div style={{ fontSize: 16, fontWeight: 800, marginBottom: 20, display: "flex", alignItems: "center", gap: 10 }}>
+                                <div style={{ width: 32, height: 32, borderRadius: 8, background: "rgba(16,185,129,0.15)", display: "flex", alignItems: "center", justifyContent: "center", color: "#10b981" }}>
+                                    <Icon d={["M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z", "M14 2v6h6"]} size={16} />
+                                </div>
+                                Documents du Client
+                            </div>
+                            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 24 }}>
+                                {/* ID Card */}
+                                <div style={{ background: "var(--surface2)", borderRadius: 16, overflow: "hidden", border: "1px solid var(--border)", display: "flex", flexDirection: "column" }}>
+                                    <div style={{ padding: "14px 18px", borderBottom: "1px solid var(--border)", background: "rgba(255,255,255,0.02)", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                                        <span style={{ fontSize: 13, fontWeight: 700, letterSpacing: "0.01em" }}>Carte d'Identité Nationale</span>
+                                    </div>
+                                    <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12, padding: 16 }}>
+                                        {/* Recto */}
+                                        <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
+                                            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                                                <span style={{ fontSize: 11, fontWeight: 700, color: "var(--muted2)" }}>Recto</span>
+                                                <button className="btn btn-ghost btn-sm" style={{ padding: "2px 6px", height: 22, fontSize: 11 }} onClick={() => setFullScreenImg(idFront)}>
+                                                    <Icon d={icons.eye} size={11} /> Voir
+                                                </button>
+                                            </div>
+                                            <div style={{ height: 140, borderRadius: 10, overflow: "hidden", background: "#000", position: "relative", cursor: "zoom-in", border: "1px solid var(--border)" }} onClick={() => setFullScreenImg(idFront)}>
+                                                <img src={idFront} alt="ID Card Front" style={{ width: "100%", height: "100%", objectFit: "cover", opacity: 0.75, transition: "opacity 0.3s" }} onMouseEnter={e => e.currentTarget.style.opacity = 1} onMouseLeave={e => e.currentTarget.style.opacity = 0.75} />
+                                            </div>
+                                        </div>
+                                        {/* Verso */}
+                                        <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
+                                            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                                                <span style={{ fontSize: 11, fontWeight: 700, color: "var(--muted2)" }}>Verso</span>
+                                                <button className="btn btn-ghost btn-sm" style={{ padding: "2px 6px", height: 22, fontSize: 11 }} onClick={() => setFullScreenImg(idBack)}>
+                                                    <Icon d={icons.eye} size={11} /> Voir
+                                                </button>
+                                            </div>
+                                            <div style={{ height: 140, borderRadius: 10, overflow: "hidden", background: "#000", position: "relative", cursor: "zoom-in", border: "1px solid var(--border)" }} onClick={() => setFullScreenImg(idBack)}>
+                                                <img src={idBack} alt="ID Card Back" style={{ width: "100%", height: "100%", objectFit: "cover", opacity: 0.75, transition: "opacity 0.3s" }} onMouseEnter={e => e.currentTarget.style.opacity = 1} onMouseLeave={e => e.currentTarget.style.opacity = 0.75} />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {/* Driving License */}
+                                <div style={{ background: "var(--surface2)", borderRadius: 16, overflow: "hidden", border: "1px solid var(--border)", display: "flex", flexDirection: "column" }}>
+                                    <div style={{ padding: "14px 18px", borderBottom: "1px solid var(--border)", background: "rgba(255,255,255,0.02)", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                                        <span style={{ fontSize: 13, fontWeight: 700, letterSpacing: "0.01em" }}>Permis de Conduire</span>
+                                    </div>
+                                    <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12, padding: 16 }}>
+                                        {/* Recto */}
+                                        <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
+                                            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                                                <span style={{ fontSize: 11, fontWeight: 700, color: "var(--muted2)" }}>Recto</span>
+                                                <button className="btn btn-ghost btn-sm" style={{ padding: "2px 6px", height: 22, fontSize: 11 }} onClick={() => setFullScreenImg(licFront)}>
+                                                    <Icon d={icons.eye} size={11} /> Voir
+                                                </button>
+                                            </div>
+                                            <div style={{ height: 140, borderRadius: 10, overflow: "hidden", background: "#000", position: "relative", cursor: "zoom-in", border: "1px solid var(--border)" }} onClick={() => setFullScreenImg(licFront)}>
+                                                <img src={licFront} alt="Driving License Front" style={{ width: "100%", height: "100%", objectFit: "cover", opacity: 0.75, transition: "opacity 0.3s" }} onMouseEnter={e => e.currentTarget.style.opacity = 1} onMouseLeave={e => e.currentTarget.style.opacity = 0.75} />
+                                            </div>
+                                        </div>
+                                        {/* Verso */}
+                                        <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
+                                            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                                                <span style={{ fontSize: 11, fontWeight: 700, color: "var(--muted2)" }}>Verso</span>
+                                                <button className="btn btn-ghost btn-sm" style={{ padding: "2px 6px", height: 22, fontSize: 11 }} onClick={() => setFullScreenImg(licBack)}>
+                                                    <Icon d={icons.eye} size={11} /> Voir
+                                                </button>
+                                            </div>
+                                            <div style={{ height: 140, borderRadius: 10, overflow: "hidden", background: "#000", position: "relative", cursor: "zoom-in", border: "1px solid var(--border)" }} onClick={() => setFullScreenImg(licBack)}>
+                                                <img src={licBack} alt="Driving License Back" style={{ width: "100%", height: "100%", objectFit: "cover", opacity: 0.75, transition: "opacity 0.3s" }} onMouseEnter={e => e.currentTarget.style.opacity = 1} onMouseLeave={e => e.currentTarget.style.opacity = 0.75} />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Actions */}
+                        {reservation.status === "pending" && (
+                            <div style={{ display: "flex", gap: 16, marginTop: 8, paddingTop: 24, borderTop: "1px solid var(--border)" }}>
+                                <button className="btn btn-accent" style={{ flex: 1, height: 54, borderRadius: 14, fontSize: 15, fontWeight: 800, gap: 10 }} onClick={() => { handle(reservation.id, "confirmed"); onClose(); }}>
+                                    <Icon d={icons.check} size={18} /> Confirmer la réservation
+                                </button>
+                                <button className="btn btn-ghost" style={{ flex: 1, height: 54, borderRadius: 14, fontSize: 15, fontWeight: 800, gap: 10, border: "1px solid var(--border)", background: "var(--surface2)" }} onClick={() => { handle(reservation.id, "cancelled"); onClose(); }}>
+                                    <Icon d={icons.x} size={18} /> Refuser
+                                </button>
+                            </div>
+                        )}
+                    </div>
+                </div>
+            </div>
+
+            {/* Fullscreen Image View */}
+            {fullScreenImg && (
+                <div style={{
+                    position: "fixed", top: 0, left: 0, right: 0, bottom: 0,
+                    background: "rgba(0,0,0,0.9)", backdropFilter: "blur(20px)", zIndex: 999999,
+                    display: "flex", alignItems: "center", justifyContent: "center", padding: 40,
+                    cursor: "zoom-out"
+                }} onClick={() => setFullScreenImg(null)}>
+                    <img src={fullScreenImg} alt="Document" style={{ maxWidth: "100%", maxHeight: "100%", borderRadius: 16, boxShadow: "0 30px 100px rgba(0,0,0,0.8)" }} />
+                </div>
+            )}
+        </>
+    );
+}
+
+function ReservationsPage({ t, currentMonth, currentYear }) {
+    const [reservations, setReservations] = useState([]);
     const [filterStatus, setFilterStatus] = useState("all");
+    const [selectedResv, setSelectedResv] = useState(null);
+
+    useEffect(() => {
+        setReservations(getMonthData(currentMonth, currentYear).demoReservations);
+    }, [currentMonth, currentYear]);
 
     const handle = (id, action) => {
         setReservations(rs => rs.map(r => r.id === id ? { ...r, status: action } : r));
@@ -1853,9 +3134,16 @@ function ReservationsPage({ t }) {
                 })}
             </div>
 
+            <ReservationDetailsModal
+                reservation={selectedResv}
+                onClose={() => setSelectedResv(null)}
+                t={t}
+                handle={handle}
+            />
+
             <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
                 {filtered.map(r => (
-                    <div key={r.id} className="card resv-card" style={{ padding: 0 }}>
+                    <div key={r.id} className="card resv-card" style={{ padding: 0, cursor: "pointer", transition: "transform 0.2s, box-shadow 0.2s" }} onClick={() => setSelectedResv(r)} onMouseEnter={e => { e.currentTarget.style.transform = "translateY(-2px)"; e.currentTarget.style.boxShadow = "0 12px 30px rgba(0,0,0,0.15)"; }} onMouseLeave={e => { e.currentTarget.style.transform = "none"; e.currentTarget.style.boxShadow = "none"; }}>
                         <div style={{ padding: "16px 20px", display: "flex", alignItems: "center", gap: 14, flexWrap: "wrap" }}>
                             <div style={{ width: 44, height: 44, borderRadius: 14, background: `${r.color}20`, border: `1px solid ${r.color}40`, display: "flex", alignItems: "center", justifyContent: "center", color: r.color, fontWeight: 900, fontSize: 15, flexShrink: 0 }}>{r.avatar}</div>
                             <div style={{ flex: 1, minWidth: 200 }}>
@@ -1867,11 +3155,11 @@ function ReservationsPage({ t }) {
                             </div>
                             <div style={{ display: "flex", alignItems: "center", gap: 12, flexWrap: "wrap" }}>
                                 <div style={{ textAlign: "right" }}>
-                                    <div style={{ fontFamily: "'Syne',sans-serif", fontWeight: 900, fontSize: 20, color: "var(--accent)" }}>€{r.amount.toLocaleString()}</div>
+                                    <div style={{ fontFamily: "'Syne',sans-serif", fontWeight: 900, fontSize: 20, color: "var(--accent)" }}>{r.amount.toLocaleString()} Dh</div>
                                     <span className={`badge ${r.status}`}><span className="badge-dot" />{r.status}</span>
                                 </div>
                                 {r.status === "pending" && (
-                                    <div style={{ display: "flex", gap: 8 }}>
+                                    <div style={{ display: "flex", gap: 8 }} onClick={e => e.stopPropagation()}>
                                         <button className="btn btn-accent btn-sm" onClick={() => handle(r.id, "confirmed")}><Icon d={icons.check} size={13} /> {t.acceptBtn}</button>
                                         <button className="btn btn-danger btn-sm" onClick={() => handle(r.id, "cancelled")}><Icon d={icons.x} size={13} /> {t.refuseBtn}</button>
                                     </div>
@@ -1886,25 +3174,142 @@ function ReservationsPage({ t }) {
     );
 }
 
-function CustomersPage({ t }) {
-    const [search, setSearch] = useState("");
-    const filtered = CLIENTS.filter(c => c.name.toLowerCase().includes(search.toLowerCase()) || c.email.toLowerCase().includes(search.toLowerCase()));
+function ClientDetailsModal({ client, onClose, t }) {
+    if (!client) return null;
     const tierColor = { Platinum: "#bf7fff", Gold: "#f59e0b", Silver: "#9ca3af" };
 
     return (
+        <div className="modal-overlay" style={{ zIndex: 99999, color: "var(--text)" }} onClick={onClose}>
+            <div style={{
+                width: "100%", maxWidth: 600, margin: "auto",
+                background: "var(--card)", borderRadius: 24, border: "1px solid var(--border)",
+                boxShadow: "0 40px 100px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.06)",
+                display: "flex", flexDirection: "column"
+            }} onClick={e => e.stopPropagation()}>
+                {/* Header */}
+                <div style={{ padding: "20px 28px", borderBottom: "1px solid var(--border)", display: "flex", alignItems: "center", justifyContent: "space-between", position: "sticky", top: 0, background: "var(--card)", zIndex: 10 }}>
+                    <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
+                        <div style={{ width: 56, height: 56, borderRadius: 16, background: `${client.color}20`, border: `1px solid ${client.color}40`, display: "flex", alignItems: "center", justifyContent: "center", color: client.color, fontWeight: 900, fontSize: 20 }}>{client.initials}</div>
+                        <div>
+                            <div style={{ fontFamily: "'Syne',sans-serif", fontWeight: 800, fontSize: 22, letterSpacing: "-0.02em" }}>{client.name}</div>
+                            <div style={{ fontSize: 13, color: "var(--muted2)", display: "flex", alignItems: "center", gap: 8, marginTop: 4 }}>
+                                <span style={{ fontSize: 10, fontWeight: 800, color: tierColor[client.tier], background: `${tierColor[client.tier]}15`, border: `1px solid ${tierColor[client.tier]}30`, padding: "2px 8px", borderRadius: 8 }}>{client.tier}</span>
+                                <span>•</span>
+                                <span>{client.city}</span>
+                            </div>
+                        </div>
+                    </div>
+                    <button onClick={onClose} style={{ width: 40, height: 40, borderRadius: 12, background: "var(--surface2)", border: "1px solid var(--border)", color: "var(--text)", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", transition: "all 0.2s" }} onMouseEnter={e => e.currentTarget.style.background = "var(--border)"} onMouseLeave={e => e.currentTarget.style.background = "var(--surface2)"}>
+                        <Icon d={icons.x} size={18} />
+                    </button>
+                </div>
+
+                {/* Content */}
+                <div style={{ padding: "28px", display: "flex", flexDirection: "column", gap: 24 }}>
+                    {/* Metrics Grid */}
+                    <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
+                        <div style={{ background: "var(--surface2)", padding: 18, borderRadius: 16, border: "1px solid var(--border)", boxShadow: "inset 0 1px 0 rgba(255,255,255,0.02)" }}>
+                            <div style={{ fontSize: 11, fontWeight: 700, color: "var(--muted2)", textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: 6 }}>Total Dépensé</div>
+                            <div style={{ fontSize: 20, fontWeight: 900, color: "var(--accent)" }}>{client.spend}</div>
+                        </div>
+                        <div style={{ background: "var(--surface2)", padding: 18, borderRadius: 16, border: "1px solid var(--border)", boxShadow: "inset 0 1px 0 rgba(255,255,255,0.02)" }}>
+                            <div style={{ fontSize: 11, fontWeight: 700, color: "var(--muted2)", textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: 6 }}>Locations Totales</div>
+                            <div style={{ fontSize: 20, fontWeight: 900 }}>{client.totalRentals} locations</div>
+                        </div>
+                    </div>
+
+                    {/* Contact details */}
+                    <div style={{ background: "var(--surface2)", borderRadius: 16, border: "1px solid var(--border)", overflow: "hidden" }}>
+                        <div style={{ padding: "14px 18px", borderBottom: "1px solid var(--border)", background: "rgba(255,255,255,0.02)", fontSize: 13, fontWeight: 700 }}>Coordonnées & Documents</div>
+                        <div style={{ padding: 18, display: "flex", flexDirection: "column", gap: 12 }}>
+                            <div style={{ display: "flex", justifyContent: "space-between", fontSize: 13 }}>
+                                <span style={{ color: "var(--muted2)" }}>Email</span>
+                                <span style={{ fontWeight: 600 }}>{client.email}</span>
+                            </div>
+                            <div style={{ display: "flex", justifyContent: "space-between", fontSize: 13 }}>
+                                <span style={{ color: "var(--muted2)" }}>Téléphone</span>
+                                <span style={{ fontWeight: 600 }}>{client.phone}</span>
+                            </div>
+                            <div style={{ display: "flex", justifyContent: "space-between", fontSize: 13 }}>
+                                <span style={{ color: "var(--muted2)" }}>Carte d'Identité (CIN)</span>
+                                <span style={{ fontWeight: 600, fontFamily: "monospace" }}>{client.cin}</span>
+                            </div>
+                            <div style={{ display: "flex", justifyContent: "space-between", fontSize: 13 }}>
+                                <span style={{ color: "var(--muted2)" }}>Permis de Conduire</span>
+                                <span style={{ fontWeight: 600, fontFamily: "monospace" }}>{client.license}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
+}
+
+function CustomersPage({ t }) {
+    const [search, setSearch] = useState("");
+    const [selectedClient, setSelectedClient] = useState(null);
+    const [selectedTier, setSelectedTier] = useState("All");
+    const [showFilterDropdown, setShowFilterDropdown] = useState(false);
+
+    const filtered = CLIENTS.filter(c => {
+        const matchesSearch = c.name.toLowerCase().includes(search.toLowerCase()) || c.email.toLowerCase().includes(search.toLowerCase());
+        const matchesTier = selectedTier === "All" || c.tier === selectedTier;
+        return matchesSearch && matchesTier;
+    });
+
+    const tierColor = { Platinum: "#bf7fff", Gold: "#f59e0b", Silver: "#9ca3af" };
+
+    const platinumCount = CLIENTS.filter(c => c.tier === "Platinum").length;
+    const goldCount = CLIENTS.filter(c => c.tier === "Gold").length;
+    const silverCount = CLIENTS.filter(c => c.tier === "Silver").length;
+
+    const tierStats = [
+        { t: "Platinum", c: "#bf7fff", n: platinumCount },
+        { t: "Gold", c: "#f59e0b", n: goldCount },
+        { t: "Silver", c: "#9ca3af", n: silverCount }
+    ];
+
+    const topSpenders = [...CLIENTS].sort((a, b) => b.spendVal - a.spendVal).slice(0, 3);
+
+    return (
         <div className="page tab-content">
-            <div style={{ display: "flex", gap: 12, marginBottom: 20 }}>
+            <div style={{ display: "flex", gap: 12, marginBottom: 20, position: "relative" }}>
                 <div className="search-bar" style={{ flex: 1 }}>
                     <Icon d={icons.search} size={16} stroke="var(--muted2)" />
                     <input placeholder={t.searchClient} value={search} onChange={e => setSearch(e.target.value)} />
                 </div>
-                <button className="btn btn-ghost"><Icon d={icons.filter} size={14} /> {t.filterBtn}</button>
+                <div style={{ position: "relative" }}>
+                    <button className="btn btn-ghost" onClick={() => setShowFilterDropdown(!showFilterDropdown)}>
+                        <Icon d={icons.filter} size={14} /> {selectedTier === "All" ? t.filterBtn : selectedTier}
+                    </button>
+                    {showFilterDropdown && (
+                        <div style={{
+                            position: "absolute", right: 0, top: "100%", marginTop: 8,
+                            background: "var(--card)", border: "1px solid var(--border)", borderRadius: 12,
+                            boxShadow: "0 10px 25px rgba(0,0,0,0.3)", zIndex: 100, minWidth: 140, overflow: "hidden"
+                        }}>
+                            {["All", "Platinum", "Gold", "Silver"].map(tier => (
+                                <div key={tier} style={{
+                                    padding: "10px 14px", fontSize: 13, fontWeight: 600, cursor: "pointer",
+                                    background: selectedTier === tier ? "rgba(16,185,129,0.15)" : "transparent",
+                                    color: selectedTier === tier ? "var(--accent)" : "var(--text)",
+                                    transition: "all 0.2s"
+                                }} onClick={() => { setSelectedTier(tier); setShowFilterDropdown(false); }}
+                                    onMouseEnter={e => e.currentTarget.style.background = selectedTier === tier ? "rgba(16,185,129,0.15)" : "var(--surface2)"}
+                                    onMouseLeave={e => e.currentTarget.style.background = selectedTier === tier ? "rgba(16,185,129,0.15)" : "transparent"}>
+                                    {tier === "All" ? t.filterAll || "Tous" : tier}
+                                </div>
+                            ))}
+                        </div>
+                    )}
+                </div>
             </div>
 
             <div className="grid-2">
                 <div className="card" style={{ padding: 0 }}>
                     {filtered.map((c, i) => (
-                        <div key={c.name} className="client-row" style={{ borderBottom: i < filtered.length - 1 ? "1px solid var(--border)" : "none" }}>
+                        <div key={c.name} className="client-row" style={{ borderBottom: i < filtered.length - 1 ? "1px solid var(--border)" : "none", cursor: "pointer" }} onClick={() => setSelectedClient(c)}>
                             <div className="client-avatar" style={{ background: `${c.color}20`, border: `1px solid ${c.color}40`, color: c.color }}>{c.initials}</div>
                             <div style={{ flex: 1, minWidth: 0 }}>
                                 <div style={{ fontWeight: 700, fontSize: 14, marginBottom: 2 }}>{c.name}</div>
@@ -1914,7 +3319,7 @@ function CustomersPage({ t }) {
                                 <div style={{ fontWeight: 800, fontSize: 14, marginBottom: 3 }}>{c.spend}</div>
                                 <span style={{ fontSize: 10, fontWeight: 800, color: tierColor[c.tier], background: `${tierColor[c.tier]}15`, border: `1px solid ${tierColor[c.tier]}30`, padding: "2px 8px", borderRadius: 8 }}>{c.tier}</span>
                             </div>
-                            <div style={{ width: 28, height: 28, borderRadius: 8, background: "var(--surface2)", display: "flex", alignItems: "center", justifyContent: "space-center", cursor: "pointer", marginLeft: 8 }}>
+                            <div style={{ width: 28, height: 28, borderRadius: 8, background: "var(--surface2)", display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", marginLeft: 8 }}>
                                 <Icon d={icons.arrow} size={13} />
                             </div>
                         </div>
@@ -1930,12 +3335,12 @@ function CustomersPage({ t }) {
                 <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
                     <div className="card" style={{ padding: "20px" }}>
                         <div className="section-title" style={{ marginBottom: 16 }}>{t.tierDist}</div>
-                        {[{ t: "Platinum", c: "#bf7fff", n: 1 }, { t: "Gold", c: "#f59e0b", n: 2 }, { t: "Silver", c: "#9ca3af", n: 2 }].map(({ t, c, n }) => (
+                        {tierStats.map(({ t, c, n }) => (
                             <div key={t} style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 12 }}>
                                 <div style={{ width: 8, height: 8, borderRadius: "50%", background: c, flexShrink: 0 }} />
                                 <span style={{ flex: 1, fontSize: 13, fontWeight: 600 }}>{t}</span>
                                 <div style={{ flex: 3, height: 6, borderRadius: 3, background: "var(--surface2)" }}>
-                                    <div style={{ height: "100%", width: `${(n / CLIENTS.length) * 100}%`, background: c, borderRadius: 3 }} />
+                                    <div style={{ height: "100%", width: `${CLIENTS.length > 0 ? (n / CLIENTS.length) * 100 : 0}%`, background: c, borderRadius: 3 }} />
                                 </div>
                                 <span style={{ fontSize: 12, fontWeight: 800, color: c }}>{n}</span>
                             </div>
@@ -1943,10 +3348,31 @@ function CustomersPage({ t }) {
                     </div>
                     <div className="card" style={{ padding: "20px" }}>
                         <div className="section-title" style={{ marginBottom: 16 }}>{t.topSpenders}</div>
-                        <div className="empty-state" style={{ padding: 20 }}><div style={{ fontSize: 13, fontWeight: 600 }}>Aucune donnée de client</div></div>
+                        {topSpenders.map((c, idx) => (
+                            <div key={c.name} style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: idx < topSpenders.length - 1 ? 14 : 0 }}>
+                                <div style={{
+                                    width: 24, height: 24, borderRadius: "50%",
+                                    background: idx === 0 ? "rgba(245,158,11,0.15)" : idx === 1 ? "rgba(156,163,175,0.15)" : "rgba(180,83,9,0.15)",
+                                    color: idx === 0 ? "#d97706" : idx === 1 ? "#4b5563" : "#b45309",
+                                    display: "flex", alignItems: "center", justifyContent: "center",
+                                    fontSize: 12, fontWeight: 900
+                                }}>
+                                    {idx + 1}
+                                </div>
+                                <div className="client-avatar" style={{ width: 32, height: 32, borderRadius: 10, fontSize: 12, background: `${c.color}20`, border: `1px solid ${c.color}40`, color: c.color }}>{c.initials}</div>
+                                <div style={{ flex: 1, minWidth: 0 }}>
+                                    <div style={{ fontWeight: 700, fontSize: 13, textOverflow: "ellipsis", overflow: "hidden", whiteSpace: "nowrap" }}>{c.name}</div>
+                                    <div style={{ fontSize: 11, color: "var(--muted2)" }}>{c.totalRentals} locations</div>
+                                </div>
+                                <div style={{ fontWeight: 800, fontSize: 13, color: "var(--accent)" }}>{c.spend}</div>
+                            </div>
+                        ))}
                     </div>
                 </div>
             </div>
+
+            {/* Client Details Modal */}
+            {selectedClient && <ClientDetailsModal client={selectedClient} onClose={() => setSelectedClient(null)} t={t} />}
         </div>
     );
 }
@@ -1954,27 +3380,62 @@ function CustomersPage({ t }) {
 function AnalyticsPage({ dark, t }) {
     const totalRevenue = REVENUE.reduce((a, b) => a + b, 0);
     const totalBookings = BOOKINGS_PER_MONTH.reduce((a, b) => a + b, 0);
+    const avgRev = totalBookings > 0 ? Math.round(totalRevenue / totalBookings) : 0;
+    const fmtMAD = v => v >= 1000000 ? `${(v / 1000000).toFixed(2)} M` : v >= 1000 ? `${(v / 1000).toFixed(0)} K` : v;
+
     return (
-        <div className="page tab-content">
-            <div className="stats-grid" style={{ marginBottom: 20 }}>
-                <StatCard label={t.totalRevYear} value={`MAD 0.00 — `} change="+0% vs 2026" up color="#10b981" icon={<Icon d={icons.dollar} size={16} />} />
-                <StatCard label={t.totalResv} value={totalBookings} change="+0% vs 2026" up color="#3b82f6" icon={<Icon d={icons.calendar} size={16} />} />
-                <StatCard label={t.useRate} value="0%" change="+0pt vs 2026" up color="#a855f7" icon={<Icon d={icons.trending} size={16} />} />
-                <StatCard label={t.avgRevInResv} value="MAD 0.00 —" change="+0% vs 2026" up color="#f59e0b" icon={<Icon d={icons.trending} size={16} />} />
+        <div className="page tab-content" style={{ display: "flex", flexDirection: "column", gap: 24 }}>
+
+            {/* ── KPI CARDS ── */}
+            <div className="stats-grid" style={{ marginBottom: 4 }}>
+                <StatCard label={t.totalRevYear} value={`MAD ${fmtMAD(totalRevenue)}`} change="+12.4% vs 2025" up color="#10b981" icon={<Icon d={icons.dollar} size={16} />} />
+                <StatCard label={t.totalResv} value={String(totalBookings)} change="+8.3% vs 2025" up color="#3b82f6" icon={<Icon d={icons.calendar} size={16} />} />
+                <StatCard label={t.useRate} value="78%" change="+5pt vs 2025" up color="#a855f7" icon={<Icon d={icons.trending} size={16} />} />
+                <StatCard label={t.avgRevInResv} value={`MAD ${fmtMAD(avgRev)}`} change="+3.6% vs 2025" up color="#f59e0b" icon={<Icon d={icons.trending} size={16} />} />
             </div>
 
+            {/* ── ROW 1 : CA mensuel + Réservations par trimestre ── */}
             <div className="grid-2">
-                <LineChart data={REVENUE} labels={MONTHS} color={dark ? "#60a5fa" : "#10b981"} title={t.monthlyRevChart} height={400} t={t} showLegend />
-                <LineChart data={BOOKINGS_PER_MONTH} labels={MONTHS} color={dark ? "#a78bfa" : "#a855f7"} title={t.monthlyResvChart} height={400} t={t} showLegend />
+                <LineChart
+                    data={REVENUE} labels={CHART_MONTHS}
+                    color={dark ? "#60a5fa" : "#10b981"}
+                    title={t.monthlyRevChart} height={340} t={t} showLegend sortable
+                />
+                <DonutChart
+                    data={QUARTER_DATA} labels={QUARTER_LABELS}
+                    colors={["#f59e0b", "#3b82f6", "#10b981", "#a855f7"]}
+                    title={t.bookingsQuarter}
+                />
             </div>
 
-            <div className="card" style={{ padding: "20px" }}>
-                <div className="section-title" style={{ marginBottom: 16 }}>{t.topCars}</div>
-                <div className="empty-state" style={{ padding: 30 }}><div style={{ fontSize: 14, fontWeight: 600 }}>Aucune donnée de location</div></div>
+            {/* ── ROW 2 : Voitures les plus rentables + TOP clients ── */}
+            <div className="grid-2">
+                <HorizontalBarChart
+                    data={PROFITABLE_CARS_DATA} labels={PROFITABLE_CARS_LABELS}
+                    title={t.profitableCars} color="#3b82f6" valueSuffix=" MAD"
+                />
+                <PolarAreaChart
+                    data={TOP_CLIENTS_DATA} labels={TOP_CLIENTS_LABELS}
+                    title={t.topClients} color="#10b981" valueSuffix=" MAD"
+                />
             </div>
+
+            {/* ── ROW 3 : Marques les plus louées + Maintenance par modèle ── */}
+            <div className="grid-2">
+                <VerticalBarChart
+                    data={RENTED_BRANDS_DATA} labels={RENTED_BRANDS_LABELS}
+                    title={t.rentedBrands} color={dark ? "#818cf8" : "#6366f1"} valueSuffix=" loc."
+                />
+                <StackedBarChart
+                    months={MAINT_MONTHS} series={MAINT_SERIES}
+                    title={t.maintenanceByModel}
+                />
+            </div>
+
         </div>
     );
 }
+
 
 function SettingsPage({ dark, setDark, t, agencyData, setAgencyData, lang, setLang }) {
     const [toggles, setToggles] = useState({ notifications: true, sms: false, autoAccept: false, vatInvoice: true, twoFactor: true, publicProfile: true });
@@ -1987,43 +3448,123 @@ function SettingsPage({ dark, setDark, t, agencyData, setAgencyData, lang, setLa
         city: agencyData?.city || "",
         phone: agencyData?.phone || "",
         address: agencyData?.address || "",
+        country: agencyData?.country || "",
         logo: agencyData?.logo || ""
     });
 
-    // Sync formData when agencyData changes (e.g., on mount after localStorage load)
+    // Only initialize formData once or when isEditing becomes false (to reset)
     useEffect(() => {
-        setFormData({
-            agencyName: agencyData?.agencyName || "",
-            firstName: agencyData?.firstName || "",
-            lastName: agencyData?.lastName || "",
-            city: agencyData?.city || "",
-            phone: agencyData?.phone || "",
-            address: agencyData?.address || "",
-            logo: agencyData?.logo || ""
-        });
-    }, [agencyData]);
+        if (!isEditing) {
+            setFormData({
+                agencyName: agencyData?.agencyName || "",
+                firstName: agencyData?.firstName || "",
+                lastName: agencyData?.lastName || "",
+                city: agencyData?.city || "",
+                phone: agencyData?.phone || "",
+                address: agencyData?.address || "",
+                country: agencyData?.country || "",
+                logo: agencyData?.logo || ""
+            });
+        }
+    }, [agencyData, isEditing]);
 
     const handleSave = () => {
+        const token = localStorage.getItem("token");
         const newData = { ...agencyData, ...formData };
-        setAgencyData(newData);
-        localStorage.setItem("agencyData", JSON.stringify(newData));
-        setIsEditing(false);
+
+        if (token) {
+            fetch("http://localhost:8080/api/auth/agency/update-profile", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`
+                },
+                body: JSON.stringify(formData)
+            })
+                .then(async res => {
+                    if (!res.ok) {
+                        const text = await res.text();
+                        throw new Error(`Status ${res.status}: ${text}`);
+                    }
+                    return res.json();
+                })
+                .then(savedData => {
+                    setAgencyData(savedData);
+                    localStorage.setItem("agencyData", JSON.stringify(savedData));
+                    setIsEditing(false);
+                    alert("Profil mis à jour avec succès !");
+                })
+                .catch(err => {
+                    console.error("Error updating agency profile:", err);
+                    alert(`Erreur technique : ${err.message}`);
+                });
+        } else {
+            // Fallback for mock/local testing if no token
+            setAgencyData(newData);
+            localStorage.setItem("agencyData", JSON.stringify(newData));
+            setIsEditing(false);
+        }
     };
 
     const handleEditToggle = () => {
         setIsEditing(!isEditing);
     };
 
+    const optimizeImage = (base64Str, maxWidth = 200, maxHeight = 200) => {
+        return new Promise((resolve) => {
+            const img = new Image();
+            img.src = base64Str;
+            img.onload = () => {
+                const canvas = document.createElement('canvas');
+                let width = img.width;
+                let height = img.height;
+
+                if (width > height) {
+                    if (width > maxWidth) {
+                        height *= maxWidth / width;
+                        width = maxWidth;
+                    }
+                } else {
+                    if (height > maxHeight) {
+                        width *= maxHeight / height;
+                        height = maxHeight;
+                    }
+                }
+
+                canvas.width = width;
+                canvas.height = height;
+                const ctx = canvas.getContext('2d');
+                ctx.drawImage(img, 0, 0, width, height);
+                // Start at 0.7 quality and reduce if still too large
+                let quality = 0.7;
+                let dataUrl = canvas.toDataURL('image/jpeg', quality);
+
+                // If larger than 30KB (approx 40,000 base64 chars), reduce quality
+                while (dataUrl.length > 40000 && quality > 0.1) {
+                    quality -= 0.1;
+                    dataUrl = canvas.toDataURL('image/jpeg', quality);
+                }
+
+                const sizeKo = Math.round(dataUrl.length * 3 / 4 / 1024);
+                console.log(`[Logo] Taille : ${sizeKo} Ko (Qualité: ${quality.toFixed(1)})`);
+
+                if (sizeKo > 30) {
+                    // En dernier recours, on renvoie une version très basse qualité
+                    resolve(canvas.toDataURL('image/jpeg', 0.1));
+                } else {
+                    resolve(dataUrl);
+                }
+            };
+        });
+    };
+
     const handleLogoUpload = (e) => {
         const file = e.target.files[0];
         if (file) {
             const reader = new FileReader();
-            reader.onloadend = () => {
-                const newLogo = reader.result;
-                setFormData(f => ({ ...f, logo: newLogo }));
-                const newData = { ...agencyData, logo: newLogo };
-                setAgencyData(newData);
-                localStorage.setItem("agencyData", JSON.stringify(newData));
+            reader.onloadend = async () => {
+                const optimized = await optimizeImage(reader.result);
+                setFormData(f => ({ ...f, logo: optimized }));
             };
             reader.readAsDataURL(file);
         }
@@ -2031,9 +3572,6 @@ function SettingsPage({ dark, setDark, t, agencyData, setAgencyData, lang, setLa
 
     const handleLogoDelete = () => {
         setFormData(f => ({ ...f, logo: "" }));
-        const newData = { ...agencyData, logo: "" };
-        setAgencyData(newData);
-        localStorage.setItem("agencyData", JSON.stringify(newData));
     };
 
     const agencyInitials = agencyData ? ((agencyData.firstName?.[0] || 'U') + (agencyData.lastName?.[0] || 'C')).toUpperCase() : 'UC';
@@ -2055,25 +3593,29 @@ function SettingsPage({ dark, setDark, t, agencyData, setAgencyData, lang, setLa
                         <div style={{ padding: "20px" }}>
                             <div style={{ display: "flex", alignItems: "center", gap: 14, marginBottom: 20 }}>
                                 <div style={{ position: "relative", display: "inline-block", width: 56, height: 56, flexShrink: 0 }}>
-                                    <label style={{ cursor: "pointer", display: "block", width: "100%", height: "100%" }}>
-                                        <div style={{ width: "100%", height: "100%", borderRadius: 16, background: "var(--grad)", display: "flex", alignItems: "center", justifyContent: "center", fontFamily: "'Syne',sans-serif", fontWeight: 900, fontSize: 20, color: "#fff", overflow: "hidden" }}>
+                                    <label style={{ cursor: isEditing ? "pointer" : "default", display: "block", width: "100%", height: "100%" }}>
+                                        <div style={{ width: "100%", height: "100%", borderRadius: 16, background: "var(--grad)", display: "flex", alignItems: "center", justifyContent: "center", fontFamily: "'Syne',sans-serif", fontWeight: 900, fontSize: 20, color: "#fff", overflow: "hidden", opacity: isEditing ? 1 : 0.7 }}>
                                             {formData.logo ? (
                                                 <img src={formData.logo} alt="Logo" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
                                             ) : (
                                                 agencyInitials
                                             )}
                                         </div>
-                                        <input type="file" accept="image/*" style={{ display: 'none' }} onChange={handleLogoUpload} />
+                                        <input type="file" accept="image/*" style={{ display: 'none' }} onChange={handleLogoUpload} disabled={!isEditing} />
                                     </label>
 
                                     {formData.logo ? (
-                                        <div onClick={(e) => { e.preventDefault(); e.stopPropagation(); handleLogoDelete(); }} style={{ position: "absolute", bottom: -4, right: -4, width: 20, height: 20, borderRadius: 6, background: "var(--red)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 2, cursor: "pointer" }} title="Supprimer le logo">
-                                            <Icon d={icons.trash} size={11} stroke="#fff" />
-                                        </div>
+                                        isEditing && (
+                                            <div onClick={(e) => { e.preventDefault(); e.stopPropagation(); handleLogoDelete(); }} style={{ position: "absolute", bottom: -4, right: -4, width: 20, height: 20, borderRadius: 6, background: "var(--red)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 2, cursor: "pointer" }} title="Supprimer le logo">
+                                                <Icon d={icons.trash} size={11} stroke="#fff" />
+                                            </div>
+                                        )
                                     ) : (
-                                        <div style={{ position: "absolute", bottom: -4, right: -4, width: 20, height: 20, borderRadius: 6, background: "var(--accent)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 2, pointerEvents: "none" }}>
-                                            <Icon d={icons.upload} size={11} stroke="#fff" />
-                                        </div>
+                                        isEditing && (
+                                            <div style={{ position: "absolute", bottom: -4, right: -4, width: 20, height: 20, borderRadius: 6, background: "var(--accent)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 2, pointerEvents: "none" }}>
+                                                <Icon d={icons.upload} size={11} stroke="#fff" />
+                                            </div>
+                                        )
                                     )}
                                 </div>
                                 <div>
@@ -2113,6 +3655,10 @@ function SettingsPage({ dark, setDark, t, agencyData, setAgencyData, lang, setLa
                                 <div className="form-group">
                                     <label className="form-label">{t.agencyAddress || "Adresse de l'agence"}</label>
                                     <input className="form-input" disabled={!isEditing} style={{ opacity: isEditing ? 1 : 0.7, pointerEvents: isEditing ? 'auto' : 'none' }} value={formData.address || ""} onChange={e => setFormData({ ...formData, address: e.target.value })} placeholder="123 Boulevard d'Anfa..." />
+                                </div>
+                                <div className="form-group">
+                                    <label className="form-label">{t.country || "Pays"}</label>
+                                    <input className="form-input" disabled={!isEditing} style={{ opacity: isEditing ? 1 : 0.7, pointerEvents: isEditing ? 'auto' : 'none' }} value={formData.country || ""} onChange={e => setFormData({ ...formData, country: e.target.value })} placeholder="Maroc..." />
                                 </div>
                             </div>
 
@@ -2554,10 +4100,14 @@ function MapPage({ t, cars, agencyData, lang }) {
 function MessagesPage({ t, dark, lang }) {
     const [activeChat, setActiveChat] = useState("support");
     const [message, setMessage] = useState("");
+    const [search, setSearch] = useState("");
     const [showEmojis, setShowEmojis] = useState(false);
     const [showPlusMenu, setShowPlusMenu] = useState(false);
     const [emojiSearch, setEmojiSearch] = useState("");
     const [emojiCat, setEmojiCat] = useState("Smileys");
+
+    // Ref for scrolling
+    const chatEndRef = useRef(null);
 
     // Lock body scroll on mobile when this page mounts!
     useEffect(() => {
@@ -2578,30 +4128,117 @@ function MessagesPage({ t, dark, lang }) {
         ? Object.values(emojiData).flat().filter(e => e.includes(emojiSearch))
         : emojiData[emojiCat];
 
-    const [messages, setMessages] = useState({
-        "support": [
-            { id: 1, from: "support", text: t.supportGreeting, time: "09:00", read: true },
+    // State for discussions list
+    const [discussions, setDiscussions] = useState(IS_MOCK ? [
+        { id: "support", name: "Support UppCar", role: t.assistance, avatar: "SU", color: dark ? "#6366f1" : "#10b981", unread: 0, online: true, lastMsg: "Bonjour ! Comment puis-je vous aider aujourd'hui ?", time: "09:00" },
+        { id: "yassine", name: "Yassine Benali", role: "Client Platinum", avatar: "YB", color: "#bf7fff", unread: 1, online: true, lastMsg: "Bonjour, puis-je prolonger ma location de la Tucson de 3 jours ?", time: "10:32" },
+        { id: "sara", name: "Sara Alami", role: "Client Gold", avatar: "SA", color: "#f59e0b", unread: 0, online: false, lastMsg: "J'ai bien déposé le véhicule à l'aéroport de Marrakech.", time: "Hier" },
+        { id: "karim", name: "Karim Hajji", role: "Client Gold", avatar: "KH", color: "#f59e0b", unread: 0, online: true, lastMsg: "Merci pour le service impeccable !", time: "12 Mai" }
+    ] : [
+        { id: "support", name: "Support UppCar", role: t.assistance, avatar: "SU", color: dark ? "#6366f1" : "#10b981", unread: 0, online: true, lastMsg: "Bonjour ! Comment puis-je vous aider aujourd'hui ?", time: "09:00" }
+    ]);
 
+    // State for messages history
+    const [messages, setMessages] = useState(IS_MOCK ? {
+        "support": [
+            { id: 1, from: "support", text: "Bonjour ! Comment puis-je vous aider aujourd'hui ?", time: "09:00", read: true }
+        ],
+        "yassine": [
+            { id: 1, from: "me", text: "Bonjour Yassine, tout se passe bien avec le véhicule ?", time: "10:30", read: true },
+            { id: 2, from: "yassine", text: "Bonjour, oui super ! Mais puis-je prolonger ma location de la Tucson de 3 jours ?", time: "10:32", read: false }
+        ],
+        "sara": [
+            { id: 1, from: "me", text: "Bonjour Sara, merci de nous confirmer le lieu de retour.", time: "14:00", read: true },
+            { id: 2, from: "sara", text: "J'ai bien déposé le véhicule à l'aéroport de Marrakech.", time: "14:15", read: true }
+        ],
+        "karim": [
+            { id: 1, from: "me", text: "Votre facture a été envoyée par e-mail.", time: "09:00", read: true },
+            { id: 2, from: "karim", text: "Merci pour le service impeccable !", time: "09:05", read: true }
+        ]
+    } : {
+        "support": [
+            { id: 1, from: "support", text: "Bonjour ! Comment puis-je vous aider aujourd'hui ?", time: "09:00", read: true }
         ]
     });
 
-    const contacts = [];
+    const active = discussions.find(d => d.id === activeChat) || discussions[0];
+    const chatMessages = messages[activeChat] || [];
+
+    // Scroll to bottom
+    useEffect(() => {
+        chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    }, [chatMessages.length]);
+
+    // Mark active chat as read
+    useEffect(() => {
+        setDiscussions(prev => prev.map(d => {
+            if (d.id === activeChat && d.unread > 0) {
+                return { ...d, unread: 0 };
+            }
+            return d;
+        }));
+    }, [activeChat]);
+
+    const filteredDiscussions = discussions.filter(d =>
+        d.name.toLowerCase().includes(search.toLowerCase()) ||
+        d.lastMsg.toLowerCase().includes(search.toLowerCase())
+    );
 
     const sendMessage = () => {
         if (!message.trim()) return;
-        const newMsg = { id: Date.now(), from: "me", text: message, time: t.now, read: false };
-        setMessages(prev => ({ ...prev, [activeChat]: [...(prev[activeChat] || []), newMsg] }));
-        setMessage("");
-        setTimeout(() => {
-            const replies = t.autoReplies;
-            const reply = { id: Date.now() + 1, from: "support", text: replies[Math.floor(Math.random() * replies.length)], time: t.now, read: false };
-            setMessages(prev => ({ ...prev, [activeChat]: [...(prev[activeChat] || []), reply] }));
-        }, 1200);
-    };
+        const nowStr = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        const newMsg = { id: Date.now(), from: "me", text: message, time: nowStr, read: true };
 
-    const supportContact = { id: "support", name: t.supportName, role: t.assistance, avatar: "SU", color: dark ? "#6366f1" : "#10b981", unread: 0, online: true };
-    const active = activeChat === "support" ? supportContact : (contacts.find(c => c.id === activeChat) || supportContact);
-    const chatMessages = messages[activeChat] || [];
+        // Save msg
+        setMessages(prev => ({ ...prev, [activeChat]: [...(prev[activeChat] || []), newMsg] }));
+
+        // Update sidebar list
+        setDiscussions(prev => prev.map(d => {
+            if (d.id === activeChat) {
+                return { ...d, lastMsg: message, time: nowStr, unread: 0 };
+            }
+            return d;
+        }));
+
+        const userMsgText = message;
+        setMessage("");
+
+        // Auto reply
+        setTimeout(() => {
+            let replyText = "";
+            if (activeChat === "support") {
+                const txt = userMsgText.toLowerCase();
+                if (txt.includes("commission") || txt.includes("pourcentage") || txt.includes("frais") || txt.includes("tarif")) {
+                    replyText = "Chez UppCar, notre commission est fixe et transparente : seulement 10% sur les réservations validées. Aucun abonnement mensuel caché, et vos virements sont traités en 48h ! 💸";
+                } else if (txt.includes("gps") || txt.includes("tracker") || txt.includes("flotte") || txt.includes("balise") || txt.includes("localisation")) {
+                    replyText = "Vos trackers GPS UppCar Premium sont configurés automatiquement. Vous pouvez suivre l'emplacement précis, la vitesse et l'état du moteur de votre flotte en temps réel depuis l'onglet 'GPS & Flotte'. 🗺️";
+                } else if (txt.includes("facture") || txt.includes("finance") || txt.includes("tva") || txt.includes("revenu")) {
+                    replyText = "Toutes les transactions et déclarations de TVA sont centralisées dans l'onglet 'Finance & Revenus'. Le système génère automatiquement des factures PDF professionnelles pour vos clients. 🧾";
+                } else if (txt.includes("ajout") || txt.includes("voiture") || txt.includes("véhicule") || txt.includes("ajouter")) {
+                    replyText = "Pour ajouter un véhicule, rendez-vous dans l'onglet 'Véhicules' et cliquez sur le bouton vert '+ Ajouter'. Saisissez les caractéristiques (plaque, modèle, prix) et glissez des photos de haute qualité pour maximiser vos réservations ! 🚗";
+                } else if (txt.includes("client") || txt.includes("permis") || txt.includes("carte") || txt.includes("recto") || txt.includes("verso") || txt.includes("cin")) {
+                    replyText = "La sécurité est notre priorité. Chaque client doit soumettre sa CIN et son Permis de conduire. Vous pouvez voir les scans Scans Recto et Verso côte à côte directement dans les détails de la réservation du client. 🛡️";
+                } else if (txt.includes("abonnement") || txt.includes("pro") || txt.includes("prix")) {
+                    replyText = "Votre agence est actuellement sous le 'Plan Pro' de UppCar à Marrakech. Ce plan inclut la flotte illimitée, le support 24/7, et les outils d'analytiques avancés sans frais supplémentaires ! 💎";
+                } else {
+                    replyText = "Bonjour ! Le support UppCar est là pour vous assister. Vous pouvez me poser des questions sur les commissions, le fonctionnement des trackers GPS, l'ajout de véhicules, la facturation ou la vérification des clients ! 🤝";
+                }
+            } else {
+                replyText = `Merci pour votre message ! Je reste disponible si vous avez besoin de quoi que ce soit d'autre. 👍`;
+            }
+
+            const replyMsg = { id: Date.now() + 1, from: activeChat, text: replyText, time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }), read: false };
+
+            setMessages(prev => ({ ...prev, [activeChat]: [...(prev[activeChat] || []), replyMsg] }));
+
+            setDiscussions(prev => prev.map(d => {
+                if (d.id === activeChat) {
+                    return { ...d, lastMsg: replyText, time: "À l'instant", unread: activeChat === "support" ? 0 : 1 };
+                }
+                return d;
+            }));
+        }, 1000);
+    };
 
     return (
         <div className="page tab-content messages-layout" style={{ height: "calc(100dvh - 140px)", display: "flex", gap: 16 }}>
@@ -2620,21 +4257,21 @@ function MessagesPage({ t, dark, lang }) {
                         </div>
                         {t.messages}
                     </div>
-                    <div style={{ display: "flex", alignItems: "center", gap: 8, background: "var(--surface2)", borderRadius: 20, padding: "15px 13px", border: "1px solid var(--accent-color)" }}>
+                    <div style={{ display: "flex", alignItems: "center", gap: 8, background: "var(--surface2)", borderRadius: 20, padding: "15px 13px", border: "1px solid var(--border)" }}>
                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--muted2)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="11" cy="11" r="8" /><path d="m21 21-4.35-4.35" /></svg>
-                        <input placeholder={t.searchPlaceholder} style={{ background: "transparent", border: "none", outline: "none", fontSize: 13, color: "var(--text)", flex: 1 }} />
+                        <input value={search} onChange={e => setSearch(e.target.value)} placeholder={t.searchPlaceholder} style={{ background: "transparent", border: "none", outline: "none", fontSize: 13, color: "var(--text)", flex: 1 }} />
                     </div>
                 </div>
                 {/* Contact list */}
                 <div style={{ flex: 1, overflowY: "auto" }}>
-                    {contacts.length === 0 ? (
+                    {filteredDiscussions.length === 0 ? (
                         <div style={{ padding: "40px 20px", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 12, color: "var(--muted2)", opacity: 0.8, textAlign: "center", height: "100%", animation: "fadeUp .4s ease" }}>
                             <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2" /><line x1="3" y1="9" x2="21" y2="9" /><line x1="9" y1="21" x2="9" y2="9" /></svg>
                             <span style={{ fontSize: 13, fontWeight: 600 }}>{t.noMessages}</span>
                             <span style={{ fontSize: 11, opacity: 0.7 }}>{t.emptyInboxSub}</span>
                         </div>
                     ) : (
-                        contacts.map((c, i) => (
+                        filteredDiscussions.map((c, i) => (
                             <div key={c.id} onClick={() => setActiveChat(c.id)}
                                 style={{
                                     display: "flex",
@@ -2661,41 +4298,6 @@ function MessagesPage({ t, dark, lang }) {
                             </div>
                         ))
                     )}
-                </div>
-
-                {/* ANIMATED SUPPORT BUTTON AT THE BOTTOM */}
-                <div onClick={() => setActiveChat("support")} style={{
-                    padding: "16px",
-                    borderTop: "1px solid var(--border)",
-                    background: activeChat === "support" ? (dark ? "rgba(99,102,241,0.08)" : "rgba(16, 185, 129, 0.08)") : "var(--surface2)",
-                    transition: "all .3s ease",
-                    cursor: "pointer",
-                    display: "flex",
-                    alignItems: "center",
-                    gap: 14,
-                    borderInlineStart: activeChat === "support" ? "3px solid var(--accent)" : "3px solid transparent"
-                }}>
-                    <div style={{
-                        width: 44,
-                        height: 44,
-                        borderRadius: 14,
-                        background: dark ? "linear-gradient(135deg, #6366f1, #4f46e5)" : "linear-gradient(135deg, #059669, #197553)",
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        color: "#fff",
-                        boxShadow: activeChat === "support"
-                            ? (dark ? "0 4px 15px rgba(99,102,241,0.4)" : "0 4px 15px rgba(16, 185, 129, 0.4)")
-                            : (dark ? "0 4px 10px rgba(99,102,241,0.2)" : "0 4px 10px rgba(16, 185, 129, 0.2)")
-                    }}>
-                        <svg className="anim-svg-chat-elite" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 18v-6a9 9 0 0 1 18 0v6" /><path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z" /></svg>
-                    </div>
-                    <div style={{ flex: 1 }}>
-                        <div style={{ fontWeight: 800, fontSize: 13, color: "var(--text)" }}>{t.supportName}</div>
-                        <div style={{ fontSize: 11, color: "var(--accent)", fontWeight: 800, letterSpacing: "0.5px" }}>{t.assistance}</div>
-                    </div>
-                    {/* Pulsing indicator */}
-                    <div style={{ width: 8, height: 8, borderRadius: "50%", background: "#22c55e", boxShadow: "0 0 8px #22c55e", animation: "pulse 2s infinite" }} />
                 </div>
             </div>
 
@@ -2740,8 +4342,8 @@ function MessagesPage({ t, dark, lang }) {
                     ) : (
                         chatMessages.map((msg, i) => (
                             <div key={msg.id} style={{ display: "flex", justifyContent: msg.from === "me" ? "flex-end" : "flex-start", animation: "fadeUp .3s ease" }}>
-                                {msg.from === "support" && (
-                                    <div style={{ width: 28, height: 28, borderRadius: 8, background: `linear-gradient(135deg, ${active.color}, ${active.color}99)`, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 10, fontWeight: 900, color: "#fff", marginRight: 8, flexShrink: 0, alignSelf: "flex-end" }}>{active.avatar[0]}</div>
+                                {msg.from !== "me" && (
+                                    <div style={{ width: 28, height: 28, borderRadius: 8, background: `linear-gradient(135deg, ${active.color}, ${active.color}99)`, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 10, fontWeight: 900, color: "#fff", marginRight: 8, flexShrink: 0, alignSelf: "flex-end" }}>{active.avatar}</div>
                                 )}
                                 <div style={{ maxWidth: "65%" }}>
                                     <div style={{
@@ -2761,6 +4363,7 @@ function MessagesPage({ t, dark, lang }) {
                             </div>
                         ))
                     )}
+                    <div ref={chatEndRef} />
                 </div>
 
                 {/* Input */}
@@ -2907,20 +4510,66 @@ function MessagesPage({ t, dark, lang }) {
     );
 }
 
-function FinancePage({ t }) {
-    const animatedValue = (val, color) => (
-        <span className="text-animate-glow" style={{ color }}>{val}</span>
-    );
+function FinancePage({ t, currentMonth = 4, currentYear = 2025, currency = "MAD", dark = false, lang = "fr" }) {
+    const [notification, setNotification] = useState(null);
+
+    const md = getMonthData(currentMonth, currentYear);
+    const { taxes, demoReservations } = md;
+
+    const rate = getRate(currency);
+    const cvt = (madVal) => madVal * rate;
+    const fmtC = (madVal) => Math.abs(cvt(madVal)).toLocaleString('fr-FR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+
+    const triggerDownload = (facNum) => {
+        setNotification(
+            lang === "ar"
+                ? `تم تحميل الفاتورة ${facNum} بنجاح !`
+                : lang === "en"
+                    ? `Invoice ${facNum} successfully downloaded!`
+                    : `Facture ${facNum} téléchargée avec succès !`
+        );
+        setTimeout(() => {
+            setNotification(null);
+        }, 3000);
+    };
 
     return (
         <div className="page tab-content finance-page" style={{ padding: "10px 40px" }}>
+            {notification && (
+                <div className="btn-premium-shine" style={{
+                    position: "fixed",
+                    top: 24,
+                    right: 24,
+                    background: dark ? "rgba(99, 102, 241, 0.95)" : "rgba(16, 185, 129, 0.95)",
+                    backdropFilter: "blur(8px)",
+                    color: "#fff",
+                    padding: "12px 24px",
+                    borderRadius: 16,
+                    boxShadow: "0 10px 25px rgba(0,0,0,0.2)",
+                    zIndex: 9999,
+                    fontSize: 13,
+                    fontWeight: 700,
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 8,
+                    animation: "fadeUp .3s ease"
+                }}>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3"><polyline points="20 6 9 17 4 12" /></svg>
+                    {notification}
+                </div>
+            )}
+
             <div className="stats-grid" style={{ gap: 0, marginBottom: 48, gridTemplateColumns: "1fr" }}>
                 <div className="stat-card-lg" style={{ textAlign: "center", alignItems: "center", position: "relative", overflow: "hidden" }}>
-                    <div className="stat-label" style={{ textTransform: "uppercase", letterSpacing: "0.2em", fontSize: 13 }}>TVA Collectée (2026)</div>
-                    <div className="stat-value finance-stat-value" style={{ fontSize: 62, margin: "16px 0" }}>0 MAD</div>
+                    <div className="stat-label" style={{ textTransform: "uppercase", letterSpacing: "0.2em", fontSize: 13 }}>
+                        {t.vatCollected || "TVA Collectée"} ({MONTHS[currentMonth - 1]} {currentYear})
+                    </div>
+                    <div className="stat-value finance-stat-value" style={{ fontSize: 62, margin: "16px 0" }}>
+                        {fmtC(taxes)} {currency}
+                    </div>
                     <div className="stat-change up" style={{ color: "#3b82f6", fontSize: 14 }}>
                         <Icon d={icons.arrow} size={16} style={{ transform: "rotate(-45deg)" }} />
-                        Prêt pour déclaration · 0 MAD au total
+                        {t.readyForDeclaration || "Prêt pour déclaration"} · {fmtC(taxes)} {currency} {lang === "ar" ? "إجمالاً" : "au total"}
                     </div>
                     <div className="finance-stat-icon" style={{ position: "absolute", top: "50%", right: 40, transform: "translateY(-50%)", padding: 20, borderRadius: 24, background: "rgba(59,130,246,0.1)", color: "#3b82f6" }}>
                         <Icon d={icons.finance} size={32} />
@@ -2945,27 +4594,192 @@ function FinancePage({ t }) {
                             <th><div className="invoice-header-badge" style={{ borderColor: "#10b981", color: "#10b981" }}>{t.invoiceDate}</div></th>
                             <th><div className="invoice-header-badge" style={{ borderColor: "#f59e0b", color: "#f59e0b" }}>{t.invoiceAmount}</div></th>
                             <th><div className="invoice-header-badge" style={{ borderColor: "#06b6d4", color: "#06b6d4" }}>{t.invoiceStatus}</div></th>
+                            <th><div className="invoice-header-badge" style={{ borderColor: "#ec4899", color: "#ec4899" }}>Action</div></th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr className="table-row-animate" style={{ animationDelay: "0.2s" }}>
-                            <td colSpan="5" style={{ textAlign: "center", padding: 60, color: "var(--muted2)", background: "var(--surface2)", borderRadius: 24, border: "1px dashed var(--border)" }}>
-                                <Icon d={icons.finance} size={32} style={{ opacity: 0.3, marginBottom: 12 }} />
-                                <div style={{ fontSize: 15, fontWeight: 600 }}>{t.quietPeriod}</div>
-                                <div style={{ fontSize: 13, marginTop: 4 }}>{t.futureInvoices}</div>
-                            </td>
-                        </tr>
+                        {demoReservations.length === 0 ? (
+                            <tr className="table-row-animate" style={{ animationDelay: "0.2s" }}>
+                                <td colSpan="6" style={{ textAlign: "center", padding: 60, color: "var(--muted2)", background: "var(--surface2)", borderRadius: 24, border: "1px dashed var(--border)" }}>
+                                    <Icon d={icons.finance} size={32} style={{ opacity: 0.3, marginBottom: 12 }} />
+                                    <div style={{ fontSize: 15, fontWeight: 600 }}>{t.quietPeriod}</div>
+                                    <div style={{ fontSize: 13, marginTop: 4 }}>{t.futureInvoices}</div>
+                                </td>
+                            </tr>
+                        ) : (
+                            demoReservations.map((res, i) => {
+                                const facNum = `FAC-${res.id.replace("RES-", "")}`;
+                                const statusColor = res.status === "confirmed"
+                                    ? "#10b981"
+                                    : res.status === "pending"
+                                        ? "#f59e0b"
+                                        : "#ef4444";
+                                const statusBg = res.status === "confirmed"
+                                    ? "rgba(16, 185, 129, 0.08)"
+                                    : res.status === "pending"
+                                        ? "rgba(245, 158, 11, 0.08)"
+                                        : "rgba(239, 68, 68, 0.08)";
+                                const statusBorder = res.status === "confirmed"
+                                    ? "1px solid rgba(16, 185, 129, 0.15)"
+                                    : res.status === "pending"
+                                        ? "1px solid rgba(245, 158, 11, 0.15)"
+                                        : "1px solid rgba(239, 68, 68, 0.15)";
+                                const statusText = res.status === "confirmed"
+                                    ? (lang === "ar" ? "مدفوعة" : lang === "en" ? "Paid" : "Payée")
+                                    : res.status === "pending"
+                                        ? (lang === "ar" ? "قيد الانتظار" : lang === "en" ? "Pending" : "En attente")
+                                        : (lang === "ar" ? "ملغاة" : lang === "en" ? "Cancelled" : "Annulée");
+
+                                return (
+                                    <tr key={res.id} className="table-row-animate" style={{ animationDelay: `${0.1 * (i + 1)}s`, background: "var(--card)" }}>
+                                        <td style={{ fontWeight: 700, color: "var(--accent)" }}>{facNum}</td>
+                                        <td>
+                                            <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                                                <div style={{ width: 28, height: 28, borderRadius: 8, background: `linear-gradient(135deg, ${res.color}, ${res.color}99)`, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 10, fontWeight: 900, color: "#fff", boxShadow: `0 2px 8px ${res.color}30` }}>
+                                                    {res.avatar}
+                                                </div>
+                                                <span style={{ fontWeight: 600 }}>{res.client}</span>
+                                            </div>
+                                        </td>
+                                        <td style={{ color: "var(--muted)" }}>{res.from}</td>
+                                        <td style={{ fontWeight: 800 }}>{fmtC(res.amount)} {currency}</td>
+                                        <td>
+                                            <span style={{
+                                                display: "inline-flex",
+                                                alignItems: "center",
+                                                gap: 6,
+                                                padding: "4px 10px",
+                                                borderRadius: 12,
+                                                fontSize: 11,
+                                                fontWeight: 700,
+                                                color: statusColor,
+                                                background: statusBg,
+                                                border: statusBorder
+                                            }}>
+                                                <span style={{ width: 6, height: 6, borderRadius: "50%", background: statusColor, display: "inline-block", animation: res.status === "pending" ? "pulse 2s infinite" : "none" }} />
+                                                {statusText}
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <button
+                                                onClick={() => triggerDownload(facNum)}
+                                                className="btn-premium-shine"
+                                                style={{
+                                                    background: "var(--surface2)",
+                                                    border: "1px solid var(--border)",
+                                                    color: "var(--text)",
+                                                    padding: "6px 12px",
+                                                    borderRadius: 8,
+                                                    cursor: "pointer",
+                                                    fontSize: 11,
+                                                    fontWeight: 700,
+                                                    display: "inline-flex",
+                                                    alignItems: "center",
+                                                    gap: 6,
+                                                    transition: "all .2s"
+                                                }}
+                                                onMouseEnter={e => e.currentTarget.style.borderColor = "var(--accent)"}
+                                                onMouseLeave={e => e.currentTarget.style.borderColor = "var(--border)"}
+                                            >
+                                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3" /></svg>
+                                                PDF
+                                            </button>
+                                        </td>
+                                    </tr>
+                                );
+                            })
+                        )}
                     </tbody>
                 </table>
             </div>
 
             {/* MOBILE LIST */}
-            <div className="finance-mobile-list" style={{ marginTop: 20 }}>
-                <div style={{ padding: "40px 20px", textAlign: "center", color: "var(--muted2)", background: "var(--surface2)", borderRadius: 24, border: "1px dashed var(--border)" }}>
-                    <Icon d={icons.finance} size={32} style={{ opacity: 0.3, marginBottom: 12 }} />
-                    <div style={{ fontSize: 15, fontWeight: 600 }}>{t.quietPeriod}</div>
-                    <div style={{ fontSize: 13, marginTop: 4 }}>{t.futureInvoices}</div>
-                </div>
+            <div className="finance-mobile-list" style={{ marginTop: 20, display: "flex", flexDirection: "column", gap: 12 }}>
+                {demoReservations.length === 0 ? (
+                    <div style={{ padding: "40px 20px", textAlign: "center", color: "var(--muted2)", background: "var(--surface2)", borderRadius: 24, border: "1px dashed var(--border)" }}>
+                        <Icon d={icons.finance} size={32} style={{ opacity: 0.3, marginBottom: 12 }} />
+                        <div style={{ fontSize: 15, fontWeight: 600 }}>{t.quietPeriod}</div>
+                        <div style={{ fontSize: 13, marginTop: 4 }}>{t.futureInvoices}</div>
+                    </div>
+                ) : (
+                    demoReservations.map((res, i) => {
+                        const facNum = `FAC-${res.id.replace("RES-", "")}`;
+                        const statusColor = res.status === "confirmed"
+                            ? "#10b981"
+                            : res.status === "pending"
+                                ? "#f59e0b"
+                                : "#ef4444";
+                        const statusBg = res.status === "confirmed"
+                            ? "rgba(16, 185, 129, 0.08)"
+                            : res.status === "pending"
+                                ? "rgba(245, 158, 11, 0.08)"
+                                : "rgba(239, 68, 68, 0.08)";
+                        const statusBorder = res.status === "confirmed"
+                            ? "1px solid rgba(16, 185, 129, 0.15)"
+                            : res.status === "pending"
+                                ? "1px solid rgba(245, 158, 11, 0.15)"
+                                : "1px solid rgba(239, 68, 68, 0.15)";
+                        const statusText = res.status === "confirmed"
+                            ? (lang === "ar" ? "مدفوعة" : lang === "en" ? "Paid" : "Payée")
+                            : res.status === "pending"
+                                ? (lang === "ar" ? "قيد الانتظار" : lang === "en" ? "Pending" : "En attente")
+                                : (lang === "ar" ? "ملغاة" : lang === "en" ? "Cancelled" : "Annulée");
+
+                        return (
+                            <div key={res.id} style={{ background: "var(--card)", border: "1px solid var(--border)", borderRadius: 16, padding: 16, display: "flex", flexDirection: "column", gap: 12, position: "relative" }}>
+                                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                                    <span style={{ fontWeight: 800, fontSize: 13, color: "var(--accent)" }}>{facNum}</span>
+                                    <span style={{
+                                        display: "inline-flex",
+                                        alignItems: "center",
+                                        gap: 6,
+                                        padding: "3px 8px",
+                                        borderRadius: 8,
+                                        fontSize: 10,
+                                        fontWeight: 700,
+                                        color: statusColor,
+                                        background: statusBg,
+                                        border: statusBorder
+                                    }}>
+                                        {statusText}
+                                    </span>
+                                </div>
+                                <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                                    <div style={{ width: 32, height: 32, borderRadius: 10, background: `linear-gradient(135deg, ${res.color}, ${res.color}99)`, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 11, fontWeight: 900, color: "#fff" }}>
+                                        {res.avatar}
+                                    </div>
+                                    <div>
+                                        <div style={{ fontWeight: 700, fontSize: 13 }}>{res.client}</div>
+                                        <div style={{ fontSize: 11, color: "var(--muted)" }}>{res.from}</div>
+                                    </div>
+                                </div>
+                                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", borderTop: "1px solid var(--border)", paddingTop: 12, marginTop: 4 }}>
+                                    <span style={{ fontWeight: 850, fontSize: 14 }}>{fmtC(res.amount)} {currency}</span>
+                                    <button
+                                        onClick={() => triggerDownload(facNum)}
+                                        className="btn-premium-shine"
+                                        style={{
+                                            background: "rgba(99, 102, 241, 0.06)",
+                                            border: "1px solid rgba(99, 102, 241, 0.15)",
+                                            color: "var(--accent)",
+                                            padding: "6px 14px",
+                                            borderRadius: 8,
+                                            cursor: "pointer",
+                                            fontSize: 11,
+                                            fontWeight: 700,
+                                            display: "inline-flex",
+                                            alignItems: "center",
+                                            gap: 6
+                                        }}
+                                    >
+                                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3" /></svg>
+                                        PDF
+                                    </button>
+                                </div>
+                            </div>
+                        );
+                    })
+                )}
             </div>
         </div>
     );
@@ -3001,6 +4815,27 @@ export default function AgencyDashboard() {
     });
 
     const [cars, setCars] = useState([]);
+    const [currentMonth, setCurrentMonth] = useState(4);
+    const [currentYear, setCurrentYear] = useState(2025);
+
+    // Sync agency data with backend on mount
+    useEffect(() => {
+        const token = localStorage.getItem("token");
+        if (token) {
+            fetch("http://localhost:8080/api/auth/agency/me", {
+                headers: { "Authorization": `Bearer ${token}` }
+            })
+                .then(res => {
+                    if (!res.ok) throw new Error("Failed to fetch agency data");
+                    return res.json();
+                })
+                .then(data => {
+                    setAgencyData(data);
+                    localStorage.setItem("agencyData", JSON.stringify(data));
+                })
+                .catch(err => console.error("Error fetching agency profile:", err));
+        }
+    }, []);
 
     // Fetch cars from backend
     useEffect(() => {
@@ -3097,9 +4932,6 @@ export default function AgencyDashboard() {
         window.addEventListener('pointerdown', onPointerDown, { passive: true });
         return () => window.removeEventListener('pointerdown', onPointerDown);
     }, []);
-    // useEffect(() => {
-    //     localStorage.setItem("agencyCars", JSON.stringify(cars));
-    // }, [cars]);
 
     const handleSaveCar = (form) => {
         if (!agencyData || !agencyData.id) return alert("Agency data missing");
@@ -3175,7 +5007,8 @@ export default function AgencyDashboard() {
         };
     }, [mobileOpen]);
 
-    const pending = RESERVATIONS.filter(r => r.status === "pending").length;
+    const md = getMonthData(currentMonth, currentYear);
+    const pending = md.demoReservations.filter(r => r.status === "pending").length;
 
     const navItems = [
         { id: "dashboard", label: t.dashboard, icon: icons.dashboard, color: dark ? "#6366f1" : "#10b981" },
@@ -3358,13 +5191,13 @@ export default function AgencyDashboard() {
 
                     {/* PAGE CONTENT */}
                     <div className="content">
-                        {page === "dashboard" && <DashboardPage dark={dark} t={t} cars={cars} currency={currency} setCurrency={setCurrency} lang={lang} />}
+                        {page === "dashboard" && <DashboardPage dark={dark} t={t} cars={cars} currency={currency} setCurrency={setCurrency} lang={lang} currentMonth={currentMonth} setCurrentMonth={setCurrentMonth} currentYear={currentYear} setCurrentYear={setCurrentYear} />}
                         {page === "cars" && <CarsPage t={t} cars={cars} onSave={handleSaveCar} onDelete={handleDeleteCar} dark={dark} />}
                         {page === "map" && <MapPage t={t} cars={cars} agencyData={agencyData} lang={lang} />}
-                        {page === "reservations" && <ReservationsPage t={t} />}
+                        {page === "reservations" && <ReservationsPage t={t} currentMonth={currentMonth} currentYear={currentYear} />}
                         {page === "customers" && <CustomersPage t={t} />}
                         {page === "messages" && <MessagesPage t={t} dark={dark} lang={lang} />}
-                        {page === "finance" && <FinancePage t={t} />}
+                        {page === "finance" && <FinancePage t={t} currentMonth={currentMonth} currentYear={currentYear} currency={currency} dark={dark} lang={lang} />}
                         {page === "analytics" && <AnalyticsPage dark={dark} t={t} />}
                         {page === "settings" && <SettingsPage dark={dark} setDark={setDark} t={t} agencyData={agencyData} setAgencyData={setAgencyData} lang={lang} setLang={setLang} />}
                     </div>

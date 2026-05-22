@@ -41,4 +41,32 @@ public class AgencyService {
 
         return agency;
     }
+
+    public Optional<Agency> findByEmail(String email) {
+        return agencyRepository.findByEmail(email);
+    }
+
+    public Agency updateAgencyProfile(String email, Agency newData) {
+        Agency agency = agencyRepository.findByEmail(email)
+                .orElseThrow(() -> new IllegalArgumentException("Agency not found"));
+
+        if (newData.getFirstName() != null)
+            agency.setFirstName(newData.getFirstName());
+        if (newData.getLastName() != null)
+            agency.setLastName(newData.getLastName());
+        if (newData.getAgencyName() != null)
+            agency.setAgencyName(newData.getAgencyName());
+        if (newData.getPhone() != null)
+            agency.setPhone(newData.getPhone());
+        if (newData.getCity() != null)
+            agency.setCity(newData.getCity());
+        if (newData.getAddress() != null)
+            agency.setAddress(newData.getAddress());
+        if (newData.getCountry() != null)
+            agency.setCountry(newData.getCountry());
+        if (newData.getLogo() != null)
+            agency.setLogo(newData.getLogo());
+
+        return agencyRepository.save(agency);
+    }
 }

@@ -52,6 +52,12 @@ export const AR = {
         startFree: "ابدأ مجانًا",
         browseFleet: "استعرض الأسطول",
         number1: "المنصة الأولى في المغرب",
+        dateBar: {
+            pickup: "الاستلام",
+            dropoff: "العودة",
+            city: "المدينة",
+            cityPlaceholder: "إلى أين أنت ذاهب؟"
+        },
         pills: [
             "بدون وديعة",
             "تسليم بدون تلامس",
