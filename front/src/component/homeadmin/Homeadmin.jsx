@@ -4,16 +4,16 @@ import {
   PiSquaresFourDuotone, PiUsersDuotone, PiBuildingsDuotone, PiCalendarCheckDuotone, PiWalletDuotone,
   PiUserPlusDuotone, PiBuildingDuotone, PiCalendarPlusDuotone, PiCurrencyDollarDuotone,
   PiMagnifyingGlassDuotone, PiBellDuotone, PiGearDuotone, PiSignOutDuotone, PiQuestionDuotone, PiFileTextDuotone,
-  PiCarProfileDuotone
+  PiCarProfileDuotone, PiMoonDuotone, PiSunDuotone
 } from "react-icons/pi";
 
 const AnimatedLogo = ({ hideText = false }) => {
   return (
     <div style={{ display: 'flex', alignItems: 'center', gap: 14, cursor: 'pointer', transition: 'transform 0.2s ease' }} onMouseOver={e => e.currentTarget.style.transform = 'scale(1.02)'} onMouseOut={e => e.currentTarget.style.transform = 'scale(1)'}>
       <div className="animated-logo-bg" style={{ position: 'relative', width: 44, height: 44, borderRadius: 14, display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden' }}>
-        <div style={{ position: 'absolute', top: '-50%', left: '-50%', width: '200%', height: '200%', background: 'conic-gradient(from 0deg,transparent 0%,#3b82f6 30%,transparent 40%)', animation: 'spinWheel 4s linear infinite' }} />
-        <div style={{ position: 'absolute', inset: 2, background: '#ffffff', borderRadius: 12, zIndex: 1 }} />
-        <svg style={{ zIndex: 2, animation: 'driveBumps 2s ease-in-out infinite' }} width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#1e293b" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+        <div style={{ position: 'absolute', top: '-50%', left: '-50%', width: '200%', height: '200%', background: 'conic-gradient(from 0deg,transparent 0%,var(--primary) 30%,transparent 40%)', animation: 'spinWheel 4s linear infinite' }} />
+        <div className="logo-inner-bg" style={{ position: 'absolute', inset: 2, borderRadius: 12, zIndex: 1 }} />
+        <svg className="logo-car-svg" style={{ zIndex: 2, animation: 'driveBumps 2s ease-in-out infinite' }} width="24" height="24" viewBox="0 0 24 24" fill="none" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
           <path d="M14 16H9m10 0h3v-3.15a1 1 0 0 0-.84-.99L16 11l-2.7-3.6a2 2 0 0 0-1.6-.8H9.3a2 2 0 0 0-1.6.8L5 11l-5.16.86a1 1 0 0 0-.84.99V16h3" />
           <circle cx="6.5" cy="16.5" r="2.5" style={{ animation: 'spinWheel 1s linear infinite', transformOrigin: '6.5px 16.5px' }} />
           <circle cx="16.5" cy="16.5" r="2.5" style={{ animation: 'spinWheel 1s linear infinite', transformOrigin: '16.5px 16.5px' }} />
@@ -21,9 +21,9 @@ const AnimatedLogo = ({ hideText = false }) => {
       </div>
       {!hideText && (
         <div style={{ position: 'relative', fontFamily: "'Outfit',sans-serif", fontWeight: 900, fontSize: 26, letterSpacing: "-0.5px", margin: 0 }}>
-          <span style={{ color: "#1e293b" }}>Upp</span>
-          <span style={{ color: "#3b82f6" }}>Car</span>
-          <span style={{ position: 'absolute', bottom: 6, right: -12, width: 6, height: 6, borderRadius: '50%', background: '#3b82f6', animation: 'blink 2s infinite' }} />
+          <span className="logo-text-p1">Upp</span>
+          <span className="logo-text-p2">Car</span>
+          <span className="logo-dot" style={{ position: 'absolute', bottom: 6, right: -12, width: 6, height: 6, borderRadius: '50%', background: 'var(--primary)', animation: 'blink 2s infinite' }} />
         </div>
       )}
     </div>
@@ -34,9 +34,36 @@ const Homeadmin = () => {
   const navigate = useNavigate();
   const [activeNav, setActiveNav] = useState("Overview");
 
+  // THEME MANAGEMENT
+  const [theme, setTheme] = useState(() => {
+    const saved = localStorage.getItem("adminTheme");
+    if (saved) return saved;
+    return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+  });
+
   useEffect(() => {
     document.title = "UppCar - Admin Dashboard";
+    
+    // Listen for system theme changes if no local storage override
+    const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
+    const handleChange = (e) => {
+      if (!localStorage.getItem("adminTheme")) {
+        setTheme(e.matches ? "dark" : "light");
+      }
+    };
+    mediaQuery.addEventListener("change", handleChange);
+    return () => mediaQuery.removeEventListener("change", handleChange);
   }, []);
+
+  useEffect(() => {
+    localStorage.setItem("adminTheme", theme);
+    document.body.style.background = theme === "dark" ? "#09090b" : "#f8fafc";
+    document.body.style.transition = "background 0.3s ease";
+  }, [theme]);
+
+  const toggleTheme = () => {
+    setTheme(prev => prev === "light" ? "dark" : "light");
+  };
 
   const handleLogout = () => {
     localStorage.removeItem("token");
@@ -54,10 +81,10 @@ const Homeadmin = () => {
   ];
 
   const kpis = [
-    { label: "New Users", value: "24", icon: <PiUserPlusDuotone size={28} className="modern-icon kpi-svg" />, indicator: "+12%", gradient: "linear-gradient(135deg, #10b981, #059669)", bgSoft: "#ecfdf5", color: "#10b981" },
-    { label: "New Agencies", value: "3", icon: <PiBuildingDuotone size={28} className="modern-icon kpi-svg" />, indicator: "+2", gradient: "linear-gradient(135deg, #3b82f6, #2563eb)", bgSoft: "#eff6ff", color: "#3b82f6" },
-    { label: "Reservations", value: "12", icon: <PiCalendarPlusDuotone size={28} className="modern-icon kpi-svg" />, indicator: "+8%", gradient: "linear-gradient(135deg, #f59e0b, #d97706)", bgSoft: "#fffbeb", color: "#f59e0b" },
-    { label: "Daily Revenue", value: "$2,450", icon: <PiCurrencyDollarDuotone size={28} className="modern-icon kpi-svg" />, indicator: "+15%", gradient: "linear-gradient(135deg, #ef4444, #dc2626)", bgSoft: "#fef2f2", color: "#ef4444" },
+    { label: "New Users", value: "24", icon: <PiUserPlusDuotone size={28} className="modern-icon kpi-svg" />, indicator: "+12%", type: "success" },
+    { label: "New Agencies", value: "3", icon: <PiBuildingDuotone size={28} className="modern-icon kpi-svg" />, indicator: "+2", type: "primary" },
+    { label: "Reservations", value: "12", icon: <PiCalendarPlusDuotone size={28} className="modern-icon kpi-svg" />, indicator: "+8%", type: "warning" },
+    { label: "Daily Revenue", value: "$2,450", icon: <PiCurrencyDollarDuotone size={28} className="modern-icon kpi-svg" />, indicator: "+15%", type: "danger" },
   ];
 
   const activities = [
@@ -67,8 +94,7 @@ const Homeadmin = () => {
       entity: "User Account",
       status: "SUCCESS",
       time: "2 min ago",
-      statusColor: "#10b981",
-      statusBg: "#ecfdf5"
+      type: "success"
     },
     {
       user: "Sarah Wilson",
@@ -76,8 +102,7 @@ const Homeadmin = () => {
       entity: "Agency Profile",
       status: "UPDATED",
       time: "15 min ago",
-      statusColor: "#3b82f6",
-      statusBg: "#eff6ff"
+      type: "primary"
     },
     {
       user: "Mike Johnson",
@@ -85,8 +110,7 @@ const Homeadmin = () => {
       entity: "Reservation #1234",
       status: "CONFIRMED",
       time: "1 hour ago",
-      statusColor: "#f59e0b",
-      statusBg: "#fffbeb"
+      type: "warning"
     },
   ];
 
@@ -95,25 +119,109 @@ const Homeadmin = () => {
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap');
 
+        /* CSS VARIABLES - LIGHT THEME (DEFAULT) */
+        :root {
+          --bg-main: #f8fafc;
+          --bg-pattern: #e2e8f0;
+          --surface: rgba(255, 255, 255, 0.85);
+          --surface-solid: #ffffff;
+          --surface-hover: #f1f5f9;
+          --surface-active: #ffffff;
+          --border: rgba(226, 232, 240, 0.8);
+          --border-strong: #cbd5e1;
+          
+          --text-main: #0f172a;
+          --text-secondary: #1e293b;
+          --text-muted: #64748b;
+          --text-placeholder: #94a3b8;
+          
+          --primary: #3b82f6;
+          --primary-hover: #2563eb;
+          --primary-soft: #eff6ff;
+          --primary-grad: linear-gradient(135deg, #3b82f6, #2563eb);
+          
+          --success: #10b981;
+          --success-soft: #ecfdf5;
+          --success-grad: linear-gradient(135deg, #10b981, #059669);
+          
+          --warning: #f59e0b;
+          --warning-soft: #fffbeb;
+          --warning-grad: linear-gradient(135deg, #f59e0b, #d97706);
+          
+          --danger: #ef4444;
+          --danger-soft: #fef2f2;
+          --danger-grad: linear-gradient(135deg, #ef4444, #dc2626);
+          
+          --shadow-sm: 0 2px 6px rgba(0,0,0,0.02);
+          --shadow-md: 0 10px 30px rgba(0, 0, 0, 0.03);
+          --shadow-lg: 0 20px 40px rgba(0, 0, 0, 0.06);
+          
+          --nav-active-bg: #ffffff;
+          --nav-active-shadow: 0 8px 16px rgba(37, 99, 235, 0.08);
+          --icon-bg: #f1f5f9;
+        }
+
+        /* CSS VARIABLES - DARK THEME */
+        [data-theme="dark"] {
+          --bg-main: #09090b; /* zinc-950 */
+          --bg-pattern: rgba(255,255,255,0.03);
+          --surface: rgba(24, 24, 27, 0.7); /* zinc-900 */
+          --surface-solid: #18181b;
+          --surface-hover: rgba(255,255,255,0.05);
+          --surface-active: rgba(59, 130, 246, 0.1);
+          --border: rgba(255, 255, 255, 0.08);
+          --border-strong: rgba(255, 255, 255, 0.15);
+          
+          --text-main: #fafafa;
+          --text-secondary: #e4e4e7;
+          --text-muted: #a1a1aa;
+          --text-placeholder: #52525b;
+          
+          --primary: #3b82f6;
+          --primary-hover: #60a5fa;
+          --primary-soft: rgba(59, 130, 246, 0.15);
+          
+          --success: #34d399;
+          --success-soft: rgba(16, 185, 129, 0.15);
+          
+          --warning: #fbbf24;
+          --warning-soft: rgba(245, 158, 11, 0.15);
+          
+          --danger: #f87171;
+          --danger-soft: rgba(239, 68, 68, 0.15);
+          
+          --shadow-sm: 0 2px 6px rgba(0,0,0,0.2);
+          --shadow-md: 0 10px 30px rgba(0, 0, 0, 0.3);
+          --shadow-lg: 0 20px 40px rgba(0, 0, 0, 0.4);
+          
+          --nav-active-bg: rgba(59, 130, 246, 0.1);
+          --nav-active-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+          --icon-bg: rgba(255,255,255,0.05);
+        }
+
+        /* GLOBAL TRANSITIONS */
+        *, *::before, *::after {
+          transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease;
+        }
+
         .admin-dashboard {
           font-family: 'Outfit', system-ui, sans-serif;
-          background: #f8fafc;
-          /* Subtle background pattern */
-          background-image: radial-gradient(#e2e8f0 1px, transparent 1px);
+          background-color: var(--bg-main);
+          background-image: radial-gradient(var(--bg-pattern) 1px, transparent 1px);
           background-size: 20px 20px;
           min-height: 100vh;
           display: flex;
-          color: #1e293b;
+          color: var(--text-secondary);
         }
 
         /* Glassmorphism sidebar */
         .glass-sidebar {
           width: 280px;
-          background: rgba(255, 255, 255, 0.85);
-          backdrop-filter: blur(20px);
-          -webkit-backdrop-filter: blur(20px);
-          border-right: 1px solid rgba(255, 255, 255, 0.6);
-          box-shadow: 4px 0 24px rgba(0, 0, 0, 0.02);
+          background: var(--surface);
+          backdrop-filter: blur(24px);
+          -webkit-backdrop-filter: blur(24px);
+          border-right: 1px solid var(--border);
+          box-shadow: 4px 0 24px rgba(0, 0, 0, 0.05);
           display: flex;
           flex-direction: column;
           z-index: 20;
@@ -125,15 +233,17 @@ const Homeadmin = () => {
 
         .logo-area {
           padding: 28px 24px;
-          border-bottom: 1px solid rgba(226, 232, 240, 0.6);
+          border-bottom: 1px solid var(--border);
         }
         
+        .logo-inner-bg { background: var(--surface-solid); }
+        .logo-car-svg { stroke: var(--text-main); }
+        .logo-text-p1 { color: var(--text-main); }
+        .logo-text-p2 { color: var(--primary); }
+
         .logo-text {
           font-size: 26px;
           font-weight: 800;
-          background: linear-gradient(135deg, #1e293b, #3b82f6);
-          -webkit-background-clip: text;
-          -webkit-text-fill-color: transparent;
           display: flex;
           align-items: center;
           gap: 12px;
@@ -161,24 +271,22 @@ const Homeadmin = () => {
           gap: 16px;
           font-size: 15px;
           font-family: 'Outfit', sans-serif;
-          transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
           background: transparent;
-          color: #64748b;
+          color: var(--text-muted);
           font-weight: 500;
         }
 
         .nav-btn:hover {
           transform: translateX(4px);
-          background: rgba(255, 255, 255, 0.9);
-          color: #1e293b;
-          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+          background: var(--surface-hover);
+          color: var(--text-main);
         }
 
         .nav-btn.active {
-          background: #ffffff;
-          color: #2563eb;
+          background: var(--nav-active-bg);
+          color: var(--primary);
           font-weight: 700;
-          box-shadow: 0 8px 16px rgba(37, 99, 235, 0.08);
+          box-shadow: var(--nav-active-shadow);
           position: relative;
         }
         
@@ -190,7 +298,7 @@ const Homeadmin = () => {
           transform: translateY(-50%);
           height: 24px;
           width: 4px;
-          background: #3b82f6;
+          background: var(--primary);
           border-radius: 0 4px 4px 0;
         }
 
@@ -202,12 +310,11 @@ const Homeadmin = () => {
           align-items: center;
           justify-content: center;
           font-size: 18px;
-          background: #f1f5f9;
-          transition: all 0.3s ease;
+          background: var(--icon-bg);
         }
         
         .nav-btn.active .nav-icon {
-          background: linear-gradient(135deg, #3b82f6, #2563eb);
+          background: var(--primary-grad);
           color: white;
           box-shadow: 0 4px 10px rgba(37, 99, 235, 0.3);
           transform: scale(1.05);
@@ -215,13 +322,54 @@ const Homeadmin = () => {
 
         .sidebar-footer {
           padding: 24px;
-          border-top: 1px solid rgba(226, 232, 240, 0.6);
+          border-top: 1px solid var(--border);
+        }
+
+        /* TOGGLE THEME SWITCH */
+        .theme-toggle-sidebar {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          padding: 12px 16px;
+          border-radius: 14px;
+          background: var(--icon-bg);
+          border: 1px solid var(--border);
+          cursor: pointer;
+          margin-bottom: 16px;
+        }
+        .theme-toggle-sidebar:hover {
+          background: var(--surface-hover);
+        }
+        
+        .toggle-switch {
+          width: 40px;
+          height: 22px;
+          background: var(--text-placeholder);
+          border-radius: 20px;
+          position: relative;
+        }
+        [data-theme="dark"] .toggle-switch {
+          background: var(--primary);
+        }
+        .toggle-thumb {
+          position: absolute;
+          top: 3px;
+          left: 3px;
+          width: 16px;
+          height: 16px;
+          background: white;
+          border-radius: 50%;
+          transition: transform 0.3s cubic-bezier(0.4, 0.0, 0.2, 1);
+          box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+        [data-theme="dark"] .toggle-thumb {
+          transform: translateX(18px);
         }
 
         .btn-primary {
           width: 100%;
           padding: 14px;
-          background: linear-gradient(135deg, #3b82f6, #2563eb);
+          background: var(--primary-grad);
           color: white;
           border: none;
           border-radius: 12px;
@@ -233,7 +381,6 @@ const Homeadmin = () => {
           align-items: center;
           justify-content: center;
           gap: 10px;
-          transition: all 0.3s ease;
           box-shadow: 0 8px 16px rgba(59, 130, 246, 0.25);
           margin-bottom: 20px;
         }
@@ -241,6 +388,7 @@ const Homeadmin = () => {
         .btn-primary:hover {
           transform: translateY(-2px);
           box-shadow: 0 12px 20px rgba(59, 130, 246, 0.35);
+          filter: brightness(1.1);
         }
 
         .footer-link {
@@ -249,25 +397,23 @@ const Homeadmin = () => {
           cursor: pointer;
           font-size: 14px;
           font-weight: 500;
-          color: #64748b;
-          transition: all 0.2s ease;
+          color: var(--text-muted);
           display: flex;
           align-items: center;
           gap: 10px;
         }
         
         .footer-link:hover {
-          background: #f1f5f9;
-          color: #1e293b;
+          background: var(--surface-hover);
+          color: var(--text-main);
         }
         
         .footer-link.logout {
-          color: #ef4444;
+          color: var(--danger);
         }
         
         .footer-link.logout:hover {
-          background: #fef2f2;
-          color: #dc2626;
+          background: var(--danger-soft);
         }
 
         /* Main Content */
@@ -279,10 +425,10 @@ const Homeadmin = () => {
         }
 
         .glass-header {
-          background: rgba(255, 255, 255, 0.7);
-          backdrop-filter: blur(20px);
-          -webkit-backdrop-filter: blur(20px);
-          border-bottom: 1px solid rgba(255, 255, 255, 0.8);
+          background: var(--surface);
+          backdrop-filter: blur(24px);
+          -webkit-backdrop-filter: blur(24px);
+          border-bottom: 1px solid var(--border);
           padding: 20px 32px;
           display: flex;
           align-items: center;
@@ -295,7 +441,6 @@ const Homeadmin = () => {
         .search-bar {
           position: relative;
           width: 320px;
-          transition: width 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
 
         .search-bar:focus-within {
@@ -305,35 +450,27 @@ const Homeadmin = () => {
         .search-input {
           width: 100%;
           padding: 12px 16px 12px 44px;
-          background: #f8fafc;
-          border: 1px solid transparent;
+          background: var(--icon-bg);
+          border: 1px solid var(--border);
           border-radius: 14px;
           font-family: 'Outfit', sans-serif;
           font-size: 14px;
           outline: none;
-          transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-          color: #1e293b;
+          color: var(--text-main);
         }
 
         .search-input::placeholder {
-          color: #94a3b8;
-          transition: opacity 0.3s ease;
-        }
-
-        .search-input:focus::placeholder {
-          opacity: 0.5;
+          color: var(--text-placeholder);
         }
         
         .search-input:hover {
-          background: #ffffff;
-          border-color: #e2e8f0;
-          box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+          border-color: var(--border-strong);
         }
         
         .search-input:focus {
-          background: #ffffff;
-          border-color: #3b82f6;
-          box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.15), 0 4px 20px rgba(37, 99, 235, 0.08);
+          background: var(--surface-solid);
+          border-color: var(--primary);
+          box-shadow: 0 0 0 4px var(--primary-soft);
         }
         
         .search-icon {
@@ -341,16 +478,14 @@ const Homeadmin = () => {
           left: 16px;
           top: 50%;
           transform: translateY(-50%);
-          color: #94a3b8;
+          color: var(--text-placeholder);
           font-size: 16px;
           pointer-events: none;
-          transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         .search-bar:focus-within .search-icon {
-          color: #3b82f6;
+          color: var(--primary);
           transform: translateY(-50%) scale(1.1);
-          filter: drop-shadow(0 0 8px rgba(59, 130, 246, 0.3));
         }
 
         .header-actions {
@@ -363,29 +498,27 @@ const Homeadmin = () => {
           width: 42px;
           height: 42px;
           border-radius: 12px;
-          border: 1px solid transparent;
-          background: #ffffff;
-          color: #64748b;
+          border: 1px solid var(--border);
+          background: var(--surface-solid);
+          color: var(--text-muted);
           cursor: pointer;
           display: grid;
           place-items: center;
           font-size: 18px;
-          transition: all 0.2s ease;
-          box-shadow: 0 2px 6px rgba(0,0,0,0.02);
+          box-shadow: var(--shadow-sm);
         }
         
         .icon-btn:hover {
-          border-color: #e2e8f0;
-          color: #1e293b;
+          border-color: var(--border-strong);
+          color: var(--text-main);
           transform: translateY(-1px);
-          box-shadow: 0 4px 10px rgba(0,0,0,0.04);
         }
 
         .avatar {
           width: 44px;
           height: 44px;
           border-radius: 12px;
-          background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+          background: var(--primary-grad);
           color: white;
           font-weight: 700;
           font-size: 16px;
@@ -393,8 +526,7 @@ const Homeadmin = () => {
           place-items: center;
           cursor: pointer;
           box-shadow: 0 4px 10px rgba(59, 130, 246, 0.3);
-          transition: all 0.2s ease;
-          border: 2px solid #ffffff;
+          border: 2px solid var(--surface-solid);
         }
         
         .avatar:hover {
@@ -410,13 +542,13 @@ const Homeadmin = () => {
         .page-title {
           font-size: 28px;
           font-weight: 800;
-          color: #0f172a;
+          color: var(--text-main);
           margin: 0 0 8px 0;
           letter-spacing: -0.5px;
         }
         
         .page-subtitle {
-          color: #64748b;
+          color: var(--text-muted);
           font-size: 15px;
           margin: 0 0 32px 0;
         }
@@ -429,13 +561,12 @@ const Homeadmin = () => {
         }
 
         .kpi-card {
-          background: rgba(255, 255, 255, 0.8);
+          background: var(--surface);
           backdrop-filter: blur(10px);
-          border: 1px solid rgba(255, 255, 255, 0.9);
+          border: 1px solid var(--border);
           border-radius: 20px;
           padding: 24px;
-          box-shadow: 0 10px 30px rgba(0, 0, 0, 0.03);
-          transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+          box-shadow: var(--shadow-md);
           position: relative;
           overflow: hidden;
         }
@@ -446,13 +577,12 @@ const Homeadmin = () => {
           top: 0; left: 0; right: 0; height: 4px;
           background: var(--card-gradient);
           opacity: 0;
-          transition: opacity 0.3s ease;
         }
         
         .kpi-card:hover {
           transform: translateY(-6px);
-          box-shadow: 0 20px 40px rgba(0, 0, 0, 0.06);
-          background: #ffffff;
+          box-shadow: var(--shadow-lg);
+          background: var(--surface-solid);
         }
         
         .kpi-card:hover::before {
@@ -473,6 +603,7 @@ const Homeadmin = () => {
           display: grid;
           place-items: center;
           font-size: 24px;
+          color: white;
           box-shadow: 0 8px 16px rgba(0,0,0,0.08);
         }
 
@@ -483,9 +614,27 @@ const Homeadmin = () => {
           font-weight: 700;
         }
 
+        /* KPI TYPE STYLES */
+        .type-success .kpi-icon { background: var(--success-grad); }
+        .type-success .kpi-indicator { background: var(--success-soft); color: var(--success); }
+        .type-success { --card-gradient: var(--success-grad); }
+
+        .type-primary .kpi-icon { background: var(--primary-grad); }
+        .type-primary .kpi-indicator { background: var(--primary-soft); color: var(--primary); }
+        .type-primary { --card-gradient: var(--primary-grad); }
+
+        .type-warning .kpi-icon { background: var(--warning-grad); }
+        .type-warning .kpi-indicator { background: var(--warning-soft); color: var(--warning); }
+        .type-warning { --card-gradient: var(--warning-grad); }
+
+        .type-danger .kpi-icon { background: var(--danger-grad); }
+        .type-danger .kpi-indicator { background: var(--danger-soft); color: var(--danger); }
+        .type-danger { --card-gradient: var(--danger-grad); }
+
+
         .kpi-label {
           font-size: 15px;
-          color: #64748b;
+          color: var(--text-muted);
           font-weight: 600;
           margin: 0 0 8px 0;
         }
@@ -493,23 +642,23 @@ const Homeadmin = () => {
         .kpi-value {
           font-size: 32px;
           font-weight: 800;
-          color: #0f172a;
+          color: var(--text-main);
           margin: 0;
           letter-spacing: -1px;
         }
 
         /* Activity Table */
         .table-container {
-          background: #ffffff;
+          background: var(--surface-solid);
           border-radius: 20px;
-          box-shadow: 0 10px 30px rgba(0, 0, 0, 0.03);
-          border: 1px solid #f1f5f9;
+          box-shadow: var(--shadow-md);
+          border: 1px solid var(--border);
           overflow: hidden;
         }
 
         .table-header {
           padding: 24px 32px;
-          border-bottom: 1px solid #f1f5f9;
+          border-bottom: 1px solid var(--border);
           display: flex;
           justify-content: space-between;
           align-items: center;
@@ -518,12 +667,12 @@ const Homeadmin = () => {
         .table-title {
           font-size: 20px;
           font-weight: 700;
-          color: #0f172a;
+          color: var(--text-main);
           margin: 0;
         }
         
         .view-all-btn {
-          color: #3b82f6;
+          color: var(--primary);
           font-weight: 600;
           font-size: 14px;
           cursor: pointer;
@@ -542,29 +691,24 @@ const Homeadmin = () => {
         }
 
         .activity-table th {
-          background: #f8fafc;
+          background: var(--surface);
           padding: 16px 32px;
           text-align: left;
           font-size: 13px;
           font-weight: 600;
-          color: #64748b;
+          color: var(--text-muted);
           text-transform: uppercase;
           letter-spacing: 0.5px;
-          border-bottom: 1px solid #e2e8f0;
+          border-bottom: 1px solid var(--border);
         }
 
         .activity-table td {
           padding: 20px 32px;
-          border-bottom: 1px solid #f1f5f9;
-          transition: all 0.2s ease;
+          border-bottom: 1px solid var(--border);
         }
 
-        .table-row {
-          transition: all 0.2s ease;
-        }
-        
         .table-row:hover td {
-          background: #f8fafc;
+          background: var(--surface-hover);
         }
         
         .table-row:last-child td {
@@ -581,30 +725,31 @@ const Homeadmin = () => {
           width: 38px;
           height: 38px;
           border-radius: 10px;
-          background: #e2e8f0;
+          background: var(--icon-bg);
+          border: 1px solid var(--border);
           display: grid;
           place-items: center;
           font-weight: 700;
-          color: #475569;
+          color: var(--text-main);
           font-size: 14px;
         }
 
         .user-name {
           font-weight: 700;
-          color: #1e293b;
+          color: var(--text-main);
           margin: 0;
           font-size: 15px;
         }
 
         .user-action {
-          color: #64748b;
+          color: var(--text-muted);
           margin: 4px 0 0;
           font-size: 13px;
         }
 
         .entity-cell {
           font-weight: 600;
-          color: #334155;
+          color: var(--text-secondary);
           font-size: 14px;
         }
 
@@ -616,9 +761,15 @@ const Homeadmin = () => {
           font-weight: 700;
           letter-spacing: 0.5px;
         }
+        
+        /* STATUS TYPES */
+        .status-success { background: var(--success-soft); color: var(--success); }
+        .status-primary { background: var(--primary-soft); color: var(--primary); }
+        .status-warning { background: var(--warning-soft); color: var(--warning); }
+        .status-danger { background: var(--danger-soft); color: var(--danger); }
 
         .time-cell {
-          color: #64748b;
+          color: var(--text-muted);
           font-size: 14px;
           font-weight: 500;
         }
@@ -626,20 +777,18 @@ const Homeadmin = () => {
         .action-btn {
           padding: 8px 16px;
           border-radius: 8px;
-          border: 1px solid #e2e8f0;
-          background: #ffffff;
+          border: 1px solid var(--border);
+          background: var(--surface-solid);
           font-family: inherit;
           font-weight: 600;
           font-size: 13px;
-          color: #475569;
+          color: var(--text-main);
           cursor: pointer;
-          transition: all 0.2s ease;
         }
         
         .action-btn:hover {
-          border-color: #cbd5e1;
-          background: #f1f5f9;
-          color: #0f172a;
+          border-color: var(--border-strong);
+          background: var(--surface-hover);
         }
 
         /* Animations */
@@ -656,12 +805,10 @@ const Homeadmin = () => {
         .delay-2 { animation-delay: 0.2s; }
         .delay-3 { animation-delay: 0.3s; }
 
-        /* Modern icon base animations */
         .modern-icon {
           transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         }
         
-        /* Dual-tone effect enhancement */
         .modern-icon path[opacity="0.2"] {
           opacity: 0.35 !important;
         }
@@ -671,33 +818,27 @@ const Homeadmin = () => {
           filter: drop-shadow(0 4px 10px rgba(59, 130, 246, 0.5));
         }
 
-        /* Nav Icon Hover animations */
         .nav-btn:hover .modern-icon {
           transform: scale(1.15) rotate(-5deg);
-          filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
         }
         
         .nav-btn.active .modern-icon {
           animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
-          filter: drop-shadow(0 0 8px rgba(37, 99, 235, 0.4));
         }
 
-        /* KPI Icon animations */
         .kpi-card:hover .kpi-svg {
           animation: pulseIcon 1.5s infinite;
           transform: scale(1.15);
-          filter: drop-shadow(0 0 12px currentColor);
         }
 
-        /* Header Icons animations */
         .icon-btn:hover .bell-icon {
           animation: ring 1s ease-in-out infinite;
-          color: #ef4444;
+          color: var(--danger);
         }
 
         .icon-btn:hover .settings-icon {
           animation: spin 3s linear infinite;
-          color: #3b82f6;
+          color: var(--primary);
         }
 
         .btn-primary:hover .modern-icon {
@@ -747,12 +888,12 @@ const Homeadmin = () => {
         @keyframes blink { 0%,100%{opacity:1;} 50%{opacity:0;} }
 
         .animated-logo-bg { 
-          background: linear-gradient(135deg, #e0e7ff 0%, #bfdbfe 100%); 
-          box-shadow: 0 8px 16px rgba(59, 130, 246, 0.25); 
+          background: var(--icon-bg); 
+          border: 1px solid var(--border);
         }
       `}</style>
 
-      <div className="admin-dashboard">
+      <div className="admin-dashboard" data-theme={theme}>
         {/* SIDEBAR */}
         <aside className="glass-sidebar">
           <div className="logo-area" style={{ padding: '24px 20px', display: 'flex', justifyContent: 'flex-start' }}>
@@ -773,19 +914,23 @@ const Homeadmin = () => {
           </nav>
 
           <div className="sidebar-footer">
+            <div className="theme-toggle-sidebar" onClick={toggleTheme}>
+              <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                {theme === "dark" ? <PiMoonDuotone size={18} color="var(--text-main)" /> : <PiSunDuotone size={18} color="var(--text-main)" />}
+                <span style={{ fontWeight: 600, fontSize: 14, color: "var(--text-main)" }}>{theme === "dark" ? "Mode Sombre" : "Mode Clair"}</span>
+              </div>
+              <div className="toggle-switch">
+                <div className="toggle-thumb" />
+              </div>
+            </div>
+
             <button className="btn-primary">
               <PiFileTextDuotone size={20} className="modern-icon" /> New Report
             </button>
-            <div
-              className="footer-link"
-              onClick={() => { }}
-            >
+            <div className="footer-link" onClick={() => { }}>
               <PiQuestionDuotone size={20} className="modern-icon" /> Help Center
             </div>
-            <div
-              className="footer-link logout"
-              onClick={handleLogout}
-            >
+            <div className="footer-link logout" onClick={handleLogout}>
               <PiSignOutDuotone size={20} className="modern-icon" /> Logout
             </div>
           </div>
@@ -821,16 +966,12 @@ const Homeadmin = () => {
             {/* KPI GRID */}
             <div className="kpi-grid">
               {kpis.map((kpi, i) => (
-                <div
-                  key={i}
-                  className={`kpi-card animate-fade-in delay-${i % 4}`}
-                  style={{ "--card-gradient": kpi.gradient }}
-                >
+                <div key={i} className={`kpi-card type-${kpi.type} animate-fade-in delay-${i % 4}`}>
                   <div className="kpi-header">
-                    <div className="kpi-icon" style={{ background: kpi.gradient, color: "white" }}>
+                    <div className="kpi-icon">
                       {kpi.icon}
                     </div>
-                    <div className="kpi-indicator" style={{ background: kpi.bgSoft, color: kpi.color }}>
+                    <div className="kpi-indicator">
                       {kpi.indicator}
                     </div>
                   </div>
@@ -875,10 +1016,7 @@ const Homeadmin = () => {
                         </td>
                         <td className="entity-cell">{activity.entity}</td>
                         <td>
-                          <span
-                            className="status-badge"
-                            style={{ background: activity.statusBg, color: activity.statusColor }}
-                          >
+                          <span className={`status-badge status-${activity.type}`}>
                             {activity.status}
                           </span>
                         </td>
