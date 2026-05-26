@@ -43,7 +43,7 @@ const Homeadmin = () => {
 
   useEffect(() => {
     document.title = "UppCar - Admin Dashboard";
-    
+
     // Listen for system theme changes if no local storage override
     const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
     const handleChange = (e) => {
@@ -958,78 +958,321 @@ const Homeadmin = () => {
 
           {/* DASHBOARD CONTENT */}
           <main className="main-content">
-            <div className="animate-fade-in">
-              <h2 className="page-title">Welcome back, Admin 👋</h2>
-              <p className="page-subtitle">Here is what's happening with UppCar today.</p>
-            </div>
 
-            {/* KPI GRID */}
-            <div className="kpi-grid">
-              {kpis.map((kpi, i) => (
-                <div key={i} className={`kpi-card type-${kpi.type} animate-fade-in delay-${i % 4}`}>
-                  <div className="kpi-header">
-                    <div className="kpi-icon">
-                      {kpi.icon}
+            {/* ═══════════════ OVERVIEW ═══════════════ */}
+            {activeNav === "Overview" && (
+              <div className="page-section animate-fade-in">
+                <div className="page-header-block">
+                  <h2 className="page-title">Welcome back, Admin 👋</h2>
+                  <p className="page-subtitle">Here is what's happening with UppCar today.</p>
+                </div>
+                <div className="kpi-grid">
+                  {kpis.map((kpi, i) => (
+                    <div key={i} className={`kpi-card type-${kpi.type} animate-fade-in delay-${i % 4}`}>
+                      <div className="kpi-header">
+                        <div className="kpi-icon">{kpi.icon}</div>
+                        <div className="kpi-indicator">{kpi.indicator}</div>
+                      </div>
+                      <div>
+                        <p className="kpi-label">{kpi.label}</p>
+                        <p className="kpi-value">{kpi.value}</p>
+                      </div>
                     </div>
-                    <div className="kpi-indicator">
-                      {kpi.indicator}
-                    </div>
+                  ))}
+                </div>
+                <div className="table-container animate-fade-in delay-3">
+                  <div className="table-header">
+                    <h3 className="table-title">Recent Activity</h3>
+                    <button className="view-all-btn" onClick={() => setActiveNav("Reservations")}>View All →</button>
                   </div>
-                  <div>
-                    <p className="kpi-label">{kpi.label}</p>
-                    <p className="kpi-value">{kpi.value}</p>
+                  <div style={{ overflowX: "auto" }}>
+                    <table className="activity-table">
+                      <thead><tr><th>User / Action</th><th>Entity</th><th>Status</th><th>Time</th><th>Action</th></tr></thead>
+                      <tbody>
+                        {activities.map((activity, i) => (
+                          <tr key={i} className="table-row">
+                            <td>
+                              <div className="user-cell">
+                                <div className="user-avatar">{activity.user.split(' ').map(n => n[0]).join('')}</div>
+                                <div>
+                                  <p className="user-name">{activity.user}</p>
+                                  <p className="user-action">{activity.action}</p>
+                                </div>
+                              </div>
+                            </td>
+                            <td className="entity-cell">{activity.entity}</td>
+                            <td><span className={`status-badge status-${activity.type}`}>{activity.status}</span></td>
+                            <td className="time-cell">{activity.time}</td>
+                            <td><button className="action-btn">Review</button></td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
                   </div>
                 </div>
-              ))}
-            </div>
+              </div>
+            )}
 
-            {/* ACTIVITY TABLE */}
-            <div className="table-container animate-fade-in delay-3">
-              <div className="table-header">
-                <h3 className="table-title">Recent Activity</h3>
-                <button className="view-all-btn">View All</button>
+            {/* ═══════════════ USERS ═══════════════ */}
+            {activeNav === "Users" && (
+              <div className="page-section animate-fade-in">
+                <div className="page-header-block">
+                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
+                    <div>
+                      <h2 className="page-title">👤 Gestion des Utilisateurs</h2>
+                      <p className="page-subtitle">Gérez tous les comptes utilisateurs de la plateforme.</p>
+                    </div>
+                    <button className="btn-primary" style={{ marginTop: 4 }}>
+                      <PiUserPlusDuotone size={18} /> Nouvel Utilisateur
+                    </button>
+                  </div>
+                </div>
+                <div className="kpi-grid" style={{ gridTemplateColumns: "repeat(3, 1fr)", marginBottom: 32 }}>
+                  {[
+                    { label: "Total Utilisateurs", value: "1 248", type: "primary", indicator: "↑ 12%" },
+                    { label: "Actifs ce mois", value: "347", type: "success", indicator: "+24 new" },
+                    { label: "Suspendus", value: "5", type: "danger", indicator: "→ stable" },
+                  ].map((k, i) => (
+                    <div key={i} className={`kpi-card type-${k.type}`}>
+                      <div className="kpi-header">
+                        <div className="kpi-icon"><PiUsersDuotone size={26} /></div>
+                        <div className="kpi-indicator">{k.indicator}</div>
+                      </div>
+                      <p className="kpi-label">{k.label}</p>
+                      <p className="kpi-value">{k.value}</p>
+                    </div>
+                  ))}
+                </div>
+                <div className="table-container">
+                  <div className="table-header">
+                    <h3 className="table-title">Liste des Utilisateurs</h3>
+                    <div className="search-bar" style={{ width: 240, padding: "8px 14px" }}>
+                      <PiMagnifyingGlassDuotone size={16} className="search-icon modern-icon" />
+                      <input type="text" placeholder="Rechercher..." className="search-input" style={{ fontSize: 13 }} />
+                    </div>
+                  </div>
+                  <div style={{ overflowX: "auto" }}>
+                    <table className="activity-table">
+                      <thead><tr><th>Utilisateur</th><th>Email</th><th>Rôle</th><th>Statut</th><th>Inscrit le</th><th>Actions</th></tr></thead>
+                      <tbody>
+                        {[
+                          { name: "Alice Martin", email: "alice@mail.com", role: "Client", status: "Actif", date: "12 Jan 2025", type: "success" },
+                          { name: "Bob Dupont", email: "bob@mail.com", role: "Client", status: "Actif", date: "3 Fév 2025", type: "success" },
+                          { name: "Carla Jeune", email: "carla@mail.com", role: "Admin", status: "Actif", date: "19 Mar 2025", type: "primary" },
+                          { name: "David Leroy", email: "david@mail.com", role: "Client", status: "Suspendu", date: "7 Avr 2025", type: "danger" },
+                          { name: "Emma Bernard", email: "emma@mail.com", role: "Client", status: "Inactif", date: "21 Mai 2025", type: "warning" },
+                        ].map((u, i) => (
+                          <tr key={i} className="table-row">
+                            <td><div className="user-cell"><div className="user-avatar">{u.name.split(' ').map(n => n[0]).join('')}</div><p className="user-name" style={{ margin: 0 }}>{u.name}</p></div></td>
+                            <td className="entity-cell">{u.email}</td>
+                            <td><span className={`status-badge status-${u.role === "Admin" ? "primary" : "warning"}`}>{u.role}</span></td>
+                            <td><span className={`status-badge status-${u.type}`}>{u.status}</span></td>
+                            <td className="time-cell">{u.date}</td>
+                            <td style={{ display: "flex", gap: 8, paddingTop: 20, paddingBottom: 20 }}>
+                              <button className="action-btn">Modifier</button>
+                              <button className="action-btn" style={{ borderColor: "var(--danger)", color: "var(--danger)" }}>Suspendre</button>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
               </div>
-              <div style={{ overflowX: "auto" }}>
-                <table className="activity-table">
-                  <thead>
-                    <tr>
-                      <th>User / Action</th>
-                      <th>Entity</th>
-                      <th>Status</th>
-                      <th>Time</th>
-                      <th>Action</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {activities.map((activity, i) => (
-                      <tr key={i} className="table-row">
-                        <td>
-                          <div className="user-cell">
-                            <div className="user-avatar">
-                              {activity.user.split(' ').map(n => n[0]).join('')}
-                            </div>
-                            <div>
-                              <p className="user-name">{activity.user}</p>
-                              <p className="user-action">{activity.action}</p>
-                            </div>
-                          </div>
-                        </td>
-                        <td className="entity-cell">{activity.entity}</td>
-                        <td>
-                          <span className={`status-badge status-${activity.type}`}>
-                            {activity.status}
-                          </span>
-                        </td>
-                        <td className="time-cell">{activity.time}</td>
-                        <td>
-                          <button className="action-btn">Review</button>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
+            )}
+
+            {/* ═══════════════ AGENCIES ═══════════════ */}
+            {activeNav === "Agencies" && (
+              <div className="page-section animate-fade-in">
+                <div className="page-header-block">
+                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
+                    <div>
+                      <h2 className="page-title">🏢 Gestion des Agences</h2>
+                      <p className="page-subtitle">Supervisez toutes les agences partenaires.</p>
+                    </div>
+                    <button className="btn-primary" style={{ marginTop: 4 }}>
+                      <PiBuildingDuotone size={18} /> Nouvelle Agence
+                    </button>
+                  </div>
+                </div>
+                <div className="kpi-grid" style={{ gridTemplateColumns: "repeat(3, 1fr)", marginBottom: 32 }}>
+                  {[
+                    { label: "Total Agences", value: "38", type: "primary", indicator: "+3 ce mois" },
+                    { label: "Vérifiées", value: "31", type: "success", indicator: "81 %" },
+                    { label: "En attente", value: "7", type: "warning", indicator: "→ à vérifier" },
+                  ].map((k, i) => (
+                    <div key={i} className={`kpi-card type-${k.type}`}>
+                      <div className="kpi-header">
+                        <div className="kpi-icon"><PiBuildingsDuotone size={26} /></div>
+                        <div className="kpi-indicator">{k.indicator}</div>
+                      </div>
+                      <p className="kpi-label">{k.label}</p>
+                      <p className="kpi-value">{k.value}</p>
+                    </div>
+                  ))}
+                </div>
+                <div className="table-container">
+                  <div className="table-header">
+                    <h3 className="table-title">Liste des Agences</h3>
+                    <div className="search-bar" style={{ width: 240, padding: "8px 14px" }}>
+                      <PiMagnifyingGlassDuotone size={16} className="search-icon modern-icon" />
+                      <input type="text" placeholder="Rechercher..." className="search-input" style={{ fontSize: 13 }} />
+                    </div>
+                  </div>
+                  <div style={{ overflowX: "auto" }}>
+                    <table className="activity-table">
+                      <thead><tr><th>Agence</th><th>Ville</th><th>Véhicules</th><th>Statut</th><th>Membre depuis</th><th>Actions</th></tr></thead>
+                      <tbody>
+                        {[
+                          { name: "AutoLux Alger", city: "Alger", cars: 24, status: "Vérifiée", date: "Jan 2024", type: "success" },
+                          { name: "DriveOran", city: "Oran", cars: 15, status: "Vérifiée", date: "Mar 2024", type: "success" },
+                          { name: "SpeedRent", city: "Constantine", cars: 9, status: "En attente", date: "Fév 2025", type: "warning" },
+                          { name: "EasyDrive", city: "Annaba", cars: 6, status: "Suspendue", date: "Nov 2024", type: "danger" },
+                          { name: "CarGo Tlemcen", city: "Tlemcen", cars: 11, status: "Vérifiée", date: "Avr 2024", type: "success" },
+                        ].map((a, i) => (
+                          <tr key={i} className="table-row">
+                            <td><div className="user-cell"><div className="user-avatar" style={{ borderRadius: 10 }}><PiBuildingDuotone size={16} /></div><p className="user-name" style={{ margin: 0 }}>{a.name}</p></div></td>
+                            <td className="entity-cell">{a.city}</td>
+                            <td className="entity-cell">{a.cars} véhicules</td>
+                            <td><span className={`status-badge status-${a.type}`}>{a.status}</span></td>
+                            <td className="time-cell">{a.date}</td>
+                            <td style={{ display: "flex", gap: 8, paddingTop: 20, paddingBottom: 20 }}>
+                              <button className="action-btn">Voir</button>
+                              <button className="action-btn">Valider</button>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
               </div>
-            </div>
+            )}
+
+            {/* ═══════════════ RESERVATIONS ═══════════════ */}
+            {activeNav === "Reservations" && (
+              <div className="page-section animate-fade-in">
+                <div className="page-header-block">
+                  <h2 className="page-title">📅 Gestion des Réservations</h2>
+                  <p className="page-subtitle">Suivez toutes les réservations en temps réel.</p>
+                </div>
+                <div className="kpi-grid" style={{ gridTemplateColumns: "repeat(4, 1fr)", marginBottom: 32 }}>
+                  {[
+                    { label: "Total", value: "1 893", type: "primary", indicator: "ce mois" },
+                    { label: "Confirmées", value: "1 412", type: "success", indicator: "74 %" },
+                    { label: "En attente", value: "312", type: "warning", indicator: "16 %" },
+                    { label: "Annulées", value: "169", type: "danger", indicator: "8 %" },
+                  ].map((k, i) => (
+                    <div key={i} className={`kpi-card type-${k.type}`}>
+                      <div className="kpi-header">
+                        <div className="kpi-icon"><PiCalendarCheckDuotone size={26} /></div>
+                        <div className="kpi-indicator">{k.indicator}</div>
+                      </div>
+                      <p className="kpi-label">{k.label}</p>
+                      <p className="kpi-value">{k.value}</p>
+                    </div>
+                  ))}
+                </div>
+                <div className="table-container">
+                  <div className="table-header">
+                    <h3 className="table-title">Liste des Réservations</h3>
+                    <div style={{ display: "flex", gap: 12 }}>
+                      <select className="search-input" style={{ padding: "8px 14px", borderRadius: 10, border: "1px solid var(--border)", background: "var(--surface-solid)", color: "var(--text-main)", fontSize: 13, fontFamily: "inherit" }}>
+                        <option>Tous les statuts</option>
+                        <option>Confirmée</option>
+                        <option>En attente</option>
+                        <option>Annulée</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div style={{ overflowX: "auto" }}>
+                    <table className="activity-table">
+                      <thead><tr><th>Réservation</th><th>Client</th><th>Véhicule</th><th>Agence</th><th>Dates</th><th>Statut</th><th>Actions</th></tr></thead>
+                      <tbody>
+                        {[
+                          { id: "#R-1045", client: "Alice Martin", car: "BMW X5", agency: "AutoLux Alger", dates: "20–25 Mai", type: "success", status: "Confirmée" },
+                          { id: "#R-1046", client: "Bob Dupont", car: "Renault Clio", agency: "DriveOran", dates: "22–24 Mai", type: "warning", status: "En attente" },
+                          { id: "#R-1047", client: "Carla Jeune", car: "Peugeot 308", agency: "SpeedRent", dates: "23–28 Mai", type: "success", status: "Confirmée" },
+                          { id: "#R-1048", client: "David Leroy", car: "Toyota Yaris", agency: "EasyDrive", dates: "25–27 Mai", type: "danger", status: "Annulée" },
+                          { id: "#R-1049", client: "Emma Bernard", car: "Dacia Logan", agency: "CarGo Tlemcen", dates: "26–30 Mai", type: "warning", status: "En attente" },
+                        ].map((r, i) => (
+                          <tr key={i} className="table-row">
+                            <td><p className="user-name" style={{ margin: 0, color: "var(--primary)" }}>{r.id}</p></td>
+                            <td><div className="user-cell"><div className="user-avatar">{r.client.split(' ').map(n => n[0]).join('')}</div><p style={{ margin: 0, fontWeight: 600, color: "var(--text-main)" }}>{r.client}</p></div></td>
+                            <td className="entity-cell">{r.car}</td>
+                            <td className="entity-cell">{r.agency}</td>
+                            <td className="time-cell">{r.dates}</td>
+                            <td><span className={`status-badge status-${r.type}`}>{r.status}</span></td>
+                            <td style={{ display: "flex", gap: 8, paddingTop: 20, paddingBottom: 20 }}>
+                              <button className="action-btn">Détails</button>
+                              <button className="action-btn" style={{ color: "var(--danger)", borderColor: "var(--danger)" }}>Annuler</button>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* ═══════════════ FINANCIALS ═══════════════ */}
+            {activeNav === "Financials" && (
+              <div className="page-section animate-fade-in">
+                <div className="page-header-block">
+                  <h2 className="page-title">💰 Financials & Revenus</h2>
+                  <p className="page-subtitle">Vue d'ensemble financière de la plateforme UppCar.</p>
+                </div>
+                <div className="kpi-grid" style={{ marginBottom: 32 }}>
+                  {[
+                    { label: "Revenu Total", value: "$124 500", type: "success", indicator: "+18% vs mois dernier" },
+                    { label: "Ce Mois-ci", value: "$12 450", type: "primary", indicator: "+15%" },
+                    { label: "Commission Agences", value: "$3 735", type: "warning", indicator: "30 % du revenu" },
+                    { label: "Revenus en attente", value: "$2 100", type: "danger", indicator: "→ à confirmer" },
+                  ].map((k, i) => (
+                    <div key={i} className={`kpi-card type-${k.type}`}>
+                      <div className="kpi-header">
+                        <div className="kpi-icon"><PiCurrencyDollarDuotone size={26} /></div>
+                        <div className="kpi-indicator">{k.indicator}</div>
+                      </div>
+                      <p className="kpi-label">{k.label}</p>
+                      <p className="kpi-value">{k.value}</p>
+                    </div>
+                  ))}
+                </div>
+                <div className="table-container">
+                  <div className="table-header">
+                    <h3 className="table-title">Transactions Récentes</h3>
+                    <button className="view-all-btn">Exporter CSV →</button>
+                  </div>
+                  <div style={{ overflowX: "auto" }}>
+                    <table className="activity-table">
+                      <thead><tr><th>Transaction</th><th>Client</th><th>Agence</th><th>Montant</th><th>Commission</th><th>Statut</th><th>Date</th></tr></thead>
+                      <tbody>
+                        {[
+                          { id: "#T-8821", client: "Alice Martin", agency: "AutoLux", amount: "$480", commission: "$144", status: "Payé", type: "success", date: "20 Mai 2025" },
+                          { id: "#T-8822", client: "Bob Dupont", agency: "DriveOran", amount: "$210", commission: "$63", status: "En attente", type: "warning", date: "22 Mai 2025" },
+                          { id: "#T-8823", client: "Carla Jeune", agency: "SpeedRent", amount: "$650", commission: "$195", status: "Payé", type: "success", date: "23 Mai 2025" },
+                          { id: "#T-8824", client: "David Leroy", agency: "EasyDrive", amount: "$320", commission: "$96", status: "Remboursé", type: "danger", date: "25 Mai 2025" },
+                          { id: "#T-8825", client: "Emma Bernard", agency: "CarGo", amount: "$175", commission: "$52", status: "En attente", type: "warning", date: "26 Mai 2025" },
+                        ].map((t, i) => (
+                          <tr key={i} className="table-row">
+                            <td><p className="user-name" style={{ margin: 0, color: "var(--primary)" }}>{t.id}</p></td>
+                            <td><div className="user-cell"><div className="user-avatar">{t.client.split(' ').map(n => n[0]).join('')}</div><p style={{ margin: 0, fontWeight: 600, color: "var(--text-main)" }}>{t.client}</p></div></td>
+                            <td className="entity-cell">{t.agency}</td>
+                            <td><p style={{ margin: 0, fontWeight: 700, color: "var(--success)", fontSize: 15 }}>{t.amount}</p></td>
+                            <td className="entity-cell">{t.commission}</td>
+                            <td><span className={`status-badge status-${t.type}`}>{t.status}</span></td>
+                            <td className="time-cell">{t.date}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            )}
+
           </main>
         </div>
       </div>
