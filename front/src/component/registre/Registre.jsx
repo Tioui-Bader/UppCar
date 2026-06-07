@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from "react";
+﻿import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import bgImageDark from "../../asset/image.png";
-import bgImageLight from "../../asset/image123.png";
+import bgImageDark from "../../asset/hero_pg.png";
+import bgImageLight from "../../asset/hero_pg.png";
 import { useGoogleLogin } from '@react-oauth/google';
 import { AR } from "./ar.js";
 import { FR } from "./fr.js";
@@ -58,6 +58,7 @@ function LanguageIcon() {
 
 export default function RegisterUser() {
     const navigate = useNavigate();
+    const cardRef = React.useRef(null);
     const isDarkMode = true;
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
@@ -88,6 +89,22 @@ export default function RegisterUser() {
             current = current[key];
         }
         return current;
+    };
+
+    const handleTilt = (e) => {
+        if (!cardRef.current || window.innerWidth < 768) return;
+        const rect = cardRef.current.getBoundingClientRect();
+        const x = e.clientX - rect.left - rect.width / 2;
+        const y = e.clientY - rect.top - rect.height / 2;
+        cardRef.current.style.transform = `rotateX(${-y / 20}deg) rotateY(${x / 20}deg)`;
+        cardRef.current.style.setProperty('--mx', `${((e.clientX - rect.left) / rect.width) * 100}%`);
+        cardRef.current.style.setProperty('--my', `${((e.clientY - rect.top) / rect.height) * 100}%`);
+    };
+
+    const resetTilt = () => {
+        if (cardRef.current) {
+            cardRef.current.style.transform = 'rotateX(0deg) rotateY(0deg)';
+        }
     };
 
     useEffect(() => {
@@ -203,8 +220,7 @@ export default function RegisterUser() {
             fontFamily: "'DM Sans', sans-serif",
             position: isMobile ? "relative" : "fixed",
             top: 0, left: 0,
-            overflowY: "auto",
-            overflowX: "hidden"
+            overflow: "hidden"
         }}>
             <div style={{
                 position: "absolute", inset: 0,
@@ -446,261 +462,334 @@ export default function RegisterUser() {
             {/* FORM */}
             <div style={{ flex: 1, display: "flex", alignItems: "center", justifyContent: "center", width: "100%", padding: 20, position: "relative", zIndex: 10 }}>
                 <style>{`
+                    html, body {
+                        background-color: var(--bg-color) !important;
+                        overscroll-behavior: none !important;
+                        margin: 0;
+                        padding: 0;
+                    }
                     :root {
-                      --bg-color: #f0fdf4; --text-main: #064e3b; --text-muted: #166534;
-                      --nav-bg: rgba(255,255,255,0.6); --nav-border: rgba(6,78,59,0.1);
-                      --card-bg: rgba(255,255,255,0.8); --card-border: rgba(6,78,59,0.1);
-                      --accent-gradient: linear-gradient(135deg,#047857 0%,#10b981 50%,#0ea5e9 100%);
-                      --accent-color: #10b981; --btn-text: #ffffff;
+                      --bg-color: #f0fdf4;
+                      --text-main: #064e3b;
+                      --text-muted: #166534;
+                      --nav-bg: rgba(255, 255, 255, 0.6);
+                      --nav-border: rgba(6, 78, 59, 0.1);
+                      --card-bg: rgba(255, 255, 255, 0.8);
+                      --card-border: rgba(6, 78, 59, 0.1);
+                      --accent-gradient: linear-gradient(135deg, #047857 0%, #10b981 50%, #0ea5e9 100%);
+                      --accent-color: #10b981;
+                      --btn-text: #ffffff;
+                      --text-miin: #064e06ff;
+                      --bg-coloor: #ffffffff;
                     }
                     [data-theme='dark'] {
-                      --bg-color: #060912; --text-main: #e6edf3; --text-muted: #9ca3af;
-                      --nav-bg: rgba(10,14,26,0.7); --nav-border: rgba(255,255,255,0.06);
-                      --card-bg: rgba(255,255,255,0.03); --card-border: rgba(255,255,255,0.07);
-                      --accent-gradient: linear-gradient(135deg,#3b82f6 0%,#8b5cf6 50%,#ec4899 100%);
-                      --accent-color: #60a5fa; --btn-text: #060912;
+                      --bg-color: #060912;
+                      --text-main: #e6edf3;
+                      --text-muted: #9ca3af;
+                      --nav-bg: rgba(10, 14, 26, 0.7);
+                      --nav-border: rgba(255, 255, 255, 0.06);
+                      --card-bg: rgba(255, 255, 255, 0.03);
+                      --card-border: rgba(255, 255, 255, 0.07);
+                      --accent-gradient: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 50%, #ec4899 100%);
+                      --accent-color: #60a5fa;
+                      --btn-text: #060912;
+                      --text-miin: #072d75ff;
+                      --bg-coloor: #060912;
                     }
-                    .nav-wrapper { position: relative; z-index: 100; margin: 9px 20px; transition: all 0.3s ease; }
-                    .nav-glass { display:flex; align-items:center; justify-content:space-between; padding:16px 32px; background:var(--nav-bg); backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px); border:1px solid var(--nav-border); border-radius:24px; box-shadow:0 8px 32px rgba(0,0,0,0.05); animation:fadeUp 0.6s ease-out; }
-                    .nav-link { position:relative; color:var(--text-muted); text-decoration:none; font-family:'Syne',sans-serif; font-size:14px; font-weight:700; padding:8px 16px; border-radius:12px; transition:all 0.3s cubic-bezier(0.4,0,0.2,1); overflow:hidden; }
+                   .nav-wrapper { position: relative; z-index: 100; margin: 9px 20px; transition: all 0.3s ease; }
+                    .nav-glass { display: flex; align-items: center; justify-content: space-between; padding: 16px 32px;  -webkit-backdrop-filter: blur(20px); border: 1px solid var(--nav-border); border-radius: 24px; box-shadow: 0 8px 32px rgba(0,0,0,0.05); animation: fadeUp 0.6s ease-out; }
+                    .nav-link { position: relative; color: var(--text-muted); text-decoration: none; font-family: 'Syne', sans-serif; font-size: 14px; font-weight: 700; padding: 8px 16px; border-radius: 12px; transition: all 0.3s cubic-bezier(0.4,0,0.2,1); overflow: hidden; }
                     .nav-link::before { content:''; position:absolute; top:0; left:0; width:100%; height:100%; background:var(--text-main); opacity:0; z-index:-1; transition:opacity 0.3s ease; border-radius:12px; }
                     .nav-link:hover { color:var(--bg-color); transform:translateY(-2px); }
                     .nav-link:hover::before { opacity:1; }
-                    .icon-btn { background:rgba(255,255,255,0.05); border:1px solid var(--nav-border); color:var(--text-main); cursor:pointer; padding:10px; border-radius:50%; display:flex; align-items:center; justify-content:center; transition:all 0.3s cubic-bezier(0.4,0,0.2,1); position:relative; left:10px; }
-                    .icon-btn:hover { background:var(--text-main); color:var(--bg-color); transform:scale(1.1) rotate(5deg); }
-                    .primary-btnE { color:#ffffff; border:none; padding:10.5px 30px; border-radius:12px; font-family:'Syne',sans-serif; font-size:15.3px; font-weight:700; cursor:pointer; transition:all 0.3s cubic-bezier(0.4,0,0.2,1); display:flex; align-items:center; justify-content:center; gap:8px; background:var(--text-main); }
-                    .primary-btnE:hover { background:var(--accent-gradient); color:white; transform:translateY(-2px); }
+                    .icon-btn { background:rgba(255,255,255,0.05); border:1px solid var(--nav-border); color:var(--text-main); cursor:pointer; padding:10px; border-radius:50%; display:flex; align-items:center; justify-content:center; transition:all 0.3s cubic-bezier(0.4,0,0.2,1);position:relative; }
+                    .icon-btn:hover { background:var(--text-main); color:var(--bg-color); transform:scale(1.1) rotate(5deg); box-shadow:0 4px 12px rgba(0,0,0,0.1); }
+                    .primary-btnDE { position:relative; background:linear-gradient(135deg,#1e3a8a 0%,#2563eb 50%,#0ea5e9 100%); background-size:200% 200%; color:#ffffff; border:none; border-radius:16px; font-family:'Syne',sans-serif; font-weight:800; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:10px; letter-spacing:0.3px; overflow:hidden; transition:transform 0.3s cubic-bezier(0.34,1.56,0.64,1); animation:btnGradientMove 4s ease infinite; box-shadow:0 0 0 1px rgba(37,99,235,0.3),0 4px 15px rgba(37,99,235,0.3),0 0 40px rgba(14,165,233,0.15); font-family: 'DM Sans', 'Syne', sans-serif; }
+                    .primary-btnDE::before { content:''; position:absolute; top:0; left:-100%; width:60%; height:100%; background:linear-gradient(120deg,transparent 0%,rgba(255,255,255,0.25) 50%,transparent 100%); animation:shineSweep 3s ease-in-out infinite; pointer-events:none; }
+                    .primary-btnDE::after { content:''; position:absolute; inset:-3px; border-radius:19px; background:var(--accent-gradient); background-size:300% 300%; z-index:-1; opacity:0.6; filter:blur(6px); animation:btnGradientMove 4s ease infinite; }
+                    .primary-btnDE:hover { transform:translateY(-1px) scale(1.01); box-shadow:0 0 0 1px rgba(14,165,233,0.5),0 8px 30px rgba(37,99,235,0.5),0 0 60px rgba(14,165,233,0.3); }
+                    .secondary-btn { background:transparent; color:var(--text-main); border:1px solid var(--card-border); padding:14px 28px; border-radius:16px; font-family:'Syne',sans-serif; font-size:16px; font-weight:700; cursor:pointer; transition:all 0.3s cubic-bezier(0.4,0,0.2,1); display:flex; align-items:center; justify-content:center; gap:10px; }
+                    .secondary-btn:hover { background:var(--text-main); color:var(--bg-color); transform:translateY(-3px) scale(1.02); box-shadow:0 12px 32px rgba(0,0,0,0.15); border-color:var(--text-main); }
+                    .primary-btnE { color:#ffffff; border:none; padding:10.5px 30px; border-radius:12px; font-family:'Syne',sans-serif; font-size:15.3px; font-weight:700; cursor:pointer; transition:all 0.3s cubic-bezier(0.4,0,0.2,1); display:flex; align-items:center; justify-content:center; gap:8px; backdrop-filter:blur(4px); background:var(--text-main); }
+                    .primary-btnE:hover { background:var(--accent-gradient); color:white; transform:translateY(-2px); box-shadow:0 4px 12px rgba(0,0,0,0.1); border:none; }
                     [data-theme='dark'] .primary-btnE { background:linear-gradient(155deg,#1e3a8a,#1d4ed8); box-shadow:0px 0px 15px #1e3a8a; }
-                    .btn-register:hover { transform:translateY(-3px); box-shadow:0 12px 30px ${isDarkMode ? "rgba(59,130,246,0.3)" : "rgba(16,185,129,0.3)"}; }
-                    @keyframes fadeUp { from{opacity:0;transform:translateY(20px);} to{opacity:1;transform:translateY(0);} }
-                    @keyframes spin { to{transform:rotate(360deg);} }
-                    @keyframes checkPop { 0%{transform:scale(0);opacity:0;} 50%{transform:scale(1.2);} 100%{transform:scale(1);opacity:1;} }
+                    @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+                    @keyframes spin { to { transform: rotate(360deg); } }
+                    @keyframes checkPop { 0% { transform: scale(0); opacity: 0; } 50% { transform: scale(1.2); } 100% { transform: scale(1); opacity: 1; } }
                     @keyframes spinWheel { 100%{transform:rotate(360deg);} }
                     @keyframes driveBumps { 0%,100%{transform:translateY(0);} 50%{transform:translateY(-1.5px);} }
                     @keyframes blink { 0%,100%{opacity:1;} 50%{opacity:0;} }
                     @keyframes btnGradientMove { 0%{background-position:0% 50%;} 50%{background-position:100% 50%;} 100%{background-position:0% 50%;} }
                     @keyframes shineSweep { 0%{left:-100%;opacity:0;} 20%{opacity:1;} 60%{left:150%;opacity:0;} 100%{left:150%;opacity:0;} }
-                    @keyframes pulse { 0%,100%{opacity:1;} 50%{opacity:0.5;} }
-                    @keyframes shake { 0%,100%{transform:translateX(0);} 20%,60%{transform:translateX(-6px);} 40%,80%{transform:translateX(6px);} }
-                    .shake { animation: shake 0.4s ease; }
+                    @keyframes glowPassLight {
+                      0%, 100% { box-shadow: 0 0 8px 2px rgba(5,150,105,0.15), 0 0 24px 4px rgba(5,150,105,0.08); }
+                      50% { box-shadow: 0 0 16px 4px rgba(5,150,105,0.3), 0 0 40px 8px rgba(5,150,105,0.15); }
+                    }
+                    .card-perspective {
+                        perspective: 2000px;
+                        width: 100%;
+                        display: flex;
+                        justify-content: center;
+                        position: relative;
+                        z-index: 10;
+                    }
+                    .card-glow {
+                      position: absolute; inset: 0;
+                      background: radial-gradient(circle at var(--mx, 50%) var(--my, 50%), rgba(96, 165, 250, 0.08) 0%, rgba(59, 130, 246, 0.03) 50%, transparent 80%);
+                      pointer-events: none;
+                      z-index: 1;
+                    }
+                    .login-card-3d {
+                        transform-style: preserve-3d;
+                        transition: transform 0.1s ease-out;
+                    }
+                    .inp-focus { border-color: ${isDarkMode ? "rgba(96,165,250,0.6)" : "rgba(16,185,129,0.5)"} !important; box-shadow: 0 0 0 3px ${isDarkMode ? "rgba(96,165,250,0.15)" : "rgba(16,185,129,0.1)"}; background: ${isDarkMode ? "rgba(96,165,250,0.04)" : "rgba(16,185,129,0.04)"} !important; }
+                    .sv-social:hover { transform: translateY(-3px); background: ${isDarkMode ? "rgba(255,255,255,0.08)" : "rgba(0,0,0,0.05)"} !important; }
+                    .btn-register:hover { transform: translateY(-3px); box-shadow: 0 12px 30px ${isDarkMode ? "rgba(59,130,246,0.3)" : "rgba(16,185,129,0.3)"}; }
                 `}</style>
 
-                <div style={{
-                    width: "100%", maxWidth: 440,
-                    backdropFilter: "blur(32px)", WebkitBackdropFilter: "blur(32px)",
-                    border: `1px solid ${isDarkMode ? "rgba(255,255,255,0.08)" : "rgba(6,78,59,0.1)"}`,
-                    borderRadius: 32, padding: "35px 40px",
-                    boxShadow: isDarkMode ? "0 24px 60px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.1)" : "0 24px 60px rgba(0,0,0,0.08), inset 0 1px 0 rgba(255,255,255,0.5)",
-                    animation: "fadeUp 0.6s cubic-bezier(0.16,1,0.3,1)",
-                    position: "relative",
-                    left: selectedLang === "AR" ? "20px" : "-20px"
-
-
-                }}>
-                    {done ? (
-                        <div style={{ display: "flex", flexDirection: "column", alignItems: "center", textAlign: "center", gap: 16 }}>
-                            <div style={{ width: 72, height: 72, borderRadius: "50%", background: isDarkMode ? "linear-gradient(135deg,#2563eb,#60a5fa)" : "linear-gradient(135deg,#059669,#10b981)", display: "flex", alignItems: "center", justifyContent: "center", animation: "checkPop 0.5s cubic-bezier(0.34,1.56,0.64,1)", boxShadow: isDarkMode ? "0 8px 30px rgba(59,130,246,0.4)" : "0 8px 30px rgba(16,185,129,0.4)" }}>
-                                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12" /></svg>
+                <div className="card-perspective">
+                    <div
+                        ref={cardRef}
+                        onMouseMove={handleTilt}
+                        onMouseLeave={resetTilt}
+                        className="login-card-3d"
+                        style={{
+                            width: "100%", maxWidth: 440,
+                            backdropFilter: "blur(32px)", WebkitBackdropFilter: "blur(32px)",
+                            border: `1px solid ${isDarkMode ? "rgba(255,255,255,0.08)" : "rgba(6,78,59,0.1)"}`,
+                            borderRadius: 32, padding: "35px 40px",
+                            boxShadow: isDarkMode ? "0 24px 60px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.1)" : "0 24px 60px rgba(0,0,0,0.08), inset 0 1px 0 rgba(255,255,255,0.5)",
+                            animation: "fadeUp 0.6s cubic-bezier(0.16, 1, 0.3, 1)",
+                            position: "relative",
+                            left: selectedLang === "AR" ? "20px" : "-20px",
+                            overflow: "hidden"
+                        }}
+                    >
+                        <div className="card-glow" />
+                        {done ? (
+                            <div style={{ display: "flex", flexDirection: "column", alignItems: "center", textAlign: "center", gap: 16 }}>
+                                <div style={{ width: 72, height: 72, borderRadius: "50%", background: isDarkMode ? "linear-gradient(135deg,#2563eb,#60a5fa)" : "linear-gradient(135deg,#059669,#10b981)", display: "flex", alignItems: "center", justifyContent: "center", animation: "checkPop 0.5s cubic-bezier(0.34,1.56,0.64,1)", boxShadow: isDarkMode ? "0 8px 30px rgba(59,130,246,0.4)" : "0 8px 30px rgba(16,185,129,0.4)" }}>
+                                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12" /></svg>
+                                </div>
+                                <h2 style={{ fontFamily: "'Syne',sans-serif", fontSize: 26, fontWeight: 900, color: isDarkMode ? "#e6edf3" : "#064e3b" }}>{t("registre.successTitle", "Compte créé !")}</h2>
+                                <p style={{ color: isDarkMode ? "rgba(255,255,255,0.6)" : "rgba(0,0,0,0.6)", fontSize: 15 }}>{t("registre.successText", "Votre compte a été créé avec succès. Redirection en cours…")}</p>
                             </div>
-                            <h2 style={{ fontFamily: "'Syne',sans-serif", fontSize: 26, fontWeight: 900, color: isDarkMode ? "#e6edf3" : "#064e3b" }}>{t("registre.successTitle", "Compte créé !")}</h2>
-                            <p style={{ color: isDarkMode ? "rgba(255,255,255,0.6)" : "rgba(0,0,0,0.6)", fontSize: 15 }}>{t("registre.successText", "Votre compte a été créé avec succès. Redirection en cours…")}</p>
-                        </div>
-                    ) : (
-                        <>
-                            {/* Badge */}
-                            <div style={{ display: "inline-flex", alignItems: "center", gap: 8, background: isDarkMode ? "rgba(96,165,250,0.1)" : "rgba(16,185,129,0.1)", color: isDarkMode ? "#60a5fa" : "#10b981", border: `1px solid ${isDarkMode ? "rgba(96,165,250,0.2)" : "rgba(16,185,129,0.2)"}`, borderRadius: 30, padding: "6px 16px", marginBottom: 32, fontSize: 11, fontWeight: 800, letterSpacing: "0.15em", position: "relative", left: selectedLang === "AR" ? "auto" : (isMobile ? "79px" : "130px"), right: selectedLang === "AR" ? (isMobile ? "80px" : "155px") : "auto", top: 7 }}>
-                                <span style={{ width: 6.5, height: 6.5, borderRadius: "50%", background: isDarkMode ? "#60a5fa" : "#10b981", boxShadow: `0 0 8px ${isDarkMode ? "#60a5fa" : "#10b981"}` }} /> {t("registre.userSpace", "Espace Utilisateur")}
-                            </div>
-
-                            {/* Title */}
-                            <h2 style={{
-                                fontFamily: "'Syne',sans-serif", fontSize: 32, fontWeight: 900,
-                                letterSpacing: "-1px", position: "relative", bottom: 22, textAlign: "center",
-                                ...(isDarkMode ? {
-                                    background: "linear-gradient(90deg, #e6edf3 0%, #478de2ff 50%, #c9e2f8ff 100%)",
-                                    backgroundSize: "200% auto", animation: "btnGradientMove 4s linear infinite",
-                                    WebkitBackgroundClip: "text", backgroundClip: "text",
-                                    WebkitTextFillColor: "transparent", color: "transparent", width: "100%",
-                                } : { color: "#10b981" })
-                            }}>
-                                {t("registre.title", "Create your Account")}
-                            </h2>
-
-                            <p style={{ color: isDarkMode ? "#9ca3af" : "#166534", fontSize: 19, lineHeight: 1.5, position: "relative", bottom: 36, textAlign: "center" }}>
-                                {t("registre.subtitle", "Join UppCar today and enjoy our services.")}
-                            </p>
-
-                            {/* Google */}
-                            <div style={{ marginBottom: 8, position: "relative", bottom: 26 }}>
-                                <button onClick={() => loginWithGoogle()} style={{
-                                    width: "100%", height: 57, borderRadius: 14, border: "none", cursor: "pointer",
-                                    display: "flex", alignItems: "center", justifyContent: "center", gap: 10,
-                                    fontFamily: "'DM Sans',sans-serif", fontSize: 16, fontWeight: 700,
-                                    position: "relative", overflow: "hidden",
-                                    background: isDarkMode ? "linear-gradient(135deg,rgba(66,133,244,0.15),rgba(52,168,83,0.1),rgba(251,188,5,0.1),rgba(234,67,53,0.1))" : "linear-gradient(135deg,rgba(66,133,244,0.08),rgba(52,168,83,0.08),rgba(251,188,5,0.08),rgba(234,67,53,0.08))",
-                                    backgroundSize: "300% 300%", animation: "btnGradientMove 4s ease infinite",
-                                    color: isDarkMode ? "#fff" : "#1a1a1a",
-                                    boxShadow: isDarkMode ? "0 0 0 1px rgba(66,133,244,0.3),0 0 20px rgba(66,133,244,0.15)" : "0 0 0 1px rgba(66,133,244,0.2),0 4px 20px rgba(66,133,244,0.12)",
-                                    transition: "all 0.3s cubic-bezier(0.16,1,0.3,1)", backdropFilter: "blur(8px)",
-                                }}
-                                    onMouseEnter={e => { e.currentTarget.style.transform = "translateY(-2px) scale(1.01)"; e.currentTarget.style.boxShadow = isDarkMode ? "0 0 0 1px rgba(66,133,244,0.5),0 8px 30px rgba(66,133,244,0.3)" : "0 0 0 1px rgba(66,133,244,0.3),0 8px 30px rgba(66,133,244,0.2)"; }}
-                                    onMouseLeave={e => { e.currentTarget.style.transform = "translateY(0) scale(1)"; e.currentTarget.style.boxShadow = isDarkMode ? "0 0 0 1px rgba(66,133,244,0.3),0 0 20px rgba(66,133,244,0.15)" : "0 0 0 1px rgba(66,133,244,0.2),0 4px 20px rgba(66,133,244,0.12)"; }}
-                                >
-                                    <div style={{ position: "absolute", top: 0, left: "-100%", width: "60%", height: "100%", background: "linear-gradient(120deg,transparent,rgba(255,255,255,0.15),transparent)", animation: "shineSweep 3s ease-in-out infinite", pointerEvents: "none" }} />
-                                    <svg width="22" height="22" viewBox="0 0 24 24">
-                                        <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4" />
-                                        <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853" />
-                                        <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05" />
-                                        <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335" />
-                                    </svg>
-                                    {t("registre.googleBtn", "Sign up with Google")}
-                                </button>
-                            </div>
-
-                            {/* Divider */}
-                            <div style={{ display: "flex", alignItems: "center", gap: 14, margin: "20px 0 16px", position: "relative", bottom: 26 }}>
-                                <div style={{ flex: 1, height: 1, background: isDarkMode ? "rgba(255,255,255,0.1)" : "rgba(0,0,0,0.1)" }} />
-                                <span style={{ fontSize: 11, color: isDarkMode ? "rgba(255,255,255,0.4)" : "rgba(0,0,0,0.4)", fontWeight: 800, textTransform: "uppercase", letterSpacing: "0.1em" }}>{t("registre.orEmail", "or with email")}</span>
-                                <div style={{ flex: 1, height: 1, background: isDarkMode ? "rgba(255,255,255,0.1)" : "rgba(0,0,0,0.1)" }} />
-                            </div>
-
-                            <form onSubmit={handleSubmit}>
-
-                                {/* EMAIL */}
-                                <div style={{ marginBottom: 16, position: "relative", bottom: 22 }}>
-                                    <label style={{ display: "block", fontSize: 12, fontWeight: 800, letterSpacing: "0.1em", textTransform: "uppercase", marginBottom: 8, transition: "color 0.3s", color: focused === "email" ? (isDarkMode ? "#60a5fa" : "#10b981") : (isDarkMode ? "#9ca3af" : "#166534") }}>{t("registre.emailLabel", "E-mail address")}</label>
-                                    <div style={inputWrapper("email")}
-                                        onMouseEnter={e => { if (focused !== "email") { e.currentTarget.style.borderColor = isDarkMode ? "rgba(96,165,250,0.4)" : "rgba(16,185,129,0.5)"; e.currentTarget.style.transform = "translateY(-1px)"; } }}
-                                        onMouseLeave={e => { if (focused !== "email") { e.currentTarget.style.borderColor = isDarkMode ? "rgba(255,255,255,0.1)" : "rgba(16,185,129,0.25)"; e.currentTarget.style.transform = "translateY(0)"; } }}
-                                    >
-                                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke={focused === "email" ? (isDarkMode ? "#60a5fa" : "#10b981") : (isDarkMode ? "rgba(255,255,255,0.3)" : "rgba(16,185,129,0.5)")} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ transition: "stroke 0.3s", flexShrink: 0 }}>
-                                            <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" /><polyline points="22,6 12,13 2,6" />
-                                        </svg>
-                                        <input type="email" placeholder={t("registre.emailPlaceholder", "Your Email")} value={email} onChange={e => setEmail(e.target.value)} onFocus={() => setFocused("email")} onBlur={() => setFocused("")} style={{ width: "100%", background: "transparent", border: "none", outline: "none", color: isDarkMode ? "#e6edf3" : "#064e3b", fontFamily: "'DM Sans',sans-serif", fontSize: 18, fontWeight: 500 }} />
-                                        {email && (
-                                            <div style={{ width: 20, height: 20, borderRadius: "50%", flexShrink: 0, background: isDarkMode ? "rgba(96,165,250,0.15)" : "rgba(16,185,129,0.15)", display: "flex", alignItems: "center", justifyContent: "center", animation: "checkPop 0.3s cubic-bezier(0.34,1.56,0.64,1)" }}>
-                                                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke={isDarkMode ? "#60a5fa" : "#10b981"} strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12" /></svg>
-                                            </div>
-                                        )}
-                                    </div>
+                        ) : (
+                            <>
+                                {/* Badge */}
+                                <div style={{ display: "inline-flex", alignItems: "center", gap: 8, background: isDarkMode ? "rgba(96,165,250,0.1)" : "rgba(16,185,129,0.1)", color: isDarkMode ? "#60a5fa" : "#10b981", border: `1px solid ${isDarkMode ? "rgba(96,165,250,0.2)" : "rgba(16,185,129,0.2)"}`, borderRadius: 30, padding: "6px 16px", marginBottom: 32, fontSize: 11, fontWeight: 800, letterSpacing: "0.15em", position: "relative", left: selectedLang === "AR" ? "auto" : (isMobile ? "79px" : "130px"), right: selectedLang === "AR" ? (isMobile ? "80px" : "155px") : "auto", top: 7 }}>
+                                    <span style={{ width: 6.5, height: 6.5, borderRadius: "50%", background: isDarkMode ? "#60a5fa" : "#10b981", boxShadow: `0 0 8px ${isDarkMode ? "#60a5fa" : "#10b981"}` }} /> {t("registre.userSpace", "Espace Utilisateur")}
                                 </div>
 
-                                {/* PASSWORD */}
-                                <div style={{ marginBottom: 16, position: "relative", bottom: 19 }}>
-                                    <label style={{ display: "block", fontSize: 12, fontWeight: 800, letterSpacing: "0.1em", textTransform: "uppercase", marginBottom: 8, transition: "color 0.3s", color: focused === "pass" ? (isDarkMode ? "#60a5fa" : "#10b981") : (isDarkMode ? "#9ca3af" : "#166534") }}>{t("registre.passLabel", "Password")}</label>
-                                    <div style={inputWrapper("pass")}
-                                        onMouseEnter={e => { if (focused !== "pass") { e.currentTarget.style.borderColor = isDarkMode ? "rgba(96,165,250,0.4)" : "rgba(16,185,129,0.5)"; e.currentTarget.style.transform = "translateY(-1px)"; } }}
-                                        onMouseLeave={e => { if (focused !== "pass") { e.currentTarget.style.borderColor = isDarkMode ? "rgba(255,255,255,0.1)" : "rgba(16,185,129,0.25)"; e.currentTarget.style.transform = "translateY(0)"; } }}
-                                    >
-                                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke={focused === "pass" ? (isDarkMode ? "#60a5fa" : "#10b981") : (isDarkMode ? "rgba(255,255,255,0.3)" : "rgba(16,185,129,0.5)")} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ transition: "stroke 0.3s", flexShrink: 0 }}>
-                                            <rect x="3" y="11" width="18" height="11" rx="2" ry="2" /><path d="M7 11V7a5 5 0 0 1 10 0v4" />
-                                        </svg>
-                                        <input type={showPass ? "password" : "text"} placeholder={t("registre.passPlaceholder", "Password")} value={password} onChange={e => setPassword(e.target.value)} onFocus={() => setFocused("pass")} onBlur={() => setFocused("")} style={{ width: "100%", background: "transparent", border: "none", outline: "none", color: isDarkMode ? "#e6edf3" : "#064e3b", fontFamily: "'DM Sans',sans-serif", fontSize: 18, fontWeight: 500 }} />
-                                        <button type="button" onClick={() => setShowPass(!showPass)} style={{ background: "none", border: "none", cursor: "pointer", flexShrink: 0, color: isDarkMode ? "rgba(255,255,255,0.35)" : "rgba(16,185,129,0.6)", transition: "color 0.2s,transform 0.2s", padding: 4, borderRadius: 8 }}
-                                            onMouseEnter={e => { e.currentTarget.style.color = isDarkMode ? "#60a5fa" : "#10b981"; e.currentTarget.style.transform = "scale(1.1)"; }}
-                                            onMouseLeave={e => { e.currentTarget.style.color = isDarkMode ? "rgba(255,255,255,0.35)" : "rgba(16,185,129,0.6)"; e.currentTarget.style.transform = "scale(1)"; }}>
-                                            {showPass ?
-                                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" /><circle cx="12" cy="12" r="3" /></svg>
-                                                :
-                                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24" /><line x1="1" y1="1" x2="23" y2="23" /></svg>
-                                            }
-                                        </button>
-                                    </div>
-                                </div>
+                                {/* Title */}
+                                <h2 style={{
+                                    fontFamily: "'Syne',sans-serif", fontSize: 32, fontWeight: 900,
+                                    letterSpacing: "-1px", position: "relative", bottom: 22, textAlign: "center",
+                                    ...(isDarkMode ? {
+                                        background: "linear-gradient(90deg, #e6edf3 0%, #478de2ff 50%, #c9e2f8ff 100%)",
+                                        backgroundSize: "200% auto", animation: "btnGradientMove 4s linear infinite",
+                                        WebkitBackgroundClip: "text", backgroundClip: "text",
+                                        WebkitTextFillColor: "transparent", color: "transparent", width: "100%",
+                                    } : { color: "#10b981" })
+                                }}>
+                                    {t("registre.title", "Create your Account")}
+                                </h2>
 
-                                {/* CONFIRM PASSWORD */}
-                                <div style={{ marginBottom: 24, position: "relative", bottom: 16 }}>
-                                    <label style={{ display: "block", fontSize: 12, fontWeight: 800, letterSpacing: "0.1em", textTransform: "uppercase", marginBottom: 8, transition: "color 0.3s", color: passwordMismatch ? "#ef4444" : focused === "confirm" ? (isDarkMode ? "#60a5fa" : "#10b981") : (isDarkMode ? "#9ca3af" : "#166534") }}>
-                                        {t("registre.confirmLabel", "Confirme password")}
-                                    </label>
-                                    <div style={{
-                                        ...inputWrapper("confirm"),
-                                        border: `1.5px solid ${passwordMismatch ? "#ef4444" : focused === "confirm" ? (isDarkMode ? "#60a5fa" : "#10b981") : (isDarkMode ? "rgba(255,255,255,0.1)" : "rgba(16,185,129,0.25)")}`,
-                                        boxShadow: passwordMismatch
-                                            ? "0 0 0 4px rgba(239,68,68,0.12), 0 8px 24px rgba(239,68,68,0.15)"
-                                            : focused === "confirm"
-                                                ? (isDarkMode ? "0 0 0 4px rgba(96,165,250,0.15),0 8px 24px rgba(96,165,250,0.2)" : "0 0 0 4px rgba(16,185,129,0.12),0 8px 24px rgba(16,185,129,0.18)")
-                                                : (isDarkMode ? "0 2px 12px rgba(96,165,250,0.08),inset 0 1px 0 rgba(255,255,255,0.05)" : "0 2px 12px rgba(16,185,129,0.08),inset 0 1px 0 rgba(255,255,255,0.8)"),
+                                <p style={{ color: isDarkMode ? "#9ca3af" : "#166534", fontSize: 19, lineHeight: 1.5, position: "relative", bottom: 36, textAlign: "center" }}>
+                                    {t("registre.subtitle", "Join UppCar today and enjoy our services.")}
+                                </p>
+
+                                {/* Google */}
+                                <div style={{ marginBottom: 8, position: "relative", bottom: 26 }}>
+                                    <button onClick={() => loginWithGoogle()} style={{
+                                        width: "100%", height: 57, borderRadius: 14, border: "none", cursor: "pointer",
+                                        display: "flex", alignItems: "center", justifyContent: "center", gap: 10,
+                                        fontFamily: "'DM Sans',sans-serif", fontSize: 16, fontWeight: 700,
+                                        position: "relative", overflow: "hidden",
+                                        background: isDarkMode ? "linear-gradient(135deg,rgba(66,133,244,0.15),rgba(52,168,83,0.1),rgba(251,188,5,0.1),rgba(234,67,53,0.1))" : "linear-gradient(135deg,rgba(66,133,244,0.08),rgba(52,168,83,0.08),rgba(251,188,5,0.08),rgba(234,67,53,0.08))",
+                                        backgroundSize: "300% 300%", animation: "btnGradientMove 4s ease infinite",
+                                        color: isDarkMode ? "#fff" : "#1a1a1a",
+                                        boxShadow: isDarkMode ? "0 0 0 1px rgba(66,133,244,0.3),0 0 20px rgba(66,133,244,0.15)" : "0 0 0 1px rgba(66,133,244,0.2),0 4px 20px rgba(66,133,244,0.12)",
+                                        transition: "all 0.3s cubic-bezier(0.16,1,0.3,1)", backdropFilter: "blur(8px)",
                                     }}
-                                        onMouseEnter={e => { if (focused !== "confirm" && !passwordMismatch) { e.currentTarget.style.borderColor = isDarkMode ? "rgba(96,165,250,0.4)" : "rgba(16,185,129,0.5)"; e.currentTarget.style.transform = "translateY(-1px)"; } }}
-                                        onMouseLeave={e => { if (focused !== "confirm" && !passwordMismatch) { e.currentTarget.style.borderColor = isDarkMode ? "rgba(255,255,255,0.1)" : "rgba(16,185,129,0.25)"; e.currentTarget.style.transform = "translateY(0)"; } }}
+                                        onMouseEnter={e => { e.currentTarget.style.transform = "translateY(-2px) scale(1.01)"; e.currentTarget.style.boxShadow = isDarkMode ? "0 0 0 1px rgba(66,133,244,0.5),0 8px 30px rgba(66,133,244,0.3)" : "0 0 0 1px rgba(66,133,244,0.3),0 8px 30px rgba(66,133,244,0.2)"; }}
+                                        onMouseLeave={e => { e.currentTarget.style.transform = "translateY(0) scale(1)"; e.currentTarget.style.boxShadow = isDarkMode ? "0 0 0 1px rgba(66,133,244,0.3),0 0 20px rgba(66,133,244,0.15)" : "0 0 0 1px rgba(66,133,244,0.2),0 4px 20px rgba(66,133,244,0.12)"; }}
                                     >
-                                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none"
-                                            stroke={passwordMismatch ? "#ef4444" : focused === "confirm" ? (isDarkMode ? "#60a5fa" : "#10b981") : (isDarkMode ? "rgba(255,255,255,0.3)" : "rgba(16,185,129,0.5)")}
-                                            strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ transition: "stroke 0.3s", flexShrink: 0 }}>
-                                            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                                        <div style={{ position: "absolute", top: 0, left: "-100%", width: "60%", height: "100%", background: "linear-gradient(120deg,transparent,rgba(255,255,255,0.15),transparent)", animation: "shineSweep 3s ease-in-out infinite", pointerEvents: "none" }} />
+                                        <svg width="22" height="22" viewBox="0 0 24 24">
+                                            <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4" />
+                                            <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853" />
+                                            <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05" />
+                                            <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335" />
                                         </svg>
-                                        <input type={showConfirmPass ? "password" : "text"} placeholder={t("registre.confirmPlaceholder", "Repeat the password")} value={confirmPassword} onChange={e => setConfirmPassword(e.target.value)} onFocus={() => setFocused("confirm")} onBlur={() => setFocused("")} style={{ width: "100%", background: "transparent", border: "none", outline: "none", color: isDarkMode ? "#e6edf3" : "#064e3b", fontFamily: "'DM Sans',sans-serif", fontSize: 18, fontWeight: 500 }} />
-                                        {/* Status icon */}
-                                        {confirmPassword.length > 0 && (
-                                            <div style={{ width: 20, height: 20, borderRadius: "50%", flexShrink: 0, background: passwordMatch ? (isDarkMode ? "rgba(96,165,250,0.15)" : "rgba(16,185,129,0.15)") : "rgba(239,68,68,0.15)", display: "flex", alignItems: "center", justifyContent: "center", animation: "checkPop 0.3s cubic-bezier(0.34,1.56,0.64,1)" }}>
-                                                {passwordMatch
-                                                    ? <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke={isDarkMode ? "#60a5fa" : "#10b981"} strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12" /></svg>
-                                                    : <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#ef4444" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" /></svg>
+                                        {t("registre.googleBtn", "Sign up with Google")}
+                                    </button>
+                                </div>
+
+                                {/* Divider */}
+                                <div style={{ display: "flex", alignItems: "center", gap: 14, margin: "20px 0 16px", position: "relative", bottom: 26 }}>
+                                    <div style={{ flex: 1, height: 1, background: isDarkMode ? "rgba(255,255,255,0.1)" : "rgba(0,0,0,0.1)" }} />
+                                    <span style={{ fontSize: 11, color: isDarkMode ? "rgba(255,255,255,0.4)" : "rgba(0,0,0,0.4)", fontWeight: 800, textTransform: "uppercase", letterSpacing: "0.1em" }}>{t("registre.orEmail", "or with email")}</span>
+                                    <div style={{ flex: 1, height: 1, background: isDarkMode ? "rgba(255,255,255,0.1)" : "rgba(0,0,0,0.1)" }} />
+                                </div>
+
+                                <form onSubmit={handleSubmit}>
+
+                                    {/* EMAIL */}
+                                    <div style={{ marginBottom: 16, position: "relative", bottom: 22 }}>
+                                        <label style={{ display: "block", fontSize: 12, fontWeight: 800, letterSpacing: "0.1em", textTransform: "uppercase", marginBottom: 8, transition: "color 0.3s", color: focused === "email" ? (isDarkMode ? "#60a5fa" : "#10b981") : (isDarkMode ? "#9ca3af" : "#166534") }}>{t("registre.emailLabel", "E-mail address")}</label>
+                                        <div style={{
+                                            ...inputWrapper("email"),
+                                            border: `2px solid ${focused === "email"
+                                                ? (isDarkMode ? "#60a5fa" : "#10b981")
+                                                : (isDarkMode ? "rgba(96,165,250,0.6)" : "rgba(16,185,129,0.5)")}`,
+                                            boxShadow: focused === "email"
+                                                ? (isDarkMode
+                                                    ? "0 0 0 4px rgba(96,165,250,0.2), 0 8px 30px rgba(96,165,250,0.3)"
+                                                    : "0 0 0 4px rgba(16,185,129,0.15), 0 8px 30px rgba(16,185,129,0.25)")
+                                                : (isDarkMode
+                                                    ? "0 4px 20px rgba(96,165,250,0.2), inset 0 1px 0 rgba(255,255,255,0.05)"
+                                                    : "0 4px 20px rgba(16,185,129,0.12), inset 0 1px 0 rgba(255,255,255,0.8)"),
+                                        }}
+                                        >
+                                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke={focused === "email" ? (isDarkMode ? "#60a5fa" : "#10b981") : (isDarkMode ? "rgba(255,255,255,0.3)" : "rgba(16,185,129,0.5)")} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ transition: "stroke 0.3s", flexShrink: 0 }}>
+                                                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" /><polyline points="22,6 12,13 2,6" />
+                                            </svg>
+                                            <input type="email" placeholder={t("registre.emailPlaceholder", "Your Email")} value={email} onChange={e => setEmail(e.target.value)} onFocus={() => setFocused("email")} onBlur={() => setFocused("")} style={{ width: "100%", background: "transparent", border: "none", outline: "none", color: isDarkMode ? "#e6edf3" : "#064e3b", fontFamily: "'DM Sans',sans-serif", fontSize: 18, fontWeight: 500 }} />
+                                            {email && (
+                                                <div style={{ width: 20, height: 20, borderRadius: "50%", flexShrink: 0, background: isDarkMode ? "rgba(96,165,250,0.15)" : "rgba(16,185,129,0.15)", display: "flex", alignItems: "center", justifyContent: "center", animation: "checkPop 0.3s cubic-bezier(0.34,1.56,0.64,1)" }}>
+                                                    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke={isDarkMode ? "#60a5fa" : "#10b981"} strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12" /></svg>
+                                                </div>
+                                            )}
+                                        </div>
+                                    </div>
+
+                                    {/* PASSWORD */}
+                                    <div style={{ marginBottom: 16, position: "relative", bottom: 19 }}>
+                                        <label style={{ display: "block", fontSize: 12, fontWeight: 800, letterSpacing: "0.1em", textTransform: "uppercase", marginBottom: 8, transition: "color 0.3s", color: focused === "pass" ? (isDarkMode ? "#60a5fa" : "#10b981") : (isDarkMode ? "#9ca3af" : "#166534") }}>{t("registre.passLabel", "Password")}</label>
+                                        <div style={{
+                                            ...inputWrapper("pass"),
+                                            border: `2px solid ${focused === "pass"
+                                                ? (isDarkMode ? "#60a5fa" : "#10b981")
+                                                : (isDarkMode ? "rgba(96,165,250,0.6)" : "rgba(16,185,129,0.5)")}`,
+                                            boxShadow: focused === "pass"
+                                                ? (isDarkMode
+                                                    ? "0 0 0 4px rgba(96,165,250,0.2), 0 8px 30px rgba(96,165,250,0.3)"
+                                                    : "0 0 0 4px rgba(16,185,129,0.15), 0 8px 30px rgba(16,185,129,0.25)")
+                                                : (isDarkMode
+                                                    ? "0 4px 20px rgba(96,165,250,0.2), inset 0 1px 0 rgba(255,255,255,0.05)"
+                                                    : "0 4px 20px rgba(16,185,129,0.12), inset 0 1px 0 rgba(255,255,255,0.8)"),
+                                        }}
+                                        >
+                                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke={focused === "pass" ? (isDarkMode ? "#60a5fa" : "#10b981") : (isDarkMode ? "rgba(255,255,255,0.3)" : "rgba(16,185,129,0.5)")} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ transition: "stroke 0.3s", flexShrink: 0 }}>
+                                                <rect x="3" y="11" width="18" height="11" rx="2" ry="2" /><path d="M7 11V7a5 5 0 0 1 10 0v4" />
+                                            </svg>
+                                            <input type={showPass ? "password" : "text"} placeholder={t("registre.passPlaceholder", "Password")} value={password} onChange={e => setPassword(e.target.value)} onFocus={() => setFocused("pass")} onBlur={() => setFocused("")} style={{ width: "100%", background: "transparent", border: "none", outline: "none", color: isDarkMode ? "#e6edf3" : "#064e3b", fontFamily: "'DM Sans',sans-serif", fontSize: 18, fontWeight: 500 }} />
+                                            <button type="button" onClick={() => setShowPass(!showPass)} style={{ background: "none", border: "none", cursor: "pointer", flexShrink: 0, color: isDarkMode ? "rgba(255,255,255,0.35)" : "rgba(16,185,129,0.6)", transition: "color 0.2s,transform 0.2s", padding: 4, borderRadius: 8 }}
+                                                onMouseEnter={e => { e.currentTarget.style.color = isDarkMode ? "#60a5fa" : "#10b981"; e.currentTarget.style.transform = "scale(1.1)"; }}
+                                                onMouseLeave={e => { e.currentTarget.style.color = isDarkMode ? "rgba(255,255,255,0.35)" : "rgba(16,185,129,0.6)"; e.currentTarget.style.transform = "scale(1)"; }}>
+                                                {showPass ?
+                                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" /><circle cx="12" cy="12" r="3" /></svg>
+                                                    :
+                                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24" /><line x1="1" y1="1" x2="23" y2="23" /></svg>
                                                 }
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                    {/* CONFIRM PASSWORD */}
+                                    <div style={{ marginBottom: 24, position: "relative", bottom: 16 }}>
+                                        <label style={{ display: "block", fontSize: 12, fontWeight: 800, letterSpacing: "0.1em", textTransform: "uppercase", marginBottom: 8, transition: "color 0.3s", color: passwordMismatch ? "#ef4444" : focused === "confirm" ? (isDarkMode ? "#60a5fa" : "#10b981") : (isDarkMode ? "#9ca3af" : "#166534") }}>
+                                            {t("registre.confirmLabel", "Confirme password")}
+                                        </label>
+                                        <div style={{
+                                            ...inputWrapper("confirm"),
+                                            border: `2px solid ${passwordMismatch ? "#ef4444" : focused === "confirm" ? (isDarkMode ? "#60a5fa" : "#10b981") : (isDarkMode ? "rgba(96,165,250,0.6)" : "rgba(16,185,129,0.5)")}`,
+                                            boxShadow: passwordMismatch
+                                                ? "0 0 0 4px rgba(239,68,68,0.12), 0 8px 24px rgba(239,68,68,0.15)"
+                                                : focused === "confirm"
+                                                    ? (isDarkMode ? "0 0 0 4px rgba(96,165,250,0.2), 0 8px 30px rgba(96,165,250,0.3)" : "0 0 0 4px rgba(16,185,129,0.15), 0 8px 30px rgba(16,185,129,0.25)")
+                                                    : (isDarkMode ? "0 4px 20px rgba(96,165,250,0.2), inset 0 1px 0 rgba(255,255,255,0.05)" : "0 4px 20px rgba(16,185,129,0.12), inset 0 1px 0 rgba(255,255,255,0.8)"),
+                                        }}
+                                        >
+                                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none"
+                                                stroke={passwordMismatch ? "#ef4444" : focused === "confirm" ? (isDarkMode ? "#60a5fa" : "#10b981") : (isDarkMode ? "rgba(255,255,255,0.3)" : "rgba(16,185,129,0.5)")}
+                                                strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ transition: "stroke 0.3s", flexShrink: 0 }}>
+                                                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                                            </svg>
+                                            <input type={showConfirmPass ? "password" : "text"} placeholder={t("registre.confirmPlaceholder", "Repeat the password")} value={confirmPassword} onChange={e => setConfirmPassword(e.target.value)} onFocus={() => setFocused("confirm")} onBlur={() => setFocused("")} style={{ width: "100%", background: "transparent", border: "none", outline: "none", color: isDarkMode ? "#e6edf3" : "#064e3b", fontFamily: "'DM Sans',sans-serif", fontSize: 18, fontWeight: 500 }} />
+                                            {/* Status icon */}
+                                            {confirmPassword.length > 0 && (
+                                                <div style={{ width: 20, height: 20, borderRadius: "50%", flexShrink: 0, background: passwordMatch ? (isDarkMode ? "rgba(96,165,250,0.15)" : "rgba(16,185,129,0.15)") : "rgba(239,68,68,0.15)", display: "flex", alignItems: "center", justifyContent: "center", animation: "checkPop 0.3s cubic-bezier(0.34,1.56,0.64,1)" }}>
+                                                    {passwordMatch
+                                                        ? <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke={isDarkMode ? "#60a5fa" : "#10b981"} strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12" /></svg>
+                                                        : <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#ef4444" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" /></svg>
+                                                    }
+                                                </div>
+                                            )}
+                                            <button type="button" onClick={() => setShowConfirmPass(!showConfirmPass)} style={{ background: "none", border: "none", cursor: "pointer", flexShrink: 0, color: isDarkMode ? "rgba(255,255,255,0.35)" : "rgba(16,185,129,0.6)", transition: "color 0.2s,transform 0.2s", padding: 4, borderRadius: 8 }}
+                                                onMouseEnter={e => { e.currentTarget.style.color = isDarkMode ? "#60a5fa" : "#10b981"; e.currentTarget.style.transform = "scale(1.1)"; }}
+                                                onMouseLeave={e => { e.currentTarget.style.color = isDarkMode ? "rgba(255,255,255,0.35)" : "rgba(16,185,129,0.6)"; e.currentTarget.style.transform = "scale(1)"; }}>
+                                                {showConfirmPass ?
+                                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" /><circle cx="12" cy="12" r="3" /></svg>
+                                                    :
+                                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24" /><line x1="1" y1="1" x2="23" y2="23" /></svg>
+                                                }                                        </button>
+                                        </div>
+                                        {/* Error message */}
+                                        {passwordMismatch && (
+                                            <div style={{ marginTop: 8, display: "flex", alignItems: "center", gap: 6, color: "#ef4444", fontSize: 12, fontWeight: 600, animation: "fadeUp 0.2s ease" }}>
+                                                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#ef4444" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10" /><line x1="12" y1="8" x2="12" y2="12" /><line x1="12" y1="16" x2="12.01" y2="16" /></svg>
+                                                {t("registre.passMismatch", "Les mots de passe ne correspondent pas")}
                                             </div>
                                         )}
-                                        <button type="button" onClick={() => setShowConfirmPass(!showConfirmPass)} style={{ background: "none", border: "none", cursor: "pointer", flexShrink: 0, color: isDarkMode ? "rgba(255,255,255,0.35)" : "rgba(16,185,129,0.6)", transition: "color 0.2s,transform 0.2s", padding: 4, borderRadius: 8 }}
-                                            onMouseEnter={e => { e.currentTarget.style.color = isDarkMode ? "#60a5fa" : "#10b981"; e.currentTarget.style.transform = "scale(1.1)"; }}
-                                            onMouseLeave={e => { e.currentTarget.style.color = isDarkMode ? "rgba(255,255,255,0.35)" : "rgba(16,185,129,0.6)"; e.currentTarget.style.transform = "scale(1)"; }}>
-                                            {showConfirmPass ?
-                                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" /><circle cx="12" cy="12" r="3" /></svg>
-                                                :
-                                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24" /><line x1="1" y1="1" x2="23" y2="23" /></svg>
-                                            }                                        </button>
                                     </div>
-                                    {/* Error message */}
-                                    {passwordMismatch && (
-                                        <div style={{ marginTop: 8, display: "flex", alignItems: "center", gap: 6, color: "#ef4444", fontSize: 12, fontWeight: 600, animation: "fadeUp 0.2s ease" }}>
-                                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#ef4444" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10" /><line x1="12" y1="8" x2="12" y2="12" /><line x1="12" y1="16" x2="12.01" y2="16" /></svg>
-                                            {t("registre.passMismatch", "Les mots de passe ne correspondent pas")}
+
+                                    {/* Error message serveur */}
+                                    {errorMessage && (
+                                        <div style={{
+                                            borderRadius: 12,
+
+                                            display: "flex", alignItems: "center", gap: 8,
+                                            animation: "fadeUp 0.3s ease",
+                                            position: "relative", bottom: 18,
+                                            marginBottom: 7,
+                                        }}>
+                                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#ef4444" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                                                <circle cx="12" cy="12" r="10" />
+                                                <line x1="12" y1="8" x2="12" y2="12" />
+                                                <line x1="12" y1="16" x2="12.01" y2="16" />
+                                            </svg>
+                                            <span style={{ color: "#ef4444", fontSize: 16.6, fontWeight: 600 }}>
+                                                {errorMessage}
+                                            </span>
                                         </div>
                                     )}
-                                </div>
 
-                                {/* Error message serveur */}
-                                {errorMessage && (
-                                    <div style={{
-                                        borderRadius: 12,
-
-                                        display: "flex", alignItems: "center", gap: 8,
-                                        animation: "fadeUp 0.3s ease",
-                                        position: "relative", bottom: 18,
-                                        marginBottom: 7,
+                                    {/* SUBMIT */}
+                                    <button type="submit" className="btn-register" disabled={loading || !email || !password || !confirmPassword || passwordMismatch} style={{
+                                        width: "100%", height: 58, borderRadius: 16, border: "none",
+                                        cursor: (!email || !password || !confirmPassword || passwordMismatch || loading) ? "not-allowed" : "pointer",
+                                        background: isDarkMode ? "linear-gradient(135deg,#2563eb,#6366f1)" : "linear-gradient(135deg,#059669,#10b981)",
+                                        color: "#fff", fontFamily: "'Syne',sans-serif", fontSize: 16, fontWeight: 800,
+                                        letterSpacing: "0.05em", display: "flex", alignItems: "center", justifyContent: "center",
+                                        gap: 10, transition: "all 0.3s cubic-bezier(0.16,1,0.3,1)",
+                                        position: "relative", bottom: 6,
                                     }}>
-                                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#ef4444" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                                            <circle cx="12" cy="12" r="10" />
-                                            <line x1="12" y1="8" x2="12" y2="12" />
-                                            <line x1="12" y1="16" x2="12.01" y2="16" />
-                                        </svg>
-                                        <span style={{ color: "#ef4444", fontSize: 16.6, fontWeight: 600 }}>
-                                            {errorMessage}
-                                        </span>
-                                    </div>
-                                )}
+                                        {loading
+                                            ? <> <div style={{ width: 22, height: 22, border: "2.5px solid rgba(255,255,255,0.3)", borderTopColor: "#fff", borderRadius: "50%", animation: "spin 0.8s linear infinite" }} /> {t("registre.loading", "Création en cours...")} </>
+                                            : <>{t("registre.submitBtn", "Create my Account")} <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><line x1="5" y1="12" x2="19" y2="12" /><polyline points="12 5 19 12 12 19" /></svg></>
+                                        }
+                                    </button>
+                                </form>
 
-                                {/* SUBMIT */}
-                                <button type="submit" className="btn-register" disabled={loading || !email || !password || !confirmPassword || passwordMismatch} style={{
-                                    width: "100%", height: 58, borderRadius: 16, border: "none",
-                                    cursor: (!email || !password || !confirmPassword || passwordMismatch || loading) ? "not-allowed" : "pointer",
-                                    background: isDarkMode ? "linear-gradient(135deg,#2563eb,#6366f1)" : "linear-gradient(135deg,#059669,#10b981)",
-                                    color: "#fff", fontFamily: "'Syne',sans-serif", fontSize: 16, fontWeight: 800,
-                                    letterSpacing: "0.05em", display: "flex", alignItems: "center", justifyContent: "center",
-                                    gap: 10, transition: "all 0.3s cubic-bezier(0.16,1,0.3,1)",
-                                    position: "relative", bottom: 6,
-                                }}>
-                                    {loading
-                                        ? <> <div style={{ width: 22, height: 22, border: "2.5px solid rgba(255,255,255,0.3)", borderTopColor: "#fff", borderRadius: "50%", animation: "spin 0.8s linear infinite" }} /> {t("registre.loading", "Création en cours...")} </>
-                                        : <>{t("registre.submitBtn", "Create my Account")} <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><line x1="5" y1="12" x2="19" y2="12" /><polyline points="12 5 19 12 12 19" /></svg></>
-                                    }
-                                </button>
-                            </form>
-
-                            <div style={{ textAlign: "center", fontSize: 15, color: isDarkMode ? "#c2c8d3ff" : "#166634", position: "relative", top: 17 }}>
-                                {t("registre.hasAccount", "Already have account ?")} <a href="/login" onClick={(e) => { e.preventDefault(); navigate("/login"); }} style={{ color: isDarkMode ? "#60a5fa" : "#10b981", fontWeight: 800, textDecoration: "none" }}>{t("registre.loginLink", "Se Connecter.")}</a>
-                            </div>
-                        </>
-                    )}
+                                <div style={{ textAlign: "center", fontSize: 15, color: isDarkMode ? "#c2c8d3ff" : "#166634", position: "relative", top: 17 }}>
+                                    {t("registre.hasAccount", "Already have account ?")} <a href="/login" onClick={(e) => { e.preventDefault(); navigate("/login"); }} style={{ color: isDarkMode ? "#60a5fa" : "#10b981", fontWeight: 800, textDecoration: "none" }}>{t("registre.loginLink", "Se Connecter.")}</a>
+                                </div>
+                            </>
+                        )}
+                    </div>
                 </div>
             </div>
         </div>

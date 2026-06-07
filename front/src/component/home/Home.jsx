@@ -5,7 +5,6 @@ import { FR } from "./fr";
 import heroBg from "../../asset/hero_pg.png";
 import lightBg from "../../asset/home_light_bg.png";
 import lightBg2 from "../../asset/image copy 2.png";
-import lightBg3 from "../../asset/image copy 3.png";
 import darkBg2 from "../../asset/image copy 4.png";
 import darkBg3 from "../../asset/image copy.png";
 import darkBg4 from "../../asset/image copy 5.png";
@@ -46,6 +45,10 @@ html, body { transition: background 0.3s; overflow-x: hidden; width: 100%; max-w
   --btn-text: #060912;
   --text-mainee: #e6edf3;
 
+}
+
+.blue-theme .f-bottom-link:hover {
+  color: #2563eb !important;
 }
 
 body { background: var(--bg-color); color: var(--text-main); position: relative; }
@@ -117,6 +120,34 @@ body { background: var(--bg-color); color: var(--text-main); position: relative;
 @keyframes footerFadeUp { from{opacity:0;transform:translateY(30px);} to{opacity:1;transform:translateY(0);} }
 @keyframes onlineDot { 0%,100%{box-shadow:0 0 0 0 rgba(34,197,94,0.4);} 50%{box-shadow:0 0 0 5px rgba(34,197,94,0);} }
 @keyframes glowPulse { 0%,100%{opacity:0.4;transform:scale(1);} 50%{opacity:0.7;transform:scale(1.1);} }
+@keyframes slideInUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes badgePulse { 0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7); } 70% { transform: scale(1.1); box-shadow: 0 0 0 6px rgba(239, 68, 68, 0); } 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); } }
+
+/* ── WhatsApp Widget ── */
+.wa-widget-container { position: fixed; bottom: 28px; right: 28px; z-index: 9999; display: flex; flex-direction: column; align-items: flex-end; gap: 12px; }
+.wa-widget-container .wa-button { position: relative; z-index: 2; }
+.wa-menu {
+  position: absolute;
+  right: 0;
+  bottom: calc(100% + 12px);
+  width: 360px;
+  background: white;
+  border-radius: 28px;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.18), 0 4px 20px rgba(0,0,0,0.1);
+  overflow: hidden;
+  animation: fadeUp 0.35s cubic-bezier(0.16,1,0.3,1);
+  border: 1px solid rgba(0, 0, 0, 0.05);
+}
+.wa-header { background: linear-gradient(135deg, #25D366 0%, #128C7E 100%); padding: 24px; color: white; transition: background 0.3s; }
+.wa-status { display: flex; align-items: center; gap: 8px; margin-top: 8px; font-size: 13px; opacity: 0.9; }
+.wa-dot { width: 8px; height: 8px; border-radius: 50%; background: #4ade80; box-shadow: 0 0 8px #4ade80; animation: pulse 2s infinite; display: inline-block; }
+.wa-option { display: flex; align-items: center; gap: 14px; padding: 14px 24px; text-decoration: none; color: #1e293b; transition: background 0.2s; cursor: pointer; }
+.wa-option:hover { background: #f8fafc; }
+.wa-option-icon { width: 44px; height: 44px; border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0; }
+.wa-option-text { flex: 1; }
+.wa-option-title { font-weight: 700; font-size: 14px; margin-bottom: 2px; }
+.wa-option-desc { font-size: 12px; color: #64748b; line-height: 1.4; }
+@media (max-width: 768px) { .wa-widget-container { bottom: 18px; right: 14px; } .wa-menu { width: calc(100vw - 28px); left: 0; right: 0; } }
 @keyframes mobileSlideUp { from{opacity:0;transform:translateY(40px);} to{opacity:1;transform:translateY(0);} }
 @keyframes mobilePing { 0%{transform:scale(1);opacity:1;} 100%{transform:scale(2);opacity:0;} }
 @keyframes borderGlow { 0%{border-color:rgba(16,185,129,0.3); box-shadow: 0 0 12px rgba(16,185,129,0.2);} 50%{border-color:rgba(16,185,129,0.7); box-shadow: 0 0 24px rgba(16,185,129,0.4);} 100%{border-color:rgba(16,185,129,0.3); box-shadow: 0 0 12px rgba(16,185,129,0.2);} }
@@ -134,7 +165,7 @@ body { background: var(--bg-color); color: var(--text-main); position: relative;
 .nav-link:hover::before { opacity:1; }
 
 .icon-btn { background:rgba(255,255,255,0.1); border:1px solid rgba(255,255,255,0.2); color:#fff; cursor:pointer; padding:10px; border-radius:50%; display:flex; align-items:center; justify-content:center; transition:all 0.3s cubic-bezier(0.4,0,0.2,1);position:relative;left: 10px; }
-.icon-btn:hover { background:var(--accent-color); color:#fff; transform:scale(1.1) rotate(5deg); box-shadow:0 4px 12px rgba(0,0,0,0.2); }
+.icon-btn:hover { background:#fff; color:#000; transform:scale(1.1) rotate(5deg); box-shadow:0 4px 12px rgba(0,0,0,0.2); }
 
 .primary-btnDE {
   position:relative; background:linear-gradient(135deg,#1e3a8a 0%,#2563eb 50%,#0ea5e9 100%); background-size:200% 200%;
@@ -572,6 +603,136 @@ function CalendarIcon({ size = 18, color = "currentColor" }) {
     );
 }
 
+function WhatsAppIcon({ size = 28 }) {
+    return <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" /></svg>;
+}
+
+function WhatsAppWidget({ onToggleTheme, isBlueTheme, selectedLang }) {
+    const [isOpen, setIsOpen] = useState(false);
+    const phone = "212661754896";
+    const isAr = selectedLang === "AR";
+    const isFr = selectedLang === "FR";
+
+    // Multilingual content
+    const content = isAr ? {
+        title: "تواصل عبر واتساب",
+        subtitle: "رد سريع",
+        chooseLabel: "اختر طلبك",
+        options: [
+            { title: "أريد استئجار سيارة 🚗", desc: "تحدث مع فريقنا للعثور على السيارة المثالية", msg: "مرحبا، أريد استئجار سيارة من UppCar.", icon: "🚗", bg: "rgba(37, 211, 102, 0.15)" },
+            { title: "سؤال عن الحجز 📝", desc: "مشكلة أو تعديل في رحلتك؟", msg: "مرحبا، لدي سؤال بخصوص حجزي.", icon: "📝", bg: "rgba(255, 181, 71, 0.15)" },
+            { title: "أحتاج مساعدة 🆘", desc: "سؤال تقني؟ سنرد عليك فورًا", msg: "مرحبا، أحتاج مساعدة تقنية في الموقع.", icon: "🆘", bg: "rgba(239, 68, 68, 0.15)" },
+            { title: "طلب مخصص ✨", desc: "صف احتياجك الخاص لمستشارينا", msg: "مرحبا، لدي طلب خاص أريد تقديمه.", icon: "✨", bg: "rgba(0, 229, 160, 0.15)" },
+        ]
+    } : isFr ? {
+        title: "Contact WhatsApp",
+        subtitle: "Réponse Rapide",
+        chooseLabel: "Choisissez votre demande",
+        options: [
+            { title: "Je veux louer une voiture 🚗", desc: "Discutez avec notre équipe pour trouver le véhicule idéal", msg: "Bonjour, je souhaite louer une voiture sur UppCar.", icon: "🚗", bg: "rgba(37, 211, 102, 0.15)" },
+            { title: "Question réservation 📝", desc: "Un problème ou une modification sur votre voyage ?", msg: "Bonjour, j'ai une question concernant ma réservation.", icon: "📝", bg: "rgba(255, 181, 71, 0.15)" },
+            { title: "J'ai besoin d'aide 🆘", desc: "Une question technique ? On vous répond immédiatement", msg: "Bonjour, j'ai besoin d'aide technique sur le site.", icon: "🆘", bg: "rgba(239, 68, 68, 0.15)" },
+            { title: "Demande personnalisée ✨", desc: "Décrivez votre besoin spécifique à nos conseillers", msg: "Bonjour, j'ai une demande particulière à vous soumettre.", icon: "✨", bg: "rgba(0, 229, 160, 0.15)" },
+        ]
+    } : {
+        title: "Contact WhatsApp",
+        subtitle: "Quick Response",
+        chooseLabel: "Choose your request",
+        options: [
+            { title: "I want to rent a car 🚗", desc: "Chat with our team to find the ideal vehicle", msg: "Hello, I'd like to rent a car on UppCar.", icon: "🚗", bg: "rgba(37, 211, 102, 0.15)" },
+            { title: "Reservation question 📝", desc: "A problem or change to your trip?", msg: "Hello, I have a question about my reservation.", icon: "📝", bg: "rgba(255, 181, 71, 0.15)" },
+            { title: "I need help 🆘", desc: "A technical question? We'll answer immediately", msg: "Hello, I need technical help on the site.", icon: "🆘", bg: "rgba(239, 68, 68, 0.15)" },
+            { title: "Custom request ✨", desc: "Describe your specific need to our advisors", msg: "Hello, I have a special request to submit.", icon: "✨", bg: "rgba(0, 229, 160, 0.15)" },
+        ]
+    };
+
+    return (
+        <div className="wa-widget-container">
+            {isOpen && (
+                <div className="wa-menu" dir={isAr ? "rtl" : "ltr"}>
+                    <div className="wa-header" style={{ background: 'linear-gradient(135deg, #1e3a8a 0%, #2563eb 100%)' }}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                            <div>
+                                <h3 style={{ fontSize: 22, fontWeight: 900, fontFamily: "'Syne', sans-serif" }}>{content.title}</h3>
+                                <div className="wa-status">
+                                    <span className="wa-dot" />
+                                    {content.subtitle}
+                                </div>
+                            </div>
+                            <div style={{ width: 44, height: 44, background: 'rgba(255,255,255,0.2)', borderRadius: 12, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 24 }}>📱</div>
+                        </div>
+                    </div>
+                    <div style={{ padding: '20px 0', background: 'white' }}>
+                        <div style={{ fontSize: 11, fontWeight: 800, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.1em', padding: '0 24px 16px', textAlign: isAr ? 'right' : 'left' }}>{content.chooseLabel}</div>
+                        {content.options.map((opt, i) => (
+                            <a
+                                key={i}
+                                href={`https://wa.me/${phone}?text=${encodeURIComponent(opt.msg)}`}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="wa-option"
+                                style={{ flexDirection: isAr ? 'row-reverse' : 'row' }}
+                            >
+                                <div className="wa-option-icon" style={{ background: opt.bg }}>{opt.icon}</div>
+                                <div className="wa-option-text" style={{ textAlign: isAr ? 'right' : 'left' }}>
+                                    <div className="wa-option-title">{opt.title}</div>
+                                    <div className="wa-option-desc">{opt.desc}</div>
+                                </div>
+                                <div style={{ color: '#cbd5e1' }}>
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points={isAr ? "15 18 9 12 15 6" : "9 18 15 12 9 6"} /></svg>
+                                </div>
+                            </a>
+                        ))}
+                    </div>
+                    <div style={{ padding: '16px 24px', borderTop: '1px solid #f1f5f9', background: '#f8fafc', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10, color: '#64748b', fontSize: 14, fontWeight: 700 }}>
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" /></svg>
+                        <span dir="ltr">+212 621358566</span>
+                    </div>
+                </div>
+            )}
+            <button
+                className="wa-button"
+                onClick={() => setIsOpen(!isOpen)}
+                style={{
+                    width: 63,
+                    height: 63,
+                    borderRadius: '50%',
+                    background: isOpen ? 'linear-gradient(135deg, #1e3a8a 0%, #2563eb 100%)' : 'rgb(25 173 81)',
+                    border: 'none',
+                    cursor: 'pointer',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    color: 'white',
+                    boxShadow: isOpen ? '0 8px 24px rgba(37, 99, 235, 0.4)' : '0 4px 16px rgba(37,211,102,0.35)',
+                    transition: 'transform 0.2s, box-shadow 0.2s',
+                    position: "relative",
+                    top: "10px",
+                    left: "10px",
+                }}
+                onMouseEnter={e => {
+                    e.currentTarget.style.transform = 'scale(1.08)';
+                    e.currentTarget.style.boxShadow = isOpen ? '0 12px 32px rgba(37, 99, 235, 0.5)' : '0 6px 24px rgba(37,211,102,0.5)';
+                }}
+                onMouseLeave={e => {
+                    e.currentTarget.style.transform = 'scale(1)';
+                    e.currentTarget.style.boxShadow = isOpen ? '0 8px 24px rgba(37, 99, 235, 0.4)' : '0 4px 16px rgba(37,211,102,0.35)';
+                }}
+            >
+                {isOpen ? (
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none"
+                        stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                        <line x1="18" y1="6" x2="6" y2="18" />
+                        <line x1="6" y1="6" x2="18" y2="18" />
+                    </svg>
+                ) : (
+                    <WhatsAppIcon size={28} />
+                )}
+            </button>
+        </div>
+    );
+}
+
 function AnimatedLogo({ hideText = false }) {
     return (
         <div style={{ display: 'flex', alignItems: 'center', gap: 14, cursor: 'pointer', transition: 'transform 0.2s ease' }} onMouseOver={e => e.currentTarget.style.transform = 'scale(1.02)'} onMouseOut={e => e.currentTarget.style.transform = 'scale(1)'}>
@@ -874,10 +1035,16 @@ export default function UppCarLanding() {
     const [aiCharIdx, setAiCharIdx] = useState(0);
     const [aiTextIdx, setAiTextIdx] = useState(0);
     const [aiDeleting, setAiDeleting] = useState(false);
+    const [isBlueTheme, setIsBlueTheme] = useState(false);
+
+    const toggleTheme = () => {
+        setIsBlueTheme(!isBlueTheme);
+    };
+
     // ── States ──
     const [listening, setListening] = useState(false);
     const [menuOpen, setMenuOpen] = useState(false);
-    const [langMenuOpen, setLangMenuOpen] = useState(false);
+    const [langMenuOpen, setLangMenuOpen] = useState(true);
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
     const [selectedLang, setSelectedLang] = useState(localStorage.getItem("appLang") || "FR");
     const audioCtxRef = useRef(null);
@@ -966,7 +1133,6 @@ export default function UppCarLanding() {
     useEffect(() => {
         const handler = (e) => {
             if (!e.target.closest(".login-menu-wrap")) setMenuOpen(false);
-            if (!e.target.closest(".lang-menu-wrap")) setLangMenuOpen(false);
             if (!e.target.closest(".mobile-menu-wrap")) setMobileMenuOpen(false);
         };
         document.addEventListener("click", handler);
@@ -1075,49 +1241,49 @@ export default function UppCarLanding() {
                 }
 
                 const prompt = `
-Tu es l'assistant de recherche intelligent d'UppCar.
-L'utilisateur a tapé cette requête: "${query}".
+            Tu es l'assistant de recherche intelligent d'UppCar.
+            L'utilisateur a tapé cette requête: "${query}".
 
-Voici les voitures réellement disponibles dans notre flotte :
-${dbCarsList.join(", ")}
+            Voici les voitures réellement disponibles dans notre flotte :
+            ${dbCarsList.join(", ")}
 
-Voici les seules catégories (transmissions) acceptées par le backend :
-- "automatique"
-- "manuel"
+            Voici les seules catégories (transmissions) acceptées par le backend :
+            - "automatique"
+            - "manuel"
 
-IMPORTANT : L'utilisateur peut écrire en français, en anglais, en arabe classique ou en Darija (dialecte marocain). Tu dois comprendre toutes ces langues.
-Exemples de Darija :
-- "بغيت" = je veux
-- "داسيا لوغان" = Dacia Logan
-- "رونو كابتور" = Renault Captur
-- "ب 550 درهم" = à 550 DH (prix)
-- "ب كار أوتوماتيك" = voiture automatique
-- "ديها" = elle a / c'est
-Si la requête est en Darija, traduis mentalement les noms de voitures arabes vers leur équivalent latin de la liste.
+            IMPORTANT : L'utilisateur peut écrire en français, en anglais, en arabe classique ou en Darija (dialecte marocain). Tu dois comprendre toutes ces langues.
+            Exemples de Darija :
+            - "بغيت" = je veux
+            - "داسيا لوغان" = Dacia Logan
+            - "رونو كابتور" = Renault Captur
+            - "ب 550 درهم" = à 550 DH (prix)
+            - "ب كار أوتوماتيك" = voiture automatique
+            - "ديها" = elle a / c'est
+            Si la requête est en Darija, traduis mentalement les noms de voitures arabes vers leur équivalent latin de la liste.
 
-Ton but est d'extraire :
-1. "prediction" : "automatique" ou "manuel" si l'utilisateur demande explicitement une boîte de vitesse. Sinon, laisse vide "".
-2. "clean_keyword" : le nom exact de la marque ou du modèle de voiture parmi la liste ci-dessus qui correspond le mieux à sa demande.
-   - IMPORTANT : Le "clean_keyword" ne doit JAMAIS contenir la ville, le prix (ex: "de 863 DH", "ب 550 درهم"), la transmission ou le nombre de places. Il doit contenir UNIQUEMENT le modèle ou la marque choisi (ex: "Dacia Logan" ou "Dacia").
-   - Si l'utilisateur mentionne une voiture qui n'est PAS dans notre flotte (ex: "Clio"), cherche si la marque existe chez nous (ex: "Peugeot"). Si la marque existe, renvoie UNIQUEMENT le nom de la marque.
-   - Si la demande est générale pour un type de carrosserie (ex: "grosse voiture", "SUV", "4x4", "كبيرة", "فاميلية"), choisis un modèle adapté (ex: "Duster", "Range Rover", "Sportage", "Qashqai").
-   - Si la demande est "luxe", "sportive" ou "هاي كلاس", choisis "BMW", "Mercedes", "Audi" ou "Range Rover".
-   - Si la demande est "économique", "petite", "رخيصة" ou "pas cher", choisis "Picanto", "Fiat 500", "Jazz", "Rio" ou "Sandero".
-   - Si l'utilisateur mentionne directement une marque ou modèle de la liste, écris précisément ce nom de modèle.
-   - S'il n'y a aucune correspondance logique, laisse vide "".
-3. "city" : la ville mentionnée si elle correspond à l'une de nos villes de service (ex: "Casablanca", "الدار البيضاء", "Fés", "فاس"). Sinon, laisse vide "".
+            Ton but est d'extraire :
+            1. "prediction" : "automatique" ou "manuel" si l'utilisateur demande explicitement une boîte de vitesse. Sinon, laisse vide "".
+            2. "clean_keyword" : le nom exact de la marque ou du modèle de voiture parmi la liste ci-dessus qui correspond le mieux à sa demande.
+            - IMPORTANT : Le "clean_keyword" ne doit JAMAIS contenir la ville, le prix (ex: "de 863 DH", "ب 550 درهم"), la transmission ou le nombre de places. Il doit contenir UNIQUEMENT le modèle ou la marque choisi (ex: "Dacia Logan" ou "Dacia").
+            - Si l'utilisateur mentionne une voiture qui n'est PAS dans notre flotte (ex: "Clio"), cherche si la marque existe chez nous (ex: "Peugeot"). Si la marque existe, renvoie UNIQUEMENT le nom de la marque.
+            - Si la demande est générale pour un type de carrosserie (ex: "grosse voiture", "SUV", "4x4", "كبيرة", "فاميلية"), choisis un modèle adapté (ex: "Duster", "Range Rover", "Sportage", "Qashqai").
+            - Si la demande est "luxe", "sportive" ou "هاي كلاس", choisis "BMW", "Mercedes", "Audi" ou "Range Rover".
+            - Si la demande est "économique", "petite", "رخيصة" ou "pas cher", choisis "Picanto", "Fiat 500", "Jazz", "Rio" ou "Sandero".
+            - Si l'utilisateur mentionne directement une marque ou modèle de la liste, écris précisément ce nom de modèle.
+            - S'il n'y a aucune correspondance logique, laisse vide "".
+            3. "city" : la ville mentionnée si elle correspond à l'une de nos villes de service (ex: "Casablanca", "الدار البيضاء", "Fés", "فاس"). Sinon, laisse vide "".
 4. "max_price" : le prix maximum spécifié. Reconnaître toutes les formes : "de 863 DH" -> "863", "400 dirhams" -> "400", "ب 550 درهم" -> "550", "550 درهم" -> "550", "max 500 mad" -> "500". S'il n'y a pas de limite de prix, laisse vide "".
 5. "seats" : le nombre de places (ex: "5 places" -> "5", "7 places" -> "7", "5 places" -> "5"). S'il n'y a pas de nombre de places spécifié, laisse vide "".
-6. "year" : l'année de la voiture si elle est mentionnée (ex: "2021", "2019"). Sinon, laisse vide "".
+            6. "year" : l'année de la voiture si elle est mentionnée (ex: "2021", "2019"). Sinon, laisse vide "".
 
-Réponds UNIQUEMENT au format JSON strict, sans aucun texte autour :
-{
-  "prediction": "automatique ou manuel ou vide",
-  "clean_keyword": "marque ou modèle choisi ou vide",
-  "city": "ville extraite ou vide",
-  "max_price": "nombre ou vide",
-  "seats": "nombre ou vide",
-  "year": "nombre ou vide"
+            Réponds UNIQUEMENT au format JSON strict, sans aucun texte autour :
+            {
+                "prediction": "automatique ou manuel ou vide",
+            "clean_keyword": "marque ou modèle choisi ou vide",
+            "city": "ville extraite ou vide",
+            "max_price": "nombre ou vide",
+            "seats": "nombre ou vide",
+            "year": "nombre ou vide"
 }`;
 
                 const geminiRes = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${GEMINI_API_KEY}`, {
@@ -1378,38 +1544,38 @@ Réponds UNIQUEMENT au format JSON strict, sans aucun texte autour :
 
     /*   useEffect(() => {
         const canvas = canvasRef.current;
-        if (!canvas) return;
-        const ctx = canvas.getContext("2d");
-        let W, H, id, tt = 0;
-        let parts = [];
-        const resize = () => { W = canvas.width = window.innerWidth; H = canvas.height = window.innerHeight; parts = Array.from({ length: 90 }, () => new Particle(W, H)); };
+            if (!canvas) return;
+            const ctx = canvas.getContext("2d");
+            let W, H, id, tt = 0;
+            let parts = [];
+        const resize = () => {W = canvas.width = window.innerWidth; H = canvas.height = window.innerHeight; parts = Array.from({length: 90 }, () => new Particle(W, H)); };
         const loop = () => {
-          ctx.clearRect(0, 0, W, H);
-    
-           
-          tt += .0025;
-          const g1 = ctx.createRadialGradient(W * .22 + Math.sin(tt) * 70, H * .28 + Math.cos(tt * .7) * 45, 0, W * .3, H * .3, W * .52);
-          g1.addColorStop(0, isDarkMode ? 'rgba(99,102,241,.07)' : 'rgba(99,102,241,.05)');
-          g1.addColorStop(1, 'transparent');
-          ctx.globalAlpha = 1; ctx.fillStyle = g1; ctx.fillRect(0, 0, W, H);
-    
-          const g2 = ctx.createRadialGradient(W * .78 + Math.cos(tt * .6) * 55, H * .65 + Math.sin(tt) * 38, 0, W * .68, H * .6, W * .42);
-          g2.addColorStop(0, isDarkMode ? 'rgba(16,185,129,.05)' : 'rgba(16,185,129,.04)');
-          g2.addColorStop(1, 'transparent');
-          ctx.fillStyle = g2; ctx.fillRect(0, 0, W, H);
-    
-          
-    if (isDarkMode) {
-      parts.forEach(p => {
-        p.update();
-        ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-        ctx.fillStyle = p.color; ctx.globalAlpha = p.alpha; ctx.fill();
-      });
+                ctx.clearRect(0, 0, W, H);
+
+
+            tt += .0025;
+            const g1 = ctx.createRadialGradient(W * .22 + Math.sin(tt) * 70, H * .28 + Math.cos(tt * .7) * 45, 0, W * .3, H * .3, W * .52);
+            g1.addColorStop(0, isDarkMode ? 'rgba(99,102,241,.07)' : 'rgba(99,102,241,.05)');
+            g1.addColorStop(1, 'transparent');
+            ctx.globalAlpha = 1; ctx.fillStyle = g1; ctx.fillRect(0, 0, W, H);
+
+            const g2 = ctx.createRadialGradient(W * .78 + Math.cos(tt * .6) * 55, H * .65 + Math.sin(tt) * 38, 0, W * .68, H * .6, W * .42);
+            g2.addColorStop(0, isDarkMode ? 'rgba(16,185,129,.05)' : 'rgba(16,185,129,.04)');
+            g2.addColorStop(1, 'transparent');
+            ctx.fillStyle = g2; ctx.fillRect(0, 0, W, H);
+
+
+            if (isDarkMode) {
+                parts.forEach(p => {
+                    p.update();
+                    ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+                    ctx.fillStyle = p.color; ctx.globalAlpha = p.alpha; ctx.fill();
+                });
     }
-    id = requestAnimationFrame(loop);
+            id = requestAnimationFrame(loop);
   };
-  resize(); window.addEventListener("resize", resize); loop();
-  return () => { cancelAnimationFrame(id); window.removeEventListener("resize", resize); };
+            resize(); window.addEventListener("resize", resize); loop();
+  return () => {cancelAnimationFrame(id); window.removeEventListener("resize", resize); };
     }, [isDarkMode]); */
 
     const brandColors = {
@@ -1425,7 +1591,7 @@ Réponds UNIQUEMENT au format JSON strict, sans aucun texte autour :
     const getColor = (brand) => isDarkMode ? brandColors[brand]?.dark : brandColors[brand]?.light;
 
     return (
-        <>
+        <div className={isBlueTheme ? "blue-theme" : ""}>
             <style>{css}</style>
             <div className="home-base-bg" />
             <div className="home-mesh-bg" />
@@ -1451,7 +1617,7 @@ Réponds UNIQUEMENT au format JSON strict, sans aucun texte autour :
                 }}>
                     {/* ── Cinematic Car Background Layers (Pure Cross-fade) ── */}
                     {(() => {
-                        const activeImages = isMobile ? [heroBg] : (isDarkMode ? [heroBg, darkBg2, darkBg3, darkBg4] : [lightBg, lightBg2, lightBg3, lightBg4]);
+                        const activeImages = isMobile ? [heroBg] : (isDarkMode ? [heroBg, darkBg2, darkBg3, darkBg4] : [lightBg, lightBg2, lightBg4]);
                         const currentIdx = lightBgIndex % activeImages.length;
                         return activeImages.map((img, idx) => {
                             const isActive = idx === currentIdx;
@@ -1614,8 +1780,8 @@ Réponds UNIQUEMENT au format JSON strict, sans aucun texte autour :
                                             className="icon-btn"
                                             style={{
                                                 position: "relative",
-                                                background: langMenuOpen ? "var(--accent-color)" : "rgba(255,255,255,0.1)",
-                                                color: "#fff",
+                                                background: langMenuOpen ? "rgb(255, 255, 255)" : "rgba(255,255,255,0.1)",
+                                                color:  langMenuOpen ? "rgb(0, 0, 0)" : "rgb(255, 255, 255)",
                                                 transition: "all 0.3s cubic-bezier(0.16,1,0.3,1)",
                                             }}
                                             onClick={() => setLangMenuOpen(p => !p)}
@@ -2753,17 +2919,18 @@ Réponds UNIQUEMENT au format JSON strict, sans aucun texte autour :
                                     ))}
                                 </div>
 
-                                {/* Content area */}
                                 <div style={{ position: "absolute", left: 52, top: 52, right: 0, bottom: 0, zIndex: 5 }}>
                                     <FleetMockup active={activeFeature === 0} selectedLang={selectedLang} />
                                     <CRMMockup active={activeFeature === 1} selectedLang={selectedLang} />
-                                    <ReservationsMockup active={activeFeature === 2} selectedLang={selectedLang} />
-                                    <AnalyticsMockup active={activeFeature === 3} selectedLang={selectedLang} />
                                 </div>
+                                <ReservationsMockup active={activeFeature === 2} selectedLang={selectedLang} />
+                                <AnalyticsMockup active={activeFeature === 3} selectedLang={selectedLang} />
                             </div>
                         </div>
+                    </div>
 
-                        {/* ── Bottom stats strip ── */}
+                    {/* ── Bottom stats strip ── */}
+                    <div style={{ maxWidth: 1250, margin: "0 auto" }}>
                         <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "repeat(4, 1fr)", gap: 24, marginTop: 70, padding: isMobile ? "0 4px" : 0 }}>
                             {[
                                 { val: t("agencyOS.stats.0.val", "4.2s"), label: t("agencyOS.stats.0.label", "Avg. booking time"), color: "#10b981", icon: <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" /></svg> },
@@ -2802,14 +2969,10 @@ Réponds UNIQUEMENT au format JSON strict, sans aucun texte autour :
                                 </div>
                             ))}
                         </div>
-
                     </div>
                 </section>
 
-
-                {/* ══ HOW IT WORKS (ANIMATED) ══ */}
-
-
+                {/* ══ ECOSYSTEM ══ */}
                 <div id="ecosystem" style={{ maxWidth: 1200, margin: "0 auto", position: "relative", marginTop: 165, scrollMarginTop: 120 }}>
                     <div style={{ display: "flex", justifyContent: "center", marginBottom: 16 }}>
                         <div style={{ display: "inline-flex", alignItems: "center", gap: 8, background: "var(--card-bg)", border: "1px solid var(--card-border)", borderRadius: 30, padding: "6px 16px", animation: "fadeUp 0.6s ease both" }}>
@@ -2913,7 +3076,7 @@ Réponds UNIQUEMENT au format JSON strict, sans aucun texte autour :
                             </div>
                         ))}
                     </div>
-                </div>
+                </div >
 
                 {/* ══ PLATFORM ECOSYSTEM ══ */}
 
@@ -2979,122 +3142,124 @@ Réponds UNIQUEMENT au format JSON strict, sans aucun texte autour :
                 </section>
 
                 {/* ── SEARCH RESULTS ── */}
-                {hasSearched && (
-                    <section id="search-results" style={{
-                        width: "100%", maxWidth: "98vw", margin: "0 auto 80px",
-                        animation: "fadeUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) both",
-                        padding: isMobile ? "0 12px" : "0 40px",
-                        position: "relative",
-                        zIndex: 10,
-                        marginTop: 40
-                    }}>
-                        <div style={{
-                            textAlign: "center", marginBottom: 40,
-                            display: "flex", flexDirection: "column", alignItems: "center", gap: 12
+                {
+                    hasSearched && (
+                        <section id="search-results" style={{
+                            width: "100%", maxWidth: "98vw", margin: "0 auto 80px",
+                            animation: "fadeUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) both",
+                            padding: isMobile ? "0 12px" : "0 40px",
+                            position: "relative",
+                            zIndex: 10,
+                            marginTop: 40
                         }}>
-                            {searchResults.length > 0 && (
-                                <div style={{
-                                    display: "inline-flex", alignItems: "center", gap: 8,
-                                    background: "var(--card-bg)", border: "1px solid var(--card-border)",
-                                    borderRadius: 20, padding: "6px 16px", fontSize: 13, fontWeight: 700,
-                                    color: "var(--accent-color)"
+                            <div style={{
+                                textAlign: "center", marginBottom: 40,
+                                display: "flex", flexDirection: "column", alignItems: "center", gap: 12
+                            }}>
+                                {searchResults.length > 0 && (
+                                    <div style={{
+                                        display: "inline-flex", alignItems: "center", gap: 8,
+                                        background: "var(--card-bg)", border: "1px solid var(--card-border)",
+                                        borderRadius: 20, padding: "6px 16px", fontSize: 13, fontWeight: 700,
+                                        color: "var(--accent-color)"
+                                    }}>
+                                        <span style={{ width: 8, height: 8, borderRadius: "50%", background: "var(--accent-color)", animation: "pulse 2s infinite" }} />
+                                        {searchResults.length} {selectedLang === "AR" ? "السيارات المتاحة" : selectedLang === "FR" ? "Voitures disponibles" : "Vehicles Found"}
+                                    </div>
+                                )}
+                                <h2 style={{ fontFamily: "'Syne',sans-serif", fontSize: 32, fontWeight: 800, color: "var(--text-main)" }}>
+                                    {selectedLang === "AR" ? "مجموعتك المختارة من السيارات المميزة" : selectedLang === "FR" ? "Votre Sélection de Véhicules d'Exception" : "Our Exceptional Vehicles Selection"}
+                                </h2>
+                            </div>
+
+                            {searchResults.length > 0 ? (
+                                <div dir="ltr" style={{
+                                    display: "grid",
+                                    gridTemplateColumns: isMobile ? "1fr" : "repeat(4, 1fr)",
+                                    gap: isMobile ? 16 : 32
                                 }}>
-                                    <span style={{ width: 8, height: 8, borderRadius: "50%", background: "var(--accent-color)", animation: "pulse 2s infinite" }} />
-                                    {searchResults.length} {selectedLang === "AR" ? "السيارات المتاحة" : selectedLang === "FR" ? "Voitures disponibles" : "Vehicles Found"}
+                                    {searchResults.map((car, idx) => (
+                                        <div key={car.id} dir={selectedLang === "AR" ? "rtl" : "ltr"} className="fleet-card" style={{
+                                            animation: `fadeUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) both ${idx * 0.1}s`,
+                                            padding: 0, overflow: "hidden", background: "var(--card-bg)", border: "1px solid var(--card-border)", borderRadius: 24,
+                                            textAlign: selectedLang === "AR" ? "right" : "left"
+                                        }}>
+                                            <div style={{ position: "relative", height: 220, overflow: "hidden" }}>
+                                                <img
+                                                    src={car.photos && car.photos.length > 0 ? car.photos[0] : ""}
+                                                    alt={car.name}
+                                                    style={{ width: "100%", height: "100%", objectFit: "cover", transition: "transform 0.4s ease" }}
+                                                    onMouseEnter={e => { e.currentTarget.style.transform = "scale(1.05)"; }}
+                                                    onMouseLeave={e => { e.currentTarget.style.transform = "scale(1)"; }}
+                                                />
+                                                {/* City Badge Overlay */}
+                                                <div style={{
+                                                    position: "absolute", bottom: 12, right: 12,
+                                                    background: "rgba(0,0,0,0.6)", backdropFilter: "blur(8px)",
+                                                    padding: "4px 10px", borderRadius: 12, border: "1px solid rgba(255,255,255,0.1)",
+                                                    display: "flex", alignItems: "center", gap: 5, color: "#fff", fontSize: 11, fontWeight: 700
+                                                }}>
+                                                    <MapPinIcon size={12} color="var(--accent-color)" />
+                                                    {car.city}
+                                                </div>
+                                                {/* Category badge */}
+                                                {car.category && (
+                                                    <div style={{
+                                                        position: "absolute", top: 12, right: 12,
+                                                        background: "rgba(0,0,0,0.6)", backdropFilter: "blur(8px)",
+                                                        color: "#fff", padding: "4px 12px", borderRadius: 12,
+                                                        fontSize: 12, fontWeight: 800
+                                                    }}>
+                                                        {car.category}
+                                                    </div>
+                                                )}
+                                            </div>
+                                            <div style={{ padding: 24 }}>
+                                                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 16 }}>
+                                                    <div>
+                                                        <h3 style={{ fontFamily: "'Syne',sans-serif", fontSize: 20, fontWeight: 800, color: "var(--text-main)", marginBottom: 4 }}>{car.name}</h3>
+                                                        <div style={{ fontSize: 13, color: "var(--text-muted)", display: "flex", alignItems: "center", gap: 6 }}>
+                                                            <MapPinIcon size={13} /> {car.city || "Location available"}
+                                                        </div>
+                                                    </div>
+                                                    <div style={{ textAlign: "right" }}>
+                                                        <div style={{ fontSize: 22, fontWeight: 900, color: "var(--accent-color)", fontFamily: "'Syne',sans-serif" }}>
+                                                            {car.price} MAD
+                                                        </div>
+                                                        <div style={{ fontSize: 11, color: "var(--text-muted)", fontWeight: 700 }}>/ {selectedLang === "AR" ? "يوم" : selectedLang === "FR" ? "jour" : "day"}</div>
+                                                    </div>
+                                                </div>
+                                                <div style={{
+                                                    display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12,
+                                                    marginBottom: 24, borderTop: "1px solid var(--card-border)", paddingTop: 16
+                                                }}>
+                                                    <div style={{ fontSize: 13, display: "flex", alignItems: "center", gap: 8, color: "var(--text-muted)" }}>
+                                                        <ZapIcon size={14} color="var(--accent-color)" /> {car.fuel}
+                                                    </div>
+                                                    <div style={{ fontSize: 13, display: "flex", alignItems: "center", gap: 8, color: "var(--text-muted)" }}>
+                                                        <UsersIcon size={14} color="var(--accent-color)" /> {car.seats} {selectedLang === "AR" ? "مقاعد" : "Seats"}
+                                                    </div>
+                                                </div>
+                                                <button
+                                                    className="primary-btnDE"
+                                                    style={{ width: "100%", padding: "14px", borderRadius: 16, fontSize: 15, display: "flex", alignItems: "center", justifyContent: "center", gap: 10 }}
+                                                    onClick={() => navigate(`/booking/${car.id}`)}
+                                                >
+                                                    <CalendarIcon size={18} />
+                                                    <span>{selectedLang === "AR" ? "احجز الآن" : selectedLang === "FR" ? "Réserver maintenant" : "Book Now"}</span>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            ) : (
+                                <div style={{ textAlign: "center", padding: "40px", color: "var(--text-muted)" }}>
+                                    {selectedLang === "AR" ? "لم يتم العثور على سيارات" : "Aucun véhicule trouvé pour cette recherche."}
                                 </div>
                             )}
-                            <h2 style={{ fontFamily: "'Syne',sans-serif", fontSize: 32, fontWeight: 800, color: "var(--text-main)" }}>
-                                {selectedLang === "AR" ? "مجموعتك المختارة من السيارات المميزة" : selectedLang === "FR" ? "Votre Sélection de Véhicules d'Exception" : "Our Exceptional Vehicles Selection"}
-                            </h2>
-                        </div>
-
-                        {searchResults.length > 0 ? (
-                            <div dir="ltr" style={{
-                                display: "grid",
-                                gridTemplateColumns: isMobile ? "1fr" : "repeat(4, 1fr)",
-                                gap: isMobile ? 16 : 32
-                            }}>
-                                {searchResults.map((car, idx) => (
-                                    <div key={car.id} dir={selectedLang === "AR" ? "rtl" : "ltr"} className="fleet-card" style={{
-                                        animation: `fadeUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) both ${idx * 0.1}s`,
-                                        padding: 0, overflow: "hidden", background: "var(--card-bg)", border: "1px solid var(--card-border)", borderRadius: 24,
-                                        textAlign: selectedLang === "AR" ? "right" : "left"
-                                    }}>
-                                        <div style={{ position: "relative", height: 220, overflow: "hidden" }}>
-                                            <img
-                                                src={car.photos && car.photos.length > 0 ? car.photos[0] : ""}
-                                                alt={car.name}
-                                                style={{ width: "100%", height: "100%", objectFit: "cover", transition: "transform 0.4s ease" }}
-                                                onMouseEnter={e => { e.currentTarget.style.transform = "scale(1.05)"; }}
-                                                onMouseLeave={e => { e.currentTarget.style.transform = "scale(1)"; }}
-                                            />
-                                            {/* City Badge Overlay */}
-                                            <div style={{
-                                                position: "absolute", bottom: 12, right: 12,
-                                                background: "rgba(0,0,0,0.6)", backdropFilter: "blur(8px)",
-                                                padding: "4px 10px", borderRadius: 12, border: "1px solid rgba(255,255,255,0.1)",
-                                                display: "flex", alignItems: "center", gap: 5, color: "#fff", fontSize: 11, fontWeight: 700
-                                            }}>
-                                                <MapPinIcon size={12} color="var(--accent-color)" />
-                                                {car.city}
-                                            </div>
-                                            {/* Category badge */}
-                                            {car.category && (
-                                                <div style={{
-                                                    position: "absolute", top: 12, right: 12,
-                                                    background: "rgba(0,0,0,0.6)", backdropFilter: "blur(8px)",
-                                                    color: "#fff", padding: "4px 12px", borderRadius: 12,
-                                                    fontSize: 12, fontWeight: 800
-                                                }}>
-                                                    {car.category}
-                                                </div>
-                                            )}
-                                        </div>
-                                        <div style={{ padding: 24 }}>
-                                            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 16 }}>
-                                                <div>
-                                                    <h3 style={{ fontFamily: "'Syne',sans-serif", fontSize: 20, fontWeight: 800, color: "var(--text-main)", marginBottom: 4 }}>{car.name}</h3>
-                                                    <div style={{ fontSize: 13, color: "var(--text-muted)", display: "flex", alignItems: "center", gap: 6 }}>
-                                                        <MapPinIcon size={13} /> {car.city || "Location available"}
-                                                    </div>
-                                                </div>
-                                                <div style={{ textAlign: "right" }}>
-                                                    <div style={{ fontSize: 22, fontWeight: 900, color: "var(--accent-color)", fontFamily: "'Syne',sans-serif" }}>
-                                                        {car.price} MAD
-                                                    </div>
-                                                    <div style={{ fontSize: 11, color: "var(--text-muted)", fontWeight: 700 }}>/ {selectedLang === "AR" ? "يوم" : selectedLang === "FR" ? "jour" : "day"}</div>
-                                                </div>
-                                            </div>
-                                            <div style={{
-                                                display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12,
-                                                marginBottom: 24, borderTop: "1px solid var(--card-border)", paddingTop: 16
-                                            }}>
-                                                <div style={{ fontSize: 13, display: "flex", alignItems: "center", gap: 8, color: "var(--text-muted)" }}>
-                                                    <ZapIcon size={14} color="var(--accent-color)" /> {car.fuel}
-                                                </div>
-                                                <div style={{ fontSize: 13, display: "flex", alignItems: "center", gap: 8, color: "var(--text-muted)" }}>
-                                                    <UsersIcon size={14} color="var(--accent-color)" /> {car.seats} {selectedLang === "AR" ? "مقاعد" : "Seats"}
-                                                </div>
-                                            </div>
-                                            <button
-                                                className="primary-btnDE"
-                                                style={{ width: "100%", padding: "14px", borderRadius: 16, fontSize: 15, display: "flex", alignItems: "center", justifyContent: "center", gap: 10 }}
-                                                onClick={() => navigate(`/booking/${car.id}`)}
-                                            >
-                                                <CalendarIcon size={18} />
-                                                <span>{selectedLang === "AR" ? "احجز الآن" : selectedLang === "FR" ? "Réserver maintenant" : "Book Now"}</span>
-                                            </button>
-                                        </div>
-                                    </div>
-                                ))}
-                            </div>
-                        ) : (
-                            <div style={{ textAlign: "center", padding: "40px", color: "var(--text-muted)" }}>
-                                {selectedLang === "AR" ? "لم يتم العثور على سيارات" : "Aucun véhicule trouvé pour cette recherche."}
-                            </div>
-                        )}
-                    </section>
-                )}
+                        </section>
+                    )
+                }
 
                 {/* ══ FOOTER ══ */}
                 <footer ref={footerRef} style={{
@@ -3282,86 +3447,87 @@ Réponds UNIQUEMENT au format JSON strict, sans aucun texte autour :
                         </svg>
                     </button>
                 </div>
-            </div>
+            </div >
 
             {/* ══ SEARCH OVERLAY ══ */}
-            {showSearchOverlay && (
-                <div style={{
-                    position: "fixed",
-                    inset: 0,
-                    zIndex: 9999,
-                    background: isDarkMode
-                        ? "rgba(10, 10, 15, 0.5)"
-                        : "rgba(216, 240, 223, 0.5)",
-                    backdropFilter: "blur(8px)",
-                    WebkitBackdropFilter: "blur(8px)",
-                    display: "flex",
-                    flexDirection: "column",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    gap: 0,
-                    animation: "fadeUp 0.4s ease both",
-                }}>
-                    {/* Texte principal */}
+            {
+                showSearchOverlay && (
                     <div style={{
-                        fontFamily: "'Syne', sans-serif",
-                        fontSize: isMobile ? 39 : 74,
-                        fontWeight: 900,
-                        letterSpacing: -3,
-                        marginBottom: 32,
-                        textAlign: "center",
-                        lineHeight: 1.1,
+                        position: "fixed",
+                        inset: 0,
+                        zIndex: 9999,
                         background: isDarkMode
-                            ? "linear-gradient(to right, #e6edf3 20%, #60a5fa 50%, #e6edf3 80%)"
-                            : "linear-gradient(to right, #064e3b 20%, #10b981 50%, #064e3b 80%)",
-                        backgroundSize: "200% auto",
-                        color: isDarkMode ? "#e6edf3" : "#064e3b",
-                        WebkitBackgroundClip: "text",
-                        WebkitTextFillColor: "transparent",
-                        animation: "shimmerText 2.5s linear infinite"
-                    }}>
-                        {selectedLang === "AR" ? "جارٍ البحث" : selectedLang === "FR" ? "Recherche en Cours" : "Searching"}
-                    </div>
-
-                    {/* Requête affichée */}
-                    {aiValue && (
-                        <div style={{
-                            fontFamily: "'DM Sans', sans-serif",
-                            fontSize: isMobile ? 16 : 22,
-                            color: isDarkMode ? "rgba(255,255,255,0.55)" : "rgba(6,78,59,0.6)",
-                            marginBottom: 52,
-                            maxWidth: 600,
-                            textAlign: "center",
-                            padding: "0 20px",
-                            fontStyle: "italic",
-                        }}>
-                            « {aiValue} »
-                        </div>
-                    )}
-
-                    {/* Trois points animés */}
-                    <div style={{
+                            ? "rgba(10, 10, 15, 0.5)"
+                            : "rgba(216, 240, 223, 0.5)",
+                        backdropFilter: "blur(8px)",
+                        WebkitBackdropFilter: "blur(8px)",
                         display: "flex",
-                        gap: 20,
+                        flexDirection: "column",
                         alignItems: "center",
-                        marginTop: aiValue ? 0 : 52,
+                        justifyContent: "center",
+                        gap: 0,
+                        animation: "fadeUp 0.4s ease both",
                     }}>
-                        {[0, 1, 2].map(i => (
-                            <div key={i} style={{
-                                width: 29,
-                                height: 29,
-                                borderRadius: "50%",
-                                background: isDarkMode ? "#60a5fa" : "#10b981",
-                                animationName: "bounceDot",
-                                animationDuration: "1.1s",
-                                animationTimingFunction: "ease-in-out",
-                                animationIterationCount: "infinite",
-                                animationDelay: `${i * 0.2}s`,
-                            }} />
-                        ))}
-                    </div>
+                        {/* Texte principal */}
+                        <div style={{
+                            fontFamily: "'Syne', sans-serif",
+                            fontSize: isMobile ? 39 : 74,
+                            fontWeight: 900,
+                            letterSpacing: -3,
+                            marginBottom: 32,
+                            textAlign: "center",
+                            lineHeight: 1.1,
+                            background: isDarkMode
+                                ? "linear-gradient(to right, #e6edf3 20%, #60a5fa 50%, #e6edf3 80%)"
+                                : "linear-gradient(to right, #064e3b 20%, #10b981 50%, #064e3b 80%)",
+                            backgroundSize: "200% auto",
+                            color: isDarkMode ? "#e6edf3" : "#064e3b",
+                            WebkitBackgroundClip: "text",
+                            WebkitTextFillColor: "transparent",
+                            animation: "shimmerText 2.5s linear infinite"
+                        }}>
+                            {selectedLang === "AR" ? "جارٍ البحث" : selectedLang === "FR" ? "Recherche en Cours" : "Searching"}
+                        </div>
 
-                    <style>{`
+                        {/* Requête affichée */}
+                        {aiValue && (
+                            <div style={{
+                                fontFamily: "'DM Sans', sans-serif",
+                                fontSize: isMobile ? 16 : 22,
+                                color: isDarkMode ? "rgba(255,255,255,0.55)" : "rgba(6,78,59,0.6)",
+                                marginBottom: 52,
+                                maxWidth: 600,
+                                textAlign: "center",
+                                padding: "0 20px",
+                                fontStyle: "italic",
+                            }}>
+                                « {aiValue} »
+                            </div>
+                        )}
+
+                        {/* Trois points animés */}
+                        <div style={{
+                            display: "flex",
+                            gap: 20,
+                            alignItems: "center",
+                            marginTop: aiValue ? 0 : 52,
+                        }}>
+                            {[0, 1, 2].map(i => (
+                                <div key={i} style={{
+                                    width: 29,
+                                    height: 29,
+                                    borderRadius: "50%",
+                                    background: "var(--accent-color)",
+                                    animationName: "bounceDot",
+                                    animationDuration: "1.1s",
+                                    animationTimingFunction: "ease-in-out",
+                                    animationIterationCount: "infinite",
+                                    animationDelay: `${i * 0.2}s`,
+                                }} />
+                            ))}
+                        </div>
+
+                        <style>{`
             @keyframes bounceDot {
               0%   { transform: translateY(0px);   opacity: 0.35; }
               50%  { transform: translateY(-28px); opacity: 1;    }
@@ -3372,8 +3538,10 @@ Réponds UNIQUEMENT au format JSON strict, sans aucun texte autour :
               100% { background-position: 200% center; }
             }
           `}</style>
-                </div>
-            )}
-        </>
+                    </div>
+                )
+            }
+            <WhatsAppWidget onToggleTheme={toggleTheme} isBlueTheme={isBlueTheme} selectedLang={selectedLang} />
+        </div>
     );
 }

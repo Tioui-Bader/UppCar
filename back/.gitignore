@@ -31,3 +31,9 @@ build/
 
 ### VS Code ###
 .vscode/
+
+### UppCar Secrets & AI ###
+src/main/resources/application.properties
+src/main/python/historical_data.csv
+src/main/python/growth_forecast.json
+UppCar_Growth_Forecasting.ipynb

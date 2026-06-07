@@ -1,10 +1,10 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import {
     Moon as MoonIcon, Sun as SunIcon, X, ChevronRight, ChevronLeft,
     CheckCircle2, Camera, Upload, Shield, Car, Building2,
     MapPin, Star, Fuel, Users, Gauge, Hash, Sparkles, AlertCircle,
-    FileText, CreditCard, Eye, Zap, ArrowLeft, XCircle, Loader2
+    FileText, CreditCard, Eye, Zap, ArrowLeft, XCircle, Loader2, MessageSquare
 } from 'lucide-react';
 import whatsappIcon from '../../asset/c49ca2acb2de3f97cab50b6d927244b4-removebg-preview.png';
 
@@ -46,6 +46,10 @@ const css = `
   --success-glow: rgba(52,211,153,0.22);
   --glass: rgba(255,255,255,0.04);
   --glass-border: rgba(255,255,255,0.1);
+  --btn-textee: #cfcfcf;
+    --accent-gradrr: linear-gradient(135deg, #3b82f6 0%, #8fbaffff 50%, #8b5cf6 100%);
+
+  
 }
 
 *,*::before,*::after { box-sizing:border-box; margin:0; padding:0; }
@@ -134,7 +138,7 @@ body { background:var(--bg); color:var(--text); font-family:'DM Sans',sans-serif
   box-shadow:0 8px 32px rgba(0,0,0,.05);animation:fadeUp .6s ease-out;
 }
 .nav-items { display:flex; gap:10px; list-style:none; margin:0; padding:0; }
-.nav-link { position:relative; color:var(--muted); text-decoration:none; font-family:'Syne',sans-serif; font-size:14px; font-weight:700; padding:8px 16px; border-radius:12px; transition:all .3s cubic-bezier(.4,0,.2,1); overflow:hidden; }
+.nav-link { position:relative; color:#cedfff; text-decoration:none; font-family:'Syne',sans-serif; font-size:14px; font-weight:700; padding:8px 16px; border-radius:12px; transition:all .3s cubic-bezier(.4,0,.2,1); overflow:hidden; }
 .nav-link::before { content:''; position:absolute; top:0; left:0; width:100%; height:100%; background:var(--text); opacity:0; z-index:-1; transition:opacity .3s ease; border-radius:12px; }
 .nav-link:hover { color:var(--bg); transform:translateY(-2px); }
 .nav-link:hover::before { opacity:1; }
@@ -162,7 +166,7 @@ body { background:var(--bg); color:var(--text); font-family:'DM Sans',sans-serif
   line-height:1.08;
 }
 .ba-hero-sub  { color:var(--muted);font-size:16px;margin-bottom:44px;animation:fadeUp .55s .12s ease both;font-weight:500;line-height:1.7; }
-.grad-text    { background:var(--accent-grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text; }
+.grad-text    { background:var(--accent-gradrr);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text; }
 
 /* — Grid — */
 .ba-grid { display:grid;grid-template-columns:1fr 390px;gap:32px;align-items:start; }
@@ -198,6 +202,7 @@ body { background:var(--bg); color:var(--text); font-family:'DM Sans',sans-serif
   font-family:'Syne',sans-serif;font-size:11px;font-weight:800;text-transform:uppercase;
   letter-spacing:.15em;color:var(--muted);display:flex;align-items:center;gap:10px;margin-bottom:24px;
 }
+  
 .sec-label svg { color:var(--accent); }
 .sec-label::after { content:'';flex:1;height:1px;background:var(--card-border); }
 
@@ -220,7 +225,7 @@ body { background:var(--bg); color:var(--text); font-family:'DM Sans',sans-serif
 }
 .car-name   { font-family:'Syne',sans-serif;font-size:clamp(24px,4vw,38px);font-weight:900;letter-spacing:-1.2px;color:var(--text); }
 .car-price  { display:flex;align-items:baseline;gap:8px;margin-top:16px; }
-.price-val  { font-family:'Syne',sans-serif;font-size:48px;font-weight:900;letter-spacing:-2.5px;background:var(--accent-grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text; }
+.price-val  { font-family:'Syne',sans-serif;font-size:48px;font-weight:900;letter-spacing:-2.5px;background:var(--btn-textee);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text; }
 .price-unit { font-size:14px;color:var(--muted);font-weight:600; }
 .specs-grid { display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:28px; }
 @media(max-width:580px) { .specs-grid { grid-template-columns:repeat(2,1fr); } }
@@ -555,6 +560,24 @@ body { background:var(--bg); color:var(--text); font-family:'DM Sans',sans-serif
   border-bottom:9px solid var(--c-color); background:transparent !important;
 }
 
+/* Animated Inputs */
+.modern-doc-input {
+  width:100%; padding:14px 18px; border-radius:16px; border:2px solid var(--card-border);
+  background:var(--glass); color:var(--text); outline:none; font-size:15px; font-weight:700;
+   transition:all .4s cubic-bezier(.25,1,.5,1);
+  box-shadow:0 4px 12px rgba(0,0,0,.02);
+}
+.modern-doc-input::placeholder { color:var(--muted); opacity:.6; font-weight:500; }
+.modern-doc-input:focus {
+  border-color:var(--success); background:var(--card);
+  transform:translateY(-2px) scale(1.02);
+  animation:modernInputGlow 2.5s infinite alternate;
+}
+@keyframes modernInputGlow {
+  0% { box-shadow:0 0 20px var(--success-glow), inset 0 0 5px transparent; }
+  100% { box-shadow:0 0 45px var(--success-glow), inset 0 0 15px var(--success-glow); }
+}
+
 .side-price-animated { font-family:'Syne',sans-serif; font-size:30px; font-weight:900; }
 
 /* — SIDEBAR — */
@@ -566,7 +589,7 @@ body { background:var(--bg); color:var(--text); font-family:'DM Sans',sans-serif
 .side-card:hover .side-img { transform:scale(1.05); }
 .side-body { padding:28px 30px; }
 .side-name { font-family:'Syne',sans-serif;font-size:24px;font-weight:900;color:var(--text);letter-spacing:-.5px; }
-.side-price { font-family:'Syne',sans-serif;font-size:36px;font-weight:900;background:var(--accent-grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text; }
+.side-price { font-family:'Syne',sans-serif;font-size:36px;font-weight:900;background:var(--btn-text);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text; }
 .side-unit  { font-size:13px;color:var(--muted);font-weight:600; }
 .divider    { height:1.5px;background:linear-gradient(90deg,var(--card-border),transparent);margin:20px 0; }
 .info-row   { display:flex;justify-content:space-between;font-size:14px;margin-bottom:14px;align-items:center; }
@@ -892,6 +915,7 @@ function DocSlot({ icon, title, sub, doc, status, onUpload, onCamera, onRemove, 
 export default function BookingAgreement() {
     const { id } = useParams();
     const navigate = useNavigate();
+    const location = useLocation();
     const canvasRef = useRef(null);
     const photoCanvasRef = useRef(null);
     const videoRef = useRef(null);
@@ -1037,6 +1061,8 @@ export default function BookingAgreement() {
     const [displayPhase, setDisplayPhase] = useState(0);
     const [isTransitioning, setIsTransitioning] = useState(false);
     const [docs, setDocs] = useState({ cin: null, permis: null, selfie: null });
+    const [cinNumber, setCinNumber] = useState('');
+    const [permisNumber, setPermisNumber] = useState('');
     const [camType, setCamType] = useState(null);
     const [isCamOpen, setIsCamOpen] = useState(false);
     const [activeFile, setActiveFile] = useState(null);
@@ -1045,6 +1071,12 @@ export default function BookingAgreement() {
     const [verificationError, setVerificationError] = useState(null);
     const [docStatuses, setDocStatuses] = useState({ cin: 'pending', permis: 'pending', selfie: 'valid' });
     const [showPhone, setShowPhone] = useState(false);
+
+    // Review state
+    const [rating, setRating] = useState(0);
+    const [hoverRating, setHoverRating] = useState(0);
+    const [reviewText, setReviewText] = useState('');
+    const [isReviewSubmitted, setIsReviewSubmitted] = useState(false);
 
     const changePhase = useCallback((next) => {
         if (next === phase) return;
@@ -1198,7 +1230,7 @@ export default function BookingAgreement() {
             const r = await fetch('http://localhost:8000/verify', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(docs)
+                body: JSON.stringify({ ...docs, cin_number: cinNumber, permis_number: permisNumber })
             });
             if (r.ok) {
                 const data = await r.json();
@@ -1229,8 +1261,8 @@ export default function BookingAgreement() {
     };
 
     const docsReady = docs.cin && docs.permis;
-    const allDone = docs.cin && docs.permis && docs.selfie;
-    const progress = phase === 3 ? 100 : Math.round((phase / 3) * 100 + (phase === 0 && docs.cin ? 15 : phase === 1 && docs.permis ? 15 : phase === 2 && docs.selfie ? 15 : 0));
+    const allDone = docs.cin && docs.permis;
+    const progress = phase === 3 ? 100 : Math.round((phase / 2) * 100 + (phase === 0 && docs.cin ? 15 : phase === 1 && docs.permis ? 15 : 0));
     const carImg = car?.photos?.[0] || '/static/car-placeholder.jpg';
 
     const specs = [
@@ -1625,9 +1657,9 @@ export default function BookingAgreement() {
                                         <div style={{ width: 36, height: 36, borderRadius: 12, background: 'rgba(16,185,129,0.08)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, color: 'var(--accent)', border: '1px solid rgba(16,185,129,0.1)' }}>
                                             <MapPin size={18} />
                                         </div>
-                                        <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+                                        <div style={{ display: 'flex', flexDirection: 'column', gap: 4, maxWidth: '250px' }}>
                                             <span style={{ fontSize: 11, fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.12em', color: 'var(--accent)', fontFamily: "'Syne', sans-serif" }}>{t.loc}</span>
-                                            <span style={{ fontSize: 15, fontWeight: 600, color: 'var(--text)', fontFamily: "'DM Sans', sans-serif" }}>
+                                            <span style={{ fontSize: 15, fontWeight: 600, color: 'var(--text)', fontFamily: "'DM Sans', sans-serif", lineHeight: '1.4' }}>
                                                 {agency?.address}{agency?.city ? `, ${agency.city}` : ''}{agency?.country ? `, ${agency.country}` : ''}
                                             </span>
                                         </div>
@@ -1675,7 +1707,17 @@ export default function BookingAgreement() {
                                             )
                                         )}
                                     </div>
-                                    <button type="button" className="btn-primary lg" style={{ margin: '0 auto' }} onClick={() => navigate(`/car/${id}`)}>
+                                    <button type="button" className="btn-primary lg" style={{ margin: '0 auto' }} onClick={() => navigate(`/car/${id}`, {
+                                        state: {
+                                            car: car,
+                                            reservationDays: location.state?.reservationDays || 1,
+                                            startDate: location.state?.startDate,
+                                            endDate: location.state?.endDate,
+                                            cinNumber: cinNumber,
+                                            permisNumber: permisNumber,
+                                            clientName: aiResults?.document_content?.cin?.name_extracted || "Client"
+                                        }
+                                    })}>
                                         {t.finishRes} {selectedLang === 'AR' ? <ChevronLeft size={18} /> : <ChevronRight size={18} />}
                                     </button>
                                 </div>
@@ -1703,6 +1745,20 @@ export default function BookingAgreement() {
                                         onCamera={() => openCam('cin')}
                                         onRemove={() => removeDoc('cin')}
                                     />
+                                    {docStatuses.cin === 'valid' && (
+                                        <div style={{ marginTop: 20, animation: 'fadeUp 0.3s ease' }}>
+                                            <label style={{ display: 'block', fontSize: 13, fontWeight: 700, marginBottom: 8, color: 'var(--text)' }}>
+                                                {selectedLang === 'AR' ? 'رقم البطاقة الوطنية *' : selectedLang === 'EN' ? 'National ID Number *' : 'Numéro de CIN *'}
+                                            </label>
+                                            <input
+                                                type="text"
+                                                className="modern-doc-input"
+                                                value={cinNumber}
+                                                onChange={e => setCinNumber(e.target.value)}
+                                                placeholder={selectedLang === 'AR' ? 'أدخل رقم البطاقة الوطنية' : selectedLang === 'EN' ? 'Enter your ID number' : 'Entrez votre numéro de CIN'}
+                                            />
+                                        </div>
+                                    )}
                                     <div className="selfie-tips" style={{ marginTop: 24 }}>
                                         {[t.tip_cin1, t.tip_cin2].map((tip, i) => (
                                             <div className="tip-row" key={i}><AlertCircle size={15} />{tip}</div>
@@ -1710,7 +1766,7 @@ export default function BookingAgreement() {
                                     </div>
                                     <div className="cta-row">
                                         <span className="cta-hint">{docs.cin ? t.docLoaded : t.optional}</span>
-                                        <button type="button" className="btn-primary" onClick={() => changePhase(1)} disabled={docs.cin && docStatuses.cin !== 'valid'}>
+                                        <button type="button" className="btn-primary" onClick={() => changePhase(1)} disabled={(docs.cin && docStatuses.cin !== 'valid') || (docStatuses.cin === 'valid' && !cinNumber.trim())}>
                                             {t.continueBtn} {selectedLang === 'AR' ? <ChevronLeft size={16} /> : <ChevronRight size={16} />}
                                         </button>
                                     </div>
@@ -1740,64 +1796,25 @@ export default function BookingAgreement() {
                                         onCamera={() => openCam('permis')}
                                         onRemove={() => removeDoc('permis')}
                                     />
+                                    {docStatuses.permis === 'valid' && (
+                                        <div style={{ marginTop: 20, animation: 'fadeUp 0.3s ease' }}>
+                                            <label style={{ display: 'block', fontSize: 13, fontWeight: 700, marginBottom: 8, color: 'var(--text)' }}>
+                                                {selectedLang === 'AR' ? 'رقم رخصة القيادة *' : selectedLang === 'EN' ? 'Driver License Number *' : 'Numéro de Permis *'}
+                                            </label>
+                                            <input
+                                                type="text"
+                                                className="modern-doc-input"
+                                                value={permisNumber}
+                                                onChange={e => setPermisNumber(e.target.value)}
+                                                placeholder={selectedLang === 'AR' ? 'أدخل رقم رخصة القيادة' : selectedLang === 'EN' ? 'Enter your license number' : 'Entrez votre numéro de permis'}
+                                            />
+                                        </div>
+                                    )}
                                     <div className="selfie-tips" style={{ marginTop: 24 }}>
                                         {[t.tip_permis1, t.tip_permis2].map((tip, i) => (
                                             <div className="tip-row" key={i}><AlertCircle size={15} />{tip}</div>
                                         ))}
                                     </div>
-                                    <div className="cta-row">
-                                        <button type="button" style={{ background: 'none', border: 'none', color: 'var(--muted)', cursor: 'pointer', font: '600 13px/1 DM Sans,sans-serif', display: 'flex', alignItems: 'center', gap: 6 }} onClick={() => changePhase(0)}>
-                                            {t.back}
-                                        </button>
-                                        <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-                                            <span className="cta-hint">{docs.permis ? t.docLoaded : t.optional}</span>
-                                            <button type="button" className="btn-primary" onClick={() => changePhase(2)} disabled={docs.permis && docStatuses.permis !== 'valid'}>
-                                                {t.continueBtn} {selectedLang === 'AR' ? <ChevronLeft size={16} /> : <ChevronRight size={16} />}
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
-                            ) : phase === 2 ? (
-                                /* — STEP 3: SELFIE — */
-                                <div key="step-selfie">
-                                    <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 28 }}>
-                                        <div className="progress-orbs">
-                                            <div className="orb done" /><div className="orb done" />
-                                            <div className={`orb ${docs.selfie ? 'done' : ''}`} style={{ background: !docs.selfie ? 'var(--accent)' : undefined }} />
-                                        </div>
-                                        <span style={{ fontSize: 13, color: 'var(--muted)', fontWeight: 600 }}>{t.step3}</span>
-                                    </div>
-
-                                    {docs.selfie ? (
-                                        <div className="selfie-preview-ring">
-                                            <img src={docs.selfie} alt="selfie" />
-                                            <div className="scan-line" />
-                                        </div>
-                                    ) : (
-                                        <div className="selfie-ring"><Users size={54} strokeWidth={1} /></div>
-                                    )}
-
-                                    <div className="selfie-tips" style={{ marginTop: 20 }}>
-                                        {[t.tip_selfie1, t.tip_selfie2].map((tip, i) => (
-                                            <div className="tip-row" key={i}><AlertCircle size={15} />{tip}</div>
-                                        ))}
-                                    </div>
-
-                                    {!docs.selfie ? (
-                                        <div style={{ display: 'flex', gap: '10px', width: '100%', marginBottom: 12 }}>
-                                            <button type="button" className="doc-btn-sm upload" style={{ flex: 1, padding: '16px' }} onClick={() => triggerFile('selfie')}>
-                                                <Upload size={18} style={{ marginRight: '8px' }} /> {t.importBtn}
-                                            </button>
-                                            <button type="button" className="btn-primary" style={{ flex: 1 }} onClick={() => openCam('selfie')}>
-                                                <Camera size={18} /> {t.photoBtn}
-                                            </button>
-                                        </div>
-                                    ) : (
-                                        <button type="button" className="doc-btn-sm upload" style={{ width: '100%', marginBottom: 12 }} onClick={() => removeDoc('selfie')}>
-                                            <X size={13} /> {t.retake}
-                                        </button>
-                                    )}
-
                                     {verificationError && (
                                         <div style={{
                                             padding: '14px 18px',
@@ -1807,7 +1824,7 @@ export default function BookingAgreement() {
                                             color: '#ef4444',
                                             fontSize: 13,
                                             fontWeight: 700,
-                                            marginBottom: 20,
+                                            marginTop: 20,
                                             display: 'flex',
                                             alignItems: 'center',
                                             gap: 10,
@@ -1819,12 +1836,12 @@ export default function BookingAgreement() {
                                     )}
 
                                     <div className="cta-row">
-                                        <button type="button" style={{ background: 'none', border: 'none', color: 'var(--muted)', cursor: 'pointer', font: '600 13px/1 DM Sans,sans-serif', display: 'flex', alignItems: 'center', gap: 6 }} onClick={() => changePhase(1)}>
+                                        <button type="button" style={{ background: 'none', border: 'none', color: 'var(--muted)', cursor: 'pointer', font: '600 13px/1 DM Sans,sans-serif', display: 'flex', alignItems: 'center', gap: 6 }} onClick={() => changePhase(0)}>
                                             {t.back}
                                         </button>
                                         <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-                                            <span className="cta-hint">{docs.selfie ? t.selfieReady : t.optional}</span>
-                                            <button type="button" className="btn-primary" onClick={handleVerification} disabled={isVerifying}>
+                                            <span className="cta-hint">{docs.permis ? t.docLoaded : t.optional}</span>
+                                            <button type="button" className="btn-primary" onClick={handleVerification} disabled={isVerifying || (docs.permis && docStatuses.permis !== 'valid') || (docStatuses.permis === 'valid' && !permisNumber.trim())}>
                                                 {isVerifying ? t.analyzing : t.confirm} <Zap size={15} />
                                             </button>
                                         </div>
@@ -1872,7 +1889,7 @@ export default function BookingAgreement() {
                                     {[
                                         { label: t.sideCin, done: !!docs.cin },
                                         { label: t.sidePermis, done: !!docs.permis },
-                                        { label: t.sideSelfie, done: !!docs.selfie },
+                                        /* { label: t.sideSelfie, done: !!docs.selfie }, */
                                     ].map(({ label, done }, i) => {
                                         const active = phase === i;
                                         return (
@@ -1892,6 +1909,66 @@ export default function BookingAgreement() {
                         </div>
                     </aside>
                 </div>
+
+                {/* REVIEW CARD - FULL WIDTH */}
+                <article className="card card-anim" style={{ animationDelay: '.3s', padding: '28px 32px', marginTop: '24px', width: '100%' }} {...cardGlowHandlers()}>
+                    <div className="sec-label"><Star size={14} /> {selectedLang === 'AR' ? "اكتب تقييما" : selectedLang === 'EN' ? "Write a review" : "Laissez un avis"}</div>
+
+                    {isReviewSubmitted ? (
+                        <div style={{ textAlign: 'center', padding: '20px 0', animation: 'fadeUp 0.4s ease' }}>
+                            <div style={{ width: 60, height: 60, borderRadius: '50%', background: 'rgba(34,197,94,0.1)', border: '2px solid rgba(34,197,94,0.3)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 16px', color: 'var(--success)' }}>
+                                <CheckCircle2 size={30} />
+                            </div>
+                            <h4 style={{ fontFamily: "'Syne', sans-serif", fontSize: 18, fontWeight: 800, color: 'var(--text)', marginBottom: 8 }}>
+                                {selectedLang === 'AR' ? "تم إرسال التقييم بنجاح!" : selectedLang === 'EN' ? "Review sent successfully!" : "Avis publié avec succès !"}
+                            </h4>
+                            <p style={{ color: 'var(--muted)', fontSize: 14 }}>{selectedLang === 'AR' ? "شكرا على ملاحظاتك." : selectedLang === 'EN' ? "Thank you for your feedback." : "Merci pour votre retour."}</p>
+                        </div>
+
+                    ) : (
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'start', gap: '10px', marginTop: '8px', marginBottom: '5px' }}>
+                                <span style={{ fontSize: '15px', fontWeight: 600, color: 'var(--muted)' }}>
+                                    {selectedLang === 'AR' ? "كيف كانت تجربتك؟" : selectedLang === 'EN' ? "How was your experience?" : "Évaluez votre expérience"}
+                                </span>
+                                <div style={{ display: 'flex', gap: '8px' }}>
+                                    {[1, 2, 3, 4, 5].map((star) => (
+                                        <Star
+                                            key={star}
+                                            size={32}
+                                            fill={(hoverRating || rating) >= star ? '#f59e0b' : 'transparent'}
+                                            stroke={(hoverRating || rating) >= star ? '#f59e0b' : 'var(--muted)'}
+                                            style={{ cursor: 'pointer', transition: 'all 0.2s', transform: (hoverRating || rating) >= star ? 'scale(1.15)' : 'scale(1)' }}
+                                            onClick={() => setRating(star)}
+                                            onMouseEnter={() => setHoverRating(star)}
+                                            onMouseLeave={() => setHoverRating(0)}
+                                        />
+                                    ))}
+                                </div>
+                            </div>
+
+                            <textarea
+                                className="modern-doc-input"
+                                placeholder={selectedLang === 'AR' ? "شارك تجربتك بخصوص السيارة أو الوكالة..." : selectedLang === 'EN' ? "Share your thoughts about the agency or vehicle..." : "Partagez votre avis sur l'agence ou le véhicule..."}
+                                value={reviewText}
+                                onChange={(e) => setReviewText(e.target.value)}
+                                style={{ minHeight: '80px', resize: 'vertical', fontSize: '14px' }}
+                            />
+
+                            <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+                                <button
+                                    type="button"
+                                    className="btn-primary"
+                                    disabled={rating === 0 || !reviewText.trim()}
+                                    onClick={() => setIsReviewSubmitted(true)}
+                                    style={{ padding: '12px 28px', fontSize: '15px' }}
+                                >
+                                    {selectedLang === 'AR' ? "إرسال التقييم" : selectedLang === 'EN' ? "Submit review" : "Soumettre l'avis"} <MessageSquare size={18} />
+                                </button>
+                            </div>
+                        </div>
+                    )}
+                </article>
             </main>
 
             {/* CAMERA OVERLAY */}

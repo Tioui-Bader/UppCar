@@ -7,16 +7,17 @@
 export const AR = {
     // ── NAV ──
     nav: {
-        vehicles: "من نحن",
-        services: "المفضلة",
-        pricing: "حجوزاتي",
-        aboutUs: "ملفي الشخصي",
+        vehicles: "ملفي الشخصي",
+        services: "حجوزاتي",
+        pricing: "المفضلة",
+        aboutUs: "من نحن",
         signIn: "تسجيل الدخول",
         pricingBadge: "جديد",
         myProfile: "ملفي الشخصي",
         myReservations: "حجوزاتي",
         favorites: "المفضلة",
         logout: "تسجيل الخروج",
+        profileReminder: "هام : يرجى استكمال معلومات ملفك الشخصي.",
     },
 
     // ── LANG MENU ──
