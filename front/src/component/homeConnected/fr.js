@@ -16,6 +16,7 @@ export const FR = {
         myReservations: "Mes réservations",
         favorites: "Favoris",
         logout: "Déconnexion",
+        profileReminder: "Important : Veuillez compléter les informations de votre profil.",
     },
 
     // ── LANG MENU ──

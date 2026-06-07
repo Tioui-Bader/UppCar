@@ -1,1283 +1,900 @@
-import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useState, useEffect, useCallback, useRef } from "react";
 import {
-  PiSquaresFourDuotone, PiUsersDuotone, PiBuildingsDuotone, PiCalendarCheckDuotone, PiWalletDuotone,
-  PiUserPlusDuotone, PiBuildingDuotone, PiCalendarPlusDuotone, PiCurrencyDollarDuotone,
-  PiMagnifyingGlassDuotone, PiBellDuotone, PiGearDuotone, PiSignOutDuotone, PiQuestionDuotone, PiFileTextDuotone,
-  PiCarProfileDuotone, PiMoonDuotone, PiSunDuotone
-} from "react-icons/pi";
+    LayoutGrid, Users, Building2, Calendar, Wallet,
+    BrainCircuit, Search, Bell, Settings, LogOut,
+    FileText, HelpCircle, ArrowUpRight,
+    RotateCcw, CheckCircle2, Loader2, Sparkles,
+    TrendingUp, TrendingDown, Zap, ChevronRight, Activity, Shield,
+    Mail, Phone, MapPin, Hash, Check, X, Trash2,
+    Cpu, Layers
+} from "lucide-react";
+import {
+    AreaChart, Area, XAxis, YAxis, CartesianGrid,
+    Tooltip, ResponsiveContainer
+} from 'recharts';
+import { motion, AnimatePresence } from "framer-motion";
 
-const AnimatedLogo = ({ hideText = false }) => {
-  return (
-    <div style={{ display: 'flex', alignItems: 'center', gap: 14, cursor: 'pointer', transition: 'transform 0.2s ease' }} onMouseOver={e => e.currentTarget.style.transform = 'scale(1.02)'} onMouseOut={e => e.currentTarget.style.transform = 'scale(1)'}>
-      <div className="animated-logo-bg" style={{ position: 'relative', width: 44, height: 44, borderRadius: 14, display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden' }}>
-        <div style={{ position: 'absolute', top: '-50%', left: '-50%', width: '200%', height: '200%', background: 'conic-gradient(from 0deg,transparent 0%,var(--primary) 30%,transparent 40%)', animation: 'spinWheel 4s linear infinite' }} />
-        <div className="logo-inner-bg" style={{ position: 'absolute', inset: 2, borderRadius: 12, zIndex: 1 }} />
-        <svg className="logo-car-svg" style={{ zIndex: 2, animation: 'driveBumps 2s ease-in-out infinite' }} width="24" height="24" viewBox="0 0 24 24" fill="none" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-          <path d="M14 16H9m10 0h3v-3.15a1 1 0 0 0-.84-.99L16 11l-2.7-3.6a2 2 0 0 0-1.6-.8H9.3a2 2 0 0 0-1.6.8L5 11l-5.16.86a1 1 0 0 0-.84.99V16h3" />
-          <circle cx="6.5" cy="16.5" r="2.5" style={{ animation: 'spinWheel 1s linear infinite', transformOrigin: '6.5px 16.5px' }} />
-          <circle cx="16.5" cy="16.5" r="2.5" style={{ animation: 'spinWheel 1s linear infinite', transformOrigin: '16.5px 16.5px' }} />
-        </svg>
-      </div>
-      {!hideText && (
-        <div style={{ position: 'relative', fontFamily: "'Outfit',sans-serif", fontWeight: 900, fontSize: 26, letterSpacing: "-0.5px", margin: 0 }}>
-          <span className="logo-text-p1">Upp</span>
-          <span className="logo-text-p2">Car</span>
-          <span className="logo-dot" style={{ position: 'absolute', bottom: 6, right: -12, width: 6, height: 6, borderRadius: '50%', background: 'var(--primary)', animation: 'blink 2s infinite' }} />
-        </div>
-      )}
-    </div>
-  );
-};
+// --- UTILS & COMPONENTS ---
 
-const Homeadmin = () => {
-  const navigate = useNavigate();
-  const [activeNav, setActiveNav] = useState("Overview");
+function useCounter(target, duration = 1600) {
+    const [val, setVal] = useState(0);
+    useEffect(() => {
+        let start = 0;
+        const step = target / (duration / 16);
+        const timer = setInterval(() => {
+            start += step;
+            if (start >= target) { setVal(target); clearInterval(timer); }
+            else setVal(Math.floor(start));
+        }, 16);
+        return () => clearInterval(timer);
+    }, [target]);
+    return val;
+}
 
-  // THEME MANAGEMENT
-  const [theme, setTheme] = useState(() => {
-    const saved = localStorage.getItem("adminTheme");
-    if (saved) return saved;
-    return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
-  });
+function KpiCard({ label, rawVal, numericVal, icon: Icon, accent, trend, trendUp = true, delay = 0 }) {
+    const count = useCounter(numericVal, 1600);
+    const displayVal = rawVal.startsWith("$") ? `$${count.toLocaleString()}` : rawVal.endsWith(" MAD") ? `${count.toLocaleString()} MAD` : String(count);
+    return (
+        <motion.div
+            initial={{ opacity: 0, y: 30, scale: 0.96 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            transition={{ type: "spring", stiffness: 120, damping: 18, delay: delay * 0.001 }}
+            whileHover={{ y: -6, scale: 1.02, transition: { type: "spring", stiffness: 400, damping: 20 } }}
+            style={{
+                background: "white",
+                borderRadius: 28,
+                border: `1px solid ${accent}18`,
+                boxShadow: `0 4px 24px -4px ${accent}15, 0 1px 4px rgba(0,0,0,0.04)`,
+                padding: "28px 26px 24px",
+                position: "relative",
+                overflow: "hidden",
+                cursor: "default",
+            }}
+        >
+            <motion.div
+                animate={{ scale: [1, 1.3, 1], opacity: [0.12, 0.22, 0.12] }}
+                transition={{ duration: 3.5, repeat: Infinity, ease: "easeInOut" }}
+                style={{ position: "absolute", top: -50, right: -50, width: 160, height: 160, borderRadius: "50%", background: `radial-gradient(circle, ${accent} 0%, transparent 70%)`, pointerEvents: "none" }}
+            />
+            <div style={{ position: "absolute", bottom: 0, left: 0, right: 0, height: 3, background: `linear-gradient(90deg, ${accent}, ${accent}44, transparent)`, borderRadius: "0 0 28px 28px" }} />
 
-  useEffect(() => {
-    document.title = "UppCar - Admin Dashboard";
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 20 }}>
+                <motion.div
+                    whileHover={{ rotate: 10, scale: 1.1 }}
+                    style={{ width: 50, height: 50, borderRadius: 16, background: `${accent}10`, display: "flex", alignItems: "center", justifyContent: "center", border: `1.5px solid ${accent}20` }}
+                >
+                    <Icon size={22} color={accent} strokeWidth={2.2} />
+                </motion.div>
+                <div style={{ display: "flex", alignItems: "center", gap: 5, fontSize: 12, fontWeight: 800, color: trendUp ? "#16a34a" : "#dc2626", background: trendUp ? "#f0fdf4" : "#fef2f2", border: `1px solid ${trendUp ? "#bbf7d0" : "#fecaca"}`, borderRadius: 10, padding: "5px 10px" }}>
+                    {trendUp ? <TrendingUp size={11} /> : <TrendingDown size={11} />} {trend}
+                </div>
+            </div>
 
-    // Listen for system theme changes if no local storage override
-    const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
-    const handleChange = (e) => {
-      if (!localStorage.getItem("adminTheme")) {
-        setTheme(e.matches ? "dark" : "light");
-      }
+            <div style={{ fontSize: 11, fontWeight: 800, color: "#94a3b8", textTransform: "uppercase", letterSpacing: "1.8px", marginBottom: 6 }}>{label}</div>
+            <div style={{ fontSize: 40, fontWeight: 950, color: "#0f172a", letterSpacing: "-2px", lineHeight: 1, fontVariantNumeric: "tabular-nums" }}>{displayVal}</div>
+        </motion.div>
+    );
+}
+
+function SidebarItem({ icon: Icon, label, active, onClick, danger, badge, iconColor }) {
+    return (
+        <motion.div
+            onClick={onClick}
+            initial={false}
+            whileHover={{ x: 6, background: active ? "linear-gradient(135deg, #eff6ff, #dbeafe)" : "rgba(148, 163, 184, 0.05)" }}
+            whileTap={{ scale: 0.97 }}
+            style={{
+                display: "flex", alignItems: "center", gap: 12, padding: "10px 16px",
+                borderRadius: 18, cursor: "pointer", fontWeight: active ? 800 : 600, fontSize: 13,
+                position: "relative",
+                color: danger ? "#ef4444" : active ? "#2563eb" : "#64748b",
+                background: active ? "linear-gradient(135deg, #eff6ff, #dbeafe)" : "transparent",
+                border: active ? "1.5px solid rgb(15 52 135)" : "1.5px solid transparent",
+                boxShadow: active ? "0 10px 20px -8px rgba(37,99,235,0.2)" : "none",
+                transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
+                marginBottom: 6,
+            }}
+        >
+            <AnimatePresence>
+                {active && (
+                    <motion.div
+                        layoutId="activePill"
+                        style={{
+                            position: "absolute", left: -20, width: 6, height: 24,
+                            background: `linear-gradient(180deg, ${iconColor}, ${iconColor}cc)`,
+                            borderRadius: "0 4px 4px 0",
+                            boxShadow: `4px 0 12px ${iconColor}60`
+                        }}
+                        initial={{ opacity: 0, x: -10 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        exit={{ opacity: 0, x: -10 }}
+                    />
+                )}
+            </AnimatePresence>
+            <div style={{
+                width: 38, height: 38, borderRadius: 12,
+                background: active ? "white" : `${iconColor}08`,
+                display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0,
+                boxShadow: active ? `0 4px 12px ${iconColor}20` : "none",
+                transition: "all 0.3s",
+                position: "relative",
+                overflow: "hidden"
+            }}>
+                <motion.div
+                    animate={active ? {
+                        scale: [1, 1.2, 1],
+                        rotate: [0, 10, -10, 0]
+                    } : {}}
+                    transition={{ duration: 1.5, repeat: active ? Infinity : 0, ease: "easeInOut" }}
+                >
+                    <Icon size={18} color={active ? iconColor : "#64748b"} strokeWidth={active ? 2.5 : 2} />
+                </motion.div>
+                {active && (
+                    <motion.div
+                        layoutId="activeGlow"
+                        style={{
+                            position: "absolute", inset: 0,
+                            background: `radial-gradient(circle, ${iconColor}20 0%, transparent 70%)`
+                        }}
+                    />
+                )}
+            </div>
+            <span style={{ flex: 1, letterSpacing: "-0.2px" }}>{label}</span>
+            {badge && (
+                <motion.span
+                    initial={{ scale: 0 }}
+                    animate={{ scale: 1 }}
+                    style={{
+                        background: iconColor, color: "white", fontSize: 10,
+                        fontWeight: 900, padding: "2px 8px", borderRadius: 20,
+                        boxShadow: `0 4px 8px ${iconColor}40`
+                    }}
+                >
+                    {badge}
+                </motion.span>
+            )}
+        </motion.div>
+    );
+}
+
+// --- MAIN COMPONENT ---
+
+export default function Homeadmin() {
+    const [activeTab, setActiveTab] = useState("overview");
+    const [searchQuery, setSearchQuery] = useState("");
+    const [loading, setLoading] = useState(true);
+
+    // AI Forecast states
+    const [forecastType, setForecastType] = useState("reservations");
+    const [forecastData, setForecastData] = useState(null);
+    const [isTraining, setIsTraining] = useState(false);
+    const [trainingProgress, setTrainingProgress] = useState(0);
+    const [trainingLogs, setTrainingLogs] = useState([]);
+    const [trainingMetrics, setTrainingMetrics] = useState({ epoch: 0, loss: 0.85, val_loss: 0.88 });
+    const consoleRef = useRef(null);
+
+    // Business Data States
+    const [users, setUsers] = useState([]);
+    const [agencies, setAgencies] = useState([]);
+    const [reservations, setReservations] = useState([]);
+    const [stats, setStats] = useState({ totalUsers: 0, totalAgencies: 0, totalReservations: 0, totalRevenue: 0 });
+
+    const API_BASE = "http://localhost:8080/api/admin";
+
+    // Data Fetching
+    const fetchData = useCallback(async () => {
+        setLoading(true);
+        try {
+            const [usersRes, agenciesRes, reservationsRes, statsRes] = await Promise.all([
+                fetch(`${API_BASE}/users`),
+                fetch(`${API_BASE}/agencies`),
+                fetch(`${API_BASE}/reservations`),
+                fetch(`${API_BASE}/stats`)
+            ]);
+
+            if (usersRes.ok) setUsers(await usersRes.json());
+            if (agenciesRes.ok) setAgencies(await agenciesRes.json());
+            if (reservationsRes.ok) setReservations(await reservationsRes.json());
+            if (statsRes.ok) setStats(await statsRes.json());
+
+            // Mock AI Forecast if API fails or for demo
+            setForecastData({
+                reservations: { historical: [120, 150, 180, 210, 190, 230, 250, 280, 300, 320], forecast: [340, 370, 390, 410, 430], dates: ["01 Juin", "02 Juin", "03 Juin", "04 Juin", "05 Juin"] },
+                clients: { historical: [45, 52, 58, 65, 70, 75, 82, 88, 92, 98], forecast: [105, 112, 118, 125, 132], dates: ["01 Juin", "02 Juin", "03 Juin", "04 Juin", "05 Juin"] },
+                agencies: { historical: [5, 6, 6, 7, 7, 8, 8, 9, 10, 10], forecast: [11, 12, 12, 13, 13], dates: ["01 Juin", "02 Juin", "03 Juin", "04 Juin", "05 Juin"] }
+            });
+        } catch (e) {
+            console.error("Fetch error:", e);
+        } finally {
+            setLoading(false);
+        }
+    }, []);
+
+    useEffect(() => { fetchData(); }, [fetchData]);
+
+    // AI Training Logic
+    const startTraining = () => {
+        if (isTraining) return;
+        setIsTraining(true); setTrainingProgress(0);
+        setTrainingLogs(["[INIT] Bootstrapping XGBoost runtime...", "[DATA] Loading historical dataset..."]);
+        let progress = 0;
+        const iv = setInterval(() => {
+            progress += Math.random() * 8;
+            if (progress >= 100) {
+                setTrainingProgress(100); setIsTraining(false);
+                setTrainingLogs(p => [...p, "[✓] Training complete — RMSE: 0.042", "[✓] Model deployed to production."]);
+                clearInterval(iv);
+            } else {
+                setTrainingProgress(progress);
+                if (Math.random() > 0.6) {
+                    const epoch = Math.floor(progress / 4);
+                    const loss = (0.85 - progress / 180).toFixed(4);
+                    setTrainingMetrics({ epoch, loss, val_loss: (parseFloat(loss) + 0.015).toFixed(4) });
+                    setTrainingLogs(p => [...p.slice(-6), `[EPOCH ${String(epoch).padStart(3, "0")}] loss=${loss}  val_loss=${(parseFloat(loss) + 0.015).toFixed(4)}`]);
+                }
+            }
+        }, 200);
     };
-    mediaQuery.addEventListener("change", handleChange);
-    return () => mediaQuery.removeEventListener("change", handleChange);
-  }, []);
 
-  useEffect(() => {
-    localStorage.setItem("adminTheme", theme);
-    document.body.style.background = theme === "dark" ? "#09090b" : "#f8fafc";
-    document.body.style.transition = "background 0.3s ease";
-  }, [theme]);
-
-  const toggleTheme = () => {
-    setTheme(prev => prev === "light" ? "dark" : "light");
-  };
-
-  const handleLogout = () => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("role");
-    localStorage.removeItem("user");
-    navigate("/loginadmin");
-  };
-
-  const navItems = [
-    { name: "Overview", icon: <PiSquaresFourDuotone size={22} className="modern-icon" /> },
-    { name: "Users", icon: <PiUsersDuotone size={22} className="modern-icon" /> },
-    { name: "Agencies", icon: <PiBuildingsDuotone size={22} className="modern-icon" /> },
-    { name: "Reservations", icon: <PiCalendarCheckDuotone size={22} className="modern-icon" /> },
-    { name: "Financials", icon: <PiWalletDuotone size={22} className="modern-icon" /> },
-  ];
-
-  const kpis = [
-    { label: "New Users", value: "24", icon: <PiUserPlusDuotone size={28} className="modern-icon kpi-svg" />, indicator: "+12%", type: "success" },
-    { label: "New Agencies", value: "3", icon: <PiBuildingDuotone size={28} className="modern-icon kpi-svg" />, indicator: "+2", type: "primary" },
-    { label: "Reservations", value: "12", icon: <PiCalendarPlusDuotone size={28} className="modern-icon kpi-svg" />, indicator: "+8%", type: "warning" },
-    { label: "Daily Revenue", value: "$2,450", icon: <PiCurrencyDollarDuotone size={28} className="modern-icon kpi-svg" />, indicator: "+15%", type: "danger" },
-  ];
-
-  const activities = [
-    {
-      user: "John Doe",
-      action: "Created new",
-      entity: "User Account",
-      status: "SUCCESS",
-      time: "2 min ago",
-      type: "success"
-    },
-    {
-      user: "Sarah Wilson",
-      action: "Updated",
-      entity: "Agency Profile",
-      status: "UPDATED",
-      time: "15 min ago",
-      type: "primary"
-    },
-    {
-      user: "Mike Johnson",
-      action: "Confirmed",
-      entity: "Reservation #1234",
-      status: "CONFIRMED",
-      time: "1 hour ago",
-      type: "warning"
-    },
-  ];
-
-  return (
-    <>
-      <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap');
-
-        /* CSS VARIABLES - LIGHT THEME (DEFAULT) */
-        :root {
-          --bg-main: #f8fafc;
-          --bg-pattern: #e2e8f0;
-          --surface: rgba(255, 255, 255, 0.85);
-          --surface-solid: #ffffff;
-          --surface-hover: #f1f5f9;
-          --surface-active: #ffffff;
-          --border: rgba(226, 232, 240, 0.8);
-          --border-strong: #cbd5e1;
-          
-          --text-main: #0f172a;
-          --text-secondary: #1e293b;
-          --text-muted: #64748b;
-          --text-placeholder: #94a3b8;
-          
-          --primary: #3b82f6;
-          --primary-hover: #2563eb;
-          --primary-soft: #eff6ff;
-          --primary-grad: linear-gradient(135deg, #3b82f6, #2563eb);
-          
-          --success: #10b981;
-          --success-soft: #ecfdf5;
-          --success-grad: linear-gradient(135deg, #10b981, #059669);
-          
-          --warning: #f59e0b;
-          --warning-soft: #fffbeb;
-          --warning-grad: linear-gradient(135deg, #f59e0b, #d97706);
-          
-          --danger: #ef4444;
-          --danger-soft: #fef2f2;
-          --danger-grad: linear-gradient(135deg, #ef4444, #dc2626);
-          
-          --shadow-sm: 0 2px 6px rgba(0,0,0,0.02);
-          --shadow-md: 0 10px 30px rgba(0, 0, 0, 0.03);
-          --shadow-lg: 0 20px 40px rgba(0, 0, 0, 0.06);
-          
-          --nav-active-bg: #ffffff;
-          --nav-active-shadow: 0 8px 16px rgba(37, 99, 235, 0.08);
-          --icon-bg: #f1f5f9;
-        }
-
-        /* CSS VARIABLES - DARK THEME */
-        [data-theme="dark"] {
-          --bg-main: #09090b; /* zinc-950 */
-          --bg-pattern: rgba(255,255,255,0.03);
-          --surface: rgba(24, 24, 27, 0.7); /* zinc-900 */
-          --surface-solid: #18181b;
-          --surface-hover: rgba(255,255,255,0.05);
-          --surface-active: rgba(59, 130, 246, 0.1);
-          --border: rgba(255, 255, 255, 0.08);
-          --border-strong: rgba(255, 255, 255, 0.15);
-          
-          --text-main: #fafafa;
-          --text-secondary: #e4e4e7;
-          --text-muted: #a1a1aa;
-          --text-placeholder: #52525b;
-          
-          --primary: #3b82f6;
-          --primary-hover: #60a5fa;
-          --primary-soft: rgba(59, 130, 246, 0.15);
-          
-          --success: #34d399;
-          --success-soft: rgba(16, 185, 129, 0.15);
-          
-          --warning: #fbbf24;
-          --warning-soft: rgba(245, 158, 11, 0.15);
-          
-          --danger: #f87171;
-          --danger-soft: rgba(239, 68, 68, 0.15);
-          
-          --shadow-sm: 0 2px 6px rgba(0,0,0,0.2);
-          --shadow-md: 0 10px 30px rgba(0, 0, 0, 0.3);
-          --shadow-lg: 0 20px 40px rgba(0, 0, 0, 0.4);
-          
-          --nav-active-bg: rgba(59, 130, 246, 0.1);
-          --nav-active-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-          --icon-bg: rgba(255,255,255,0.05);
-        }
-
-        /* GLOBAL TRANSITIONS */
-        *, *::before, *::after {
-          transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease;
-        }
-
-        .admin-dashboard {
-          font-family: 'Outfit', system-ui, sans-serif;
-          background-color: var(--bg-main);
-          background-image: radial-gradient(var(--bg-pattern) 1px, transparent 1px);
-          background-size: 20px 20px;
-          min-height: 100vh;
-          display: flex;
-          color: var(--text-secondary);
-        }
-
-        /* Glassmorphism sidebar */
-        .glass-sidebar {
-          width: 280px;
-          background: var(--surface);
-          backdrop-filter: blur(24px);
-          -webkit-backdrop-filter: blur(24px);
-          border-right: 1px solid var(--border);
-          box-shadow: 4px 0 24px rgba(0, 0, 0, 0.05);
-          display: flex;
-          flex-direction: column;
-          z-index: 20;
-          position: sticky;
-          top: 0;
-          height: 100vh;
-          overflow-y: auto;
-        }
-
-        .logo-area {
-          padding: 28px 24px;
-          border-bottom: 1px solid var(--border);
-        }
-        
-        .logo-inner-bg { background: var(--surface-solid); }
-        .logo-car-svg { stroke: var(--text-main); }
-        .logo-text-p1 { color: var(--text-main); }
-        .logo-text-p2 { color: var(--primary); }
-
-        .logo-text {
-          font-size: 26px;
-          font-weight: 800;
-          display: flex;
-          align-items: center;
-          gap: 12px;
-          letter-spacing: -0.5px;
-          margin: 0;
-        }
-
-        .nav-container {
-          flex: 1;
-          padding: 24px 16px;
-          display: flex;
-          flex-direction: column;
-          gap: 8px;
-          overflow-y: auto;
-        }
-
-        .nav-btn {
-          width: 100%;
-          border: none;
-          padding: 14px 18px;
-          border-radius: 12px;
-          cursor: pointer;
-          display: flex;
-          align-items: center;
-          gap: 16px;
-          font-size: 15px;
-          font-family: 'Outfit', sans-serif;
-          background: transparent;
-          color: var(--text-muted);
-          font-weight: 500;
-        }
-
-        .nav-btn:hover {
-          transform: translateX(4px);
-          background: var(--surface-hover);
-          color: var(--text-main);
-        }
-
-        .nav-btn.active {
-          background: var(--nav-active-bg);
-          color: var(--primary);
-          font-weight: 700;
-          box-shadow: var(--nav-active-shadow);
-          position: relative;
-        }
-        
-        .nav-btn.active::before {
-          content: '';
-          position: absolute;
-          left: -16px;
-          top: 50%;
-          transform: translateY(-50%);
-          height: 24px;
-          width: 4px;
-          background: var(--primary);
-          border-radius: 0 4px 4px 0;
-        }
-
-        .nav-icon {
-          width: 38px;
-          height: 38px;
-          border-radius: 10px;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          font-size: 18px;
-          background: var(--icon-bg);
-        }
-        
-        .nav-btn.active .nav-icon {
-          background: var(--primary-grad);
-          color: white;
-          box-shadow: 0 4px 10px rgba(37, 99, 235, 0.3);
-          transform: scale(1.05);
-        }
-
-        .sidebar-footer {
-          padding: 24px;
-          border-top: 1px solid var(--border);
-        }
-
-        /* TOGGLE THEME SWITCH */
-        .theme-toggle-sidebar {
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-          padding: 12px 16px;
-          border-radius: 14px;
-          background: var(--icon-bg);
-          border: 1px solid var(--border);
-          cursor: pointer;
-          margin-bottom: 16px;
-        }
-        .theme-toggle-sidebar:hover {
-          background: var(--surface-hover);
-        }
-        
-        .toggle-switch {
-          width: 40px;
-          height: 22px;
-          background: var(--text-placeholder);
-          border-radius: 20px;
-          position: relative;
-        }
-        [data-theme="dark"] .toggle-switch {
-          background: var(--primary);
-        }
-        .toggle-thumb {
-          position: absolute;
-          top: 3px;
-          left: 3px;
-          width: 16px;
-          height: 16px;
-          background: white;
-          border-radius: 50%;
-          transition: transform 0.3s cubic-bezier(0.4, 0.0, 0.2, 1);
-          box-shadow: 0 2px 4px rgba(0,0,0,0.2);
-        }
-        [data-theme="dark"] .toggle-thumb {
-          transform: translateX(18px);
-        }
-
-        .btn-primary {
-          width: 100%;
-          padding: 14px;
-          background: var(--primary-grad);
-          color: white;
-          border: none;
-          border-radius: 12px;
-          font-weight: 600;
-          font-size: 15px;
-          font-family: 'Outfit', sans-serif;
-          cursor: pointer;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          gap: 10px;
-          box-shadow: 0 8px 16px rgba(59, 130, 246, 0.25);
-          margin-bottom: 20px;
-        }
-        
-        .btn-primary:hover {
-          transform: translateY(-2px);
-          box-shadow: 0 12px 20px rgba(59, 130, 246, 0.35);
-          filter: brightness(1.1);
-        }
-
-        .footer-link {
-          padding: 10px 14px;
-          border-radius: 8px;
-          cursor: pointer;
-          font-size: 14px;
-          font-weight: 500;
-          color: var(--text-muted);
-          display: flex;
-          align-items: center;
-          gap: 10px;
-        }
-        
-        .footer-link:hover {
-          background: var(--surface-hover);
-          color: var(--text-main);
-        }
-        
-        .footer-link.logout {
-          color: var(--danger);
-        }
-        
-        .footer-link.logout:hover {
-          background: var(--danger-soft);
-        }
-
-        /* Main Content */
-        .main-wrapper {
-          flex: 1;
-          display: flex;
-          flex-direction: column;
-          overflow: hidden;
-        }
-
-        .glass-header {
-          background: var(--surface);
-          backdrop-filter: blur(24px);
-          -webkit-backdrop-filter: blur(24px);
-          border-bottom: 1px solid var(--border);
-          padding: 20px 32px;
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-          z-index: 10;
-          position: sticky;
-          top: 0;
-        }
-
-        .search-bar {
-          position: relative;
-          width: 320px;
-        }
-
-        .search-bar:focus-within {
-          width: 420px;
-        }
-        
-        .search-input {
-          width: 100%;
-          padding: 12px 16px 12px 44px;
-          background: var(--icon-bg);
-          border: 1px solid var(--border);
-          border-radius: 14px;
-          font-family: 'Outfit', sans-serif;
-          font-size: 14px;
-          outline: none;
-          color: var(--text-main);
-        }
-
-        .search-input::placeholder {
-          color: var(--text-placeholder);
-        }
-        
-        .search-input:hover {
-          border-color: var(--border-strong);
-        }
-        
-        .search-input:focus {
-          background: var(--surface-solid);
-          border-color: var(--primary);
-          box-shadow: 0 0 0 4px var(--primary-soft);
-        }
-        
-        .search-icon {
-          position: absolute;
-          left: 16px;
-          top: 50%;
-          transform: translateY(-50%);
-          color: var(--text-placeholder);
-          font-size: 16px;
-          pointer-events: none;
-        }
-
-        .search-bar:focus-within .search-icon {
-          color: var(--primary);
-          transform: translateY(-50%) scale(1.1);
-        }
-
-        .header-actions {
-          display: flex;
-          align-items: center;
-          gap: 16px;
-        }
-        
-        .icon-btn {
-          width: 42px;
-          height: 42px;
-          border-radius: 12px;
-          border: 1px solid var(--border);
-          background: var(--surface-solid);
-          color: var(--text-muted);
-          cursor: pointer;
-          display: grid;
-          place-items: center;
-          font-size: 18px;
-          box-shadow: var(--shadow-sm);
-        }
-        
-        .icon-btn:hover {
-          border-color: var(--border-strong);
-          color: var(--text-main);
-          transform: translateY(-1px);
-        }
-
-        .avatar {
-          width: 44px;
-          height: 44px;
-          border-radius: 12px;
-          background: var(--primary-grad);
-          color: white;
-          font-weight: 700;
-          font-size: 16px;
-          display: grid;
-          place-items: center;
-          cursor: pointer;
-          box-shadow: 0 4px 10px rgba(59, 130, 246, 0.3);
-          border: 2px solid var(--surface-solid);
-        }
-        
-        .avatar:hover {
-          transform: scale(1.05);
-        }
-
-        .main-content {
-          padding: 32px;
-          overflow-y: auto;
-          flex: 1;
-        }
-
-        .page-title {
-          font-size: 28px;
-          font-weight: 800;
-          color: var(--text-main);
-          margin: 0 0 8px 0;
-          letter-spacing: -0.5px;
-        }
-        
-        .page-subtitle {
-          color: var(--text-muted);
-          font-size: 15px;
-          margin: 0 0 32px 0;
-        }
-
-        .kpi-grid {
-          display: grid;
-          grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-          gap: 24px;
-          margin-bottom: 40px;
-        }
-
-        .kpi-card {
-          background: var(--surface);
-          backdrop-filter: blur(10px);
-          border: 1px solid var(--border);
-          border-radius: 20px;
-          padding: 24px;
-          box-shadow: var(--shadow-md);
-          position: relative;
-          overflow: hidden;
-        }
-        
-        .kpi-card::before {
-          content: '';
-          position: absolute;
-          top: 0; left: 0; right: 0; height: 4px;
-          background: var(--card-gradient);
-          opacity: 0;
-        }
-        
-        .kpi-card:hover {
-          transform: translateY(-6px);
-          box-shadow: var(--shadow-lg);
-          background: var(--surface-solid);
-        }
-        
-        .kpi-card:hover::before {
-          opacity: 1;
-        }
-
-        .kpi-header {
-          display: flex;
-          justify-content: space-between;
-          align-items: flex-start;
-          margin-bottom: 20px;
-        }
-
-        .kpi-icon {
-          width: 54px;
-          height: 54px;
-          border-radius: 16px;
-          display: grid;
-          place-items: center;
-          font-size: 24px;
-          color: white;
-          box-shadow: 0 8px 16px rgba(0,0,0,0.08);
-        }
-
-        .kpi-indicator {
-          padding: 6px 12px;
-          border-radius: 20px;
-          font-size: 13px;
-          font-weight: 700;
-        }
-
-        /* KPI TYPE STYLES */
-        .type-success .kpi-icon { background: var(--success-grad); }
-        .type-success .kpi-indicator { background: var(--success-soft); color: var(--success); }
-        .type-success { --card-gradient: var(--success-grad); }
-
-        .type-primary .kpi-icon { background: var(--primary-grad); }
-        .type-primary .kpi-indicator { background: var(--primary-soft); color: var(--primary); }
-        .type-primary { --card-gradient: var(--primary-grad); }
-
-        .type-warning .kpi-icon { background: var(--warning-grad); }
-        .type-warning .kpi-indicator { background: var(--warning-soft); color: var(--warning); }
-        .type-warning { --card-gradient: var(--warning-grad); }
-
-        .type-danger .kpi-icon { background: var(--danger-grad); }
-        .type-danger .kpi-indicator { background: var(--danger-soft); color: var(--danger); }
-        .type-danger { --card-gradient: var(--danger-grad); }
-
-
-        .kpi-label {
-          font-size: 15px;
-          color: var(--text-muted);
-          font-weight: 600;
-          margin: 0 0 8px 0;
-        }
-
-        .kpi-value {
-          font-size: 32px;
-          font-weight: 800;
-          color: var(--text-main);
-          margin: 0;
-          letter-spacing: -1px;
-        }
-
-        /* Activity Table */
-        .table-container {
-          background: var(--surface-solid);
-          border-radius: 20px;
-          box-shadow: var(--shadow-md);
-          border: 1px solid var(--border);
-          overflow: hidden;
-        }
-
-        .table-header {
-          padding: 24px 32px;
-          border-bottom: 1px solid var(--border);
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-        }
-
-        .table-title {
-          font-size: 20px;
-          font-weight: 700;
-          color: var(--text-main);
-          margin: 0;
-        }
-        
-        .view-all-btn {
-          color: var(--primary);
-          font-weight: 600;
-          font-size: 14px;
-          cursor: pointer;
-          background: transparent;
-          border: none;
-          font-family: inherit;
-        }
-        .view-all-btn:hover {
-          text-decoration: underline;
-        }
-
-        .activity-table {
-          width: 100%;
-          border-collapse: separate;
-          border-spacing: 0;
-        }
-
-        .activity-table th {
-          background: var(--surface);
-          padding: 16px 32px;
-          text-align: left;
-          font-size: 13px;
-          font-weight: 600;
-          color: var(--text-muted);
-          text-transform: uppercase;
-          letter-spacing: 0.5px;
-          border-bottom: 1px solid var(--border);
-        }
-
-        .activity-table td {
-          padding: 20px 32px;
-          border-bottom: 1px solid var(--border);
-        }
-
-        .table-row:hover td {
-          background: var(--surface-hover);
-        }
-        
-        .table-row:last-child td {
-          border-bottom: none;
-        }
-
-        .user-cell {
-          display: flex;
-          align-items: center;
-          gap: 16px;
-        }
-
-        .user-avatar {
-          width: 38px;
-          height: 38px;
-          border-radius: 10px;
-          background: var(--icon-bg);
-          border: 1px solid var(--border);
-          display: grid;
-          place-items: center;
-          font-weight: 700;
-          color: var(--text-main);
-          font-size: 14px;
-        }
-
-        .user-name {
-          font-weight: 700;
-          color: var(--text-main);
-          margin: 0;
-          font-size: 15px;
-        }
-
-        .user-action {
-          color: var(--text-muted);
-          margin: 4px 0 0;
-          font-size: 13px;
-        }
-
-        .entity-cell {
-          font-weight: 600;
-          color: var(--text-secondary);
-          font-size: 14px;
-        }
-
-        .status-badge {
-          display: inline-flex;
-          padding: 6px 14px;
-          border-radius: 20px;
-          font-size: 12px;
-          font-weight: 700;
-          letter-spacing: 0.5px;
-        }
-        
-        /* STATUS TYPES */
-        .status-success { background: var(--success-soft); color: var(--success); }
-        .status-primary { background: var(--primary-soft); color: var(--primary); }
-        .status-warning { background: var(--warning-soft); color: var(--warning); }
-        .status-danger { background: var(--danger-soft); color: var(--danger); }
-
-        .time-cell {
-          color: var(--text-muted);
-          font-size: 14px;
-          font-weight: 500;
-        }
-
-        .action-btn {
-          padding: 8px 16px;
-          border-radius: 8px;
-          border: 1px solid var(--border);
-          background: var(--surface-solid);
-          font-family: inherit;
-          font-weight: 600;
-          font-size: 13px;
-          color: var(--text-main);
-          cursor: pointer;
-        }
-        
-        .action-btn:hover {
-          border-color: var(--border-strong);
-          background: var(--surface-hover);
-        }
-
-        /* Animations */
-        @keyframes fadeIn {
-          from { opacity: 0; transform: translateY(10px); }
-          to { opacity: 1; transform: translateY(0); }
-        }
-
-        .animate-fade-in {
-          animation: fadeIn 0.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
-        }
-        
-        .delay-1 { animation-delay: 0.1s; }
-        .delay-2 { animation-delay: 0.2s; }
-        .delay-3 { animation-delay: 0.3s; }
-
-        .modern-icon {
-          transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-        
-        .modern-icon path[opacity="0.2"] {
-          opacity: 0.35 !important;
-        }
-
-        .logo-icon {
-          animation: float 6s ease-in-out infinite;
-          filter: drop-shadow(0 4px 10px rgba(59, 130, 246, 0.5));
-        }
-
-        .nav-btn:hover .modern-icon {
-          transform: scale(1.15) rotate(-5deg);
-        }
-        
-        .nav-btn.active .modern-icon {
-          animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
-        }
-
-        .kpi-card:hover .kpi-svg {
-          animation: pulseIcon 1.5s infinite;
-          transform: scale(1.15);
-        }
-
-        .icon-btn:hover .bell-icon {
-          animation: ring 1s ease-in-out infinite;
-          color: var(--danger);
-        }
-
-        .icon-btn:hover .settings-icon {
-          animation: spin 3s linear infinite;
-          color: var(--primary);
-        }
-
-        .btn-primary:hover .modern-icon {
-          transform: translateX(4px) scale(1.1);
-        }
-
-        .footer-link:hover .modern-icon {
-          transform: scale(1.1) translateX(2px);
-        }
-
-        @keyframes float {
-          0% { transform: translateY(0px); }
-          50% { transform: translateY(-4px); }
-          100% { transform: translateY(0px); }
-        }
-
-        @keyframes popIn {
-          0% { transform: scale(0.8); opacity: 0.5; }
-          50% { transform: scale(1.2); }
-          100% { transform: scale(1); opacity: 1; }
-        }
-
-        @keyframes pulseIcon {
-          0% { transform: scale(1); }
-          50% { transform: scale(1.15); }
-          100% { transform: scale(1); }
-        }
-
-        @keyframes ring {
-          0% { transform: rotate(0); }
-          10% { transform: rotate(15deg); }
-          20% { transform: rotate(-10deg); }
-          30% { transform: rotate(10deg); }
-          40% { transform: rotate(-5deg); }
-          50% { transform: rotate(5deg); }
-          60% { transform: rotate(0); }
-          100% { transform: rotate(0); }
-        }
-
-        @keyframes spin {
-          from { transform: rotate(0deg); }
-          to { transform: rotate(360deg); }
-        }
-
-        @keyframes spinWheel { 100%{transform:rotate(360deg);} }
-        @keyframes driveBumps { 0%,100%{transform:translateY(0);} 50%{transform:translateY(-1.5px);} }
-        @keyframes blink { 0%,100%{opacity:1;} 50%{opacity:0;} }
-
-        .animated-logo-bg { 
-          background: var(--icon-bg); 
-          border: 1px solid var(--border);
-        }
-      `}</style>
-
-      <div className="admin-dashboard" data-theme={theme}>
-        {/* SIDEBAR */}
-        <aside className="glass-sidebar">
-          <div className="logo-area" style={{ padding: '24px 20px', display: 'flex', justifyContent: 'flex-start' }}>
-            <AnimatedLogo />
-          </div>
-
-          <nav className="nav-container">
-            {navItems.map((item) => (
-              <button
-                key={item.name}
-                onClick={() => setActiveNav(item.name)}
-                className={`nav-btn ${activeNav === item.name ? "active" : ""}`}
-              >
-                <div className="nav-icon">{item.icon}</div>
-                {item.name}
-              </button>
-            ))}
-          </nav>
-
-          <div className="sidebar-footer">
-            <div className="theme-toggle-sidebar" onClick={toggleTheme}>
-              <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-                {theme === "dark" ? <PiMoonDuotone size={18} color="var(--text-main)" /> : <PiSunDuotone size={18} color="var(--text-main)" />}
-                <span style={{ fontWeight: 600, fontSize: 14, color: "var(--text-main)" }}>{theme === "dark" ? "Mode Sombre" : "Mode Clair"}</span>
-              </div>
-              <div className="toggle-switch">
-                <div className="toggle-thumb" />
-              </div>
+    const handlePurgeData = async () => {
+        if (!window.confirm("Êtes-vous sûr de vouloir purger TOUTES les données de test ? Cette action est irréversible.")) return;
+        setLoading(true);
+        try {
+            const res = await fetch(`${API_BASE}/purge-test-data`, { method: "DELETE" });
+            if (res.ok) {
+                alert("Données purgées avec succès.");
+                await fetchData();
+            } else {
+                alert("Erreur lors de la purge.");
+            }
+        } catch (e) {
+            console.error("Purge error:", e);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const logout = () => { localStorage.clear(); window.location.href = "/loginadmin"; };
+
+    const getStatusColor = (st) => {
+        switch (st) {
+            case "CONFIRMED": case "SUCCESS": return "#16a34a";
+            case "PENDING": return "#d97706";
+            case "CANCELLED": return "#dc2626";
+            default: return "#64748b";
+        }
+    };
+
+    const chartData = forecastData?.[forecastType]
+        ? forecastData[forecastType].historical.map((v, i) => ({
+            name: `H-${i}`,
+            date: "Historique",
+            val: v,
+            isForecast: false,
+            ci_low: v - Math.random() * 10,
+            ci_high: v + Math.random() * 10
+        }))
+            .concat(forecastData[forecastType].forecast.map((v, i) => ({
+                name: `P-${i}`,
+                date: forecastData[forecastType].dates[i] || `F-${i}`,
+                val: v,
+                isForecast: true,
+                ci_low: v - (10 + i * 5),
+                ci_high: v + (10 + i * 5)
+            })))
+        : [];
+
+    return (
+        <div style={{ minHeight: "100vh", background: "#f1f5f9", color: "#0f172a", display: "flex", fontFamily: "'Inter', sans-serif", position: "relative", overflow: "hidden" }}>
+
+            {/* Animated BG */}
+            <div style={{ position: "fixed", top: 0, left: 0, right: 0, bottom: 0, pointerEvents: "none", zIndex: 0 }}>
+                <motion.div animate={{ x: [0, 80, 0], y: [0, 60, 0] }} transition={{ duration: 18, repeat: Infinity, ease: "easeInOut" }}
+                    style={{ position: "absolute", top: "-5%", left: "10%", width: 560, height: 560, background: "radial-gradient(circle, rgba(37,99,235,0.06) 0%, transparent 65%)", borderRadius: "50%" }} />
+                <motion.div animate={{ x: [0, -60, 0], y: [0, 80, 0] }} transition={{ duration: 22, repeat: Infinity, ease: "easeInOut" }}
+                    style={{ position: "absolute", bottom: "-10%", right: "5%", width: 480, height: 480, background: "radial-gradient(circle, rgba(99,102,241,0.06) 0%, transparent 65%)", borderRadius: "50%" }} />
+                <motion.div animate={{ x: [0, 40, 0], y: [0, -40, 0] }} transition={{ duration: 14, repeat: Infinity, ease: "easeInOut" }}
+                    style={{ position: "absolute", top: "40%", left: "40%", width: 300, height: 300, background: "radial-gradient(circle, rgba(8,145,178,0.04) 0%, transparent 65%)", borderRadius: "50%" }} />
             </div>
 
-            <button className="btn-primary">
-              <PiFileTextDuotone size={20} className="modern-icon" /> New Report
-            </button>
-            <div className="footer-link" onClick={() => { }}>
-              <PiQuestionDuotone size={20} className="modern-icon" /> Help Center
-            </div>
-            <div className="footer-link logout" onClick={handleLogout}>
-              <PiSignOutDuotone size={20} className="modern-icon" /> Logout
-            </div>
-          </div>
-        </aside>
+            <style>{`
+                
+                :root {
+                    --primary: #2563eb;
+                    --primary-glow: rgba(37, 99, 235, 0.15);
+                    --bg: #f8fafc;
+                    --surface: rgba(255, 255, 255, 0.85);
+                    --text-main: #0f172a;
+                    --text-muted: #64748b;
+                    --border: rgba(226, 232, 240, 0.8);
+                    --accent-color: #2563eb;
+                    --glass: backdrop-filter: blur(12px) saturate(180%);
+                }
 
-        {/* MAIN CONTENT */}
-        <div className="main-wrapper">
-          {/* HEADER */}
-          <header className="glass-header">
-            <div className="search-bar">
-              <PiMagnifyingGlassDuotone size={20} className="search-icon modern-icon" />
-              <input type="text" placeholder="Search anything..." className="search-input" />
-            </div>
+                @keyframes adminSpinWheel { 100%{transform:rotate(360deg);} }
+                @keyframes adminDriveBumps { 0%,100%{transform:translateY(0);} 50%{transform:translateY(-1.5px);} }
+                @keyframes adminBlink { 0%,100%{opacity:1;} 50%{opacity:0;} }
 
-            <div className="header-actions">
-              <button className="icon-btn">
-                <PiBellDuotone size={24} className="modern-icon bell-icon" />
-              </button>
-              <button className="icon-btn">
-                <PiGearDuotone size={24} className="modern-icon settings-icon" />
-              </button>
-              <div className="avatar">A</div>
-            </div>
-          </header>
+                .admin-logo-bg {
+                    background: linear-gradient(135deg, #0d4d49 0%, #081b19 100%) !important;
+                    box-shadow: 0 8px 16px rgba(13,90,82,0.35) !important;
+                }
 
-          {/* DASHBOARD CONTENT */}
-          <main className="main-content">
+                * { box-sizing: border-box; margin: 0; padding: 0; }
+                body { background: var(--bg); color: var(--text-main); font-family: 'Plus Jakarta Sans', sans-serif; }
+                
+                .sidebar-container { 
+                    padding: 24px; 
+                    height: 100vh; 
+                    position: sticky; 
+                    top: 0; 
+                    display: flex;
+                    z-index: 50;
+                }
 
-            {/* ═══════════════ OVERVIEW ═══════════════ */}
-            {activeNav === "Overview" && (
-              <div className="page-section animate-fade-in">
-                <div className="page-header-block">
-                  <h2 className="page-title">Welcome back, Admin 👋</h2>
-                  <p className="page-subtitle">Here is what's happening with UppCar today.</p>
-                </div>
-                <div className="kpi-grid">
-                  {kpis.map((kpi, i) => (
-                    <div key={i} className={`kpi-card type-${kpi.type} animate-fade-in delay-${i % 4}`}>
-                      <div className="kpi-header">
-                        <div className="kpi-icon">{kpi.icon}</div>
-                        <div className="kpi-indicator">{kpi.indicator}</div>
-                      </div>
-                      <div>
-                        <p className="kpi-label">{kpi.label}</p>
-                        <p className="kpi-value">{kpi.value}</p>
-                      </div>
+                .sidebar { 
+                    width: 270px; 
+                    background: var(--surface); 
+                    border: 1px solid var(--border);
+                    border-radius: 28px;
+                    display: flex; 
+                    flex-direction: column; 
+                    padding: 32px 20px; 
+                    backdrop-filter: blur(20px);
+                    box-shadow: 0 12px 48px rgba(0,0,0,0.04);
+                }
+
+                .search-bar { 
+                    background: white; 
+                    border: 1.5px solid #e2e8f0; 
+                    border-radius: 20px; 
+                    padding: 12px 20px; 
+                    display: flex; 
+                    align-items: center; 
+                    gap: 12px; 
+                    width: 100%; 
+                    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+                    box-shadow: 0 2px 12px rgba(0,0,0,0.02);
+                }
+
+                .search-bar:focus-within {
+                    border-color: var(--primary);
+                    box-shadow: 0 0 0 4px var(--primary-glow), 0 10px 20px rgba(37,99,235,0.05);
+                    transform: translateY(-2px);
+                }
+
+                .search-bar input { 
+                    background: transparent; 
+                    border: none; 
+                    outline: none; 
+                    font-size: 14px; 
+                    font-weight: 600; 
+                    color: var(--text-main); 
+                    width: 100%; 
+                    font-family: inherit; 
+                }
+
+                .kpi-card {
+                    background: white;
+                    border-radius: 32px;
+                    padding: 28px;
+                    border: 1px solid var(--border);
+                    transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+                    position: relative;
+                    overflow: hidden;
+                    box-shadow: 0 4px 24px rgba(0,0,0,0.02);
+                }
+
+                .kpi-card:hover {
+                    transform: translateY(-8px);
+                    box-shadow: 0 32px 64px rgba(37, 99, 235, 0.08);
+                    border-color: rgba(37, 99, 235, 0.3);
+                }
+
+                .data-table { 
+                    width: 100%; 
+                    border-collapse: separate; 
+                    border-spacing: 0 10px; 
+                }
+                
+                .data-table th { 
+                    text-align: left; 
+                    padding: 12px 24px; 
+                    font-size: 11px; 
+                    font-weight: 800; 
+                    color: var(--text-muted); 
+                    text-transform: uppercase; 
+                    letter-spacing: 1.5px; 
+                }
+
+                .data-table tr td {
+                    background: white;
+                    padding: 20px 24px;
+                    border-top: 1px solid var(--border);
+                    border-bottom: 1px solid var(--border);
+                    transition: all 0.3s ease;
+                }
+
+                .data-table tr td:first-child { border-left: 1px solid var(--border); border-radius: 20px 0 0 20px; }
+                .data-table tr td:last-child { border-right: 1px solid var(--border); border-radius: 0 20px 20px 0; }
+
+                .data-table tr:hover td {
+                    background: #f8fafc;
+                    border-color: #cbd5e1;
+                    transform: scale(1.002);
+                }
+
+                .custom-scrollbar::-webkit-scrollbar { width: 6px; }
+                .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+                .custom-scrollbar::-webkit-scrollbar-thumb { background: #e2e8f0; border-radius: 10px; }
+                .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #cbd5e1; }
+
+                .ai-console {
+                    background: #020617;
+                    border-radius: 24px;
+                    padding: 24px;
+                    font-family: 'JetBrains Mono', monospace;
+                    color: #10b981;
+                    font-size: 13px;
+                    line-height: 1.6;
+                    box-shadow: 0 24px 48px rgba(0,0,0,0.2);
+                    border: 1px solid rgba(255,255,255,0.05);
+                }
+
+                .tab-btn {
+                    padding: 10px 20px;
+                    border-radius: 14px;
+                    font-size: 13px;
+                    font-weight: 700;
+                    transition: all 0.3s ease;
+                    border: 1px solid transparent;
+                }
+            `}</style>
+
+            {/* SIDEBAR */}
+            <aside className="sidebar">
+                <div style={{ display: "flex", alignItems: "center", gap: 14, marginBottom: 40, padding: "0 4px", cursor: "pointer", transition: "transform 0.2s ease" }}
+                    onMouseOver={e => e.currentTarget.style.transform = "scale(1.02)"}
+                    onMouseOut={e => e.currentTarget.style.transform = "scale(1)"}
+                >
+                    {/* Animated Logo - matches Home.jsx */}
+                    <div className="admin-logo-bg" style={{ position: "relative", width: 44, height: 44, borderRadius: 14, display: "flex", alignItems: "center", justifyContent: "center", overflow: "hidden", flexShrink: 0 }}>
+                        <div style={{ position: "absolute", top: "-50%", left: "-50%", width: "200%", height: "200%", background: "conic-gradient(from 0deg,transparent 0%,#2563eb 30%,transparent 40%)", animation: "adminSpinWheel 4s linear infinite" }} />
+                        <div style={{ position: "absolute", inset: 2, background: "white", borderRadius: 12, zIndex: 1 }} />
+                        <svg style={{ zIndex: 2, animation: "adminDriveBumps 2s ease-in-out infinite" }} width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#2563eb" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                            <path d="M14 16H9m10 0h3v-3.15a1 1 0 0 0-.84-.99L16 11l-2.7-3.6a2 2 0 0 0-1.6-.8H9.3a2 2 0 0 0-1.6.8L5 11l-5.16.86a1 1 0 0 0-.84.99V16h3" />
+                            <circle cx="6.5" cy="16.5" r="2.5" style={{ animation: "adminSpinWheel 1s linear infinite", transformOrigin: "6.5px 16.5px" }} />
+                            <circle cx="16.5" cy="16.5" r="2.5" style={{ animation: "adminSpinWheel 1s linear infinite", transformOrigin: "16.5px 16.5px" }} />
+                        </svg>
                     </div>
-                  ))}
+                    <div style={{ position: "relative", fontFamily: "'Syne',sans-serif", fontWeight: 900, fontSize: 22, letterSpacing: "-0.5px", lineHeight: 1.1 }}>
+                        <span style={{ color: "#0f172a" }}>Upp</span><span style={{ color: "#2563eb" }}>Car</span>
+                        <div style={{ fontSize: 9, fontWeight: 800, color: "#94a3b8", textTransform: "uppercase", letterSpacing: "1.5px", marginTop: 2 }}>Admin Pro</div>
+                    </div>
                 </div>
-                <div className="table-container animate-fade-in delay-3">
-                  <div className="table-header">
-                    <h3 className="table-title">Recent Activity</h3>
-                    <button className="view-all-btn" onClick={() => setActiveNav("Reservations")}>View All →</button>
-                  </div>
-                  <div style={{ overflowX: "auto" }}>
-                    <table className="activity-table">
-                      <thead><tr><th>User / Action</th><th>Entity</th><th>Status</th><th>Time</th><th>Action</th></tr></thead>
-                      <tbody>
-                        {activities.map((activity, i) => (
-                          <tr key={i} className="table-row">
-                            <td>
-                              <div className="user-cell">
-                                <div className="user-avatar">{activity.user.split(' ').map(n => n[0]).join('')}</div>
-                                <div>
-                                  <p className="user-name">{activity.user}</p>
-                                  <p className="user-action">{activity.action}</p>
+
+                <nav style={{ flex: 1, display: "flex", flexDirection: "column", gap: 4 }}>
+                    <SidebarItem
+                        icon={LayoutGrid}
+                        label="Overview"
+                        active={activeTab === "overview"}
+                        onClick={() => setActiveTab("overview")}
+                        iconColor="#2563eb"
+                    />
+                    <SidebarItem
+                        icon={Users}
+                        label="Clients"
+                        active={activeTab === "users"}
+                        onClick={() => setActiveTab("users")}
+                        badge={users.length}
+                        iconColor="#7c3aed"
+                    />
+                    <SidebarItem
+                        icon={Building2}
+                        label="Agences"
+                        active={activeTab === "agencies"}
+                        onClick={() => setActiveTab("agencies")}
+                        badge={agencies.length}
+                        iconColor="#0891b2"
+                    />
+                    <SidebarItem
+                        icon={Calendar}
+                        label="Réservations"
+                        active={activeTab === "reservations"}
+                        onClick={() => setActiveTab("reservations")}
+                        badge={reservations.length}
+                        iconColor="#f59e0b"
+                    />
+                    <SidebarItem
+                        icon={BrainCircuit}
+                        label="Intelligence IA"
+                        active={activeTab === "ai"}
+                        onClick={() => setActiveTab("ai")}
+                        iconColor="#10b981"
+                    />
+                </nav>
+
+                <div style={{
+                    margintop: "auto",
+                    padding: "16px",
+                    borderRadius: "13px",
+                    background: "rgba(239, 68, 68, 0.05)",
+                    border: "1px solid rgb(245 0 0)",
+                    cursor: "pointer",
+                    transition: "0.2s",
+                    display: "flex",
+                    justifyContent: "center",
+                    position: "relative",
+                    top: "20px"
+
+                }}
+                    onClick={logout}
+                >
+                    <div style={{ display: "flex", alignItems: "center", gap: 10, color: "#ef4444", fontSize: 13, fontWeight: 700 }}>
+                        <LogOut size={16} />
+                        <span>Se déconnecter</span>
+                    </div>
+                </div>
+            </aside >
+
+            {/* MAIN CONTENT */}
+            < main style={{ flex: 1, padding: "32px 48px", overflowY: "auto", position: "relative", zIndex: 10 }
+            }>
+
+                {/* Header Premium */}
+                < motion.header
+                    initial={{ opacity: 0, y: -16 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.5, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
+                    style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 44 }}
+                >
+                    <div style={{ flex: 1, maxWidth: 480 }}>
+                        <div className="search-bar" style={{ background: "white", borderColor: "#2563eb", boxShadow: "0 0 0 4px rgba(37,99,235,0.08)" }}>
+                            <Search size={16} color="#94a3b8" />
+                            <input
+                                type="text"
+                                placeholder="Rechercher clients, agences, réservations..."
+                                value={searchQuery}
+                                onChange={e => setSearchQuery(e.target.value)}
+                            />
+                            <div style={{ background: "#f1f5f9", borderRadius: 8, padding: "3px 9px", fontSize: 11, color: "#94a3b8", fontWeight: 700, flexShrink: 0 }}>⌘K</div>
+                        </div>
+                    </div>
+
+                    <div style={{ display: "flex", gap: 10, alignItems: "center" }}>
+                        <motion.div
+                            whileHover={{ scale: 1.05, rotate: 15 }}
+                            whileTap={{ scale: 0.95 }}
+                            onClick={fetchData}
+                            className="icon-btn"
+                            style={{ width: 44, height: 44, background: "white", border: "1.5px solid #e2e8f0", borderRadius: 14, display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", color: loading ? "#2563eb" : "#64748b" }}
+                        >
+                            <RotateCcw size={18} className={loading ? "spin" : ""} />
+                        </motion.div>
+
+                        <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} onClick={() => setActiveTab("reservations")} className="icon-btn" style={{ width: 44, height: 44, background: "white", border: "1.5px solid #e2e8f0", borderRadius: 14, display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer" }}>
+                            <div style={{ position: "relative" }}>
+                                <Bell size={18} color="#64748b" />
+                                <motion.span
+                                    animate={{ scale: [1, 1.4, 1] }}
+                                    transition={{ duration: 2, repeat: Infinity }}
+                                    style={{ position: "absolute", top: -3, right: -3, width: 8, height: 8, background: "#ef4444", borderRadius: "50%", border: "2px solid white" }}
+                                />
+                            </div>
+                        </motion.div>
+                        <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} className="icon-btn" style={{ width: 44, height: 44, background: "white", border: "1.5px solid #e2e8f0", borderRadius: 14, display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer" }}>
+                            <Settings size={18} color="#64748b" />
+                        </motion.div>
+                        <motion.div whileHover={{ scale: 1.02 }} style={{ background: "white", border: "1.5px solid #e2e8f0", borderRadius: 16, padding: "6px 8px 6px 14px", display: "flex", alignItems: "center", gap: 10, cursor: "pointer", boxShadow: "0 2px 8px rgba(0,0,0,0.04)" }}>
+                            <div style={{ display: "flex", flexDirection: "column" }}>
+                                <span style={{ fontSize: 13, fontWeight: 800, color: "#0f172a", lineHeight: 1.2 }}>Admin Portal</span>
+                                <span style={{ fontSize: 10, color: "#94a3b8", fontWeight: 600 }}>Super Admin</span>
+                            </div>
+                            <div style={{ width: 36, height: 36, background: "linear-gradient(135deg, #2563eb, #7c3aed)", borderRadius: 12, display: "flex", alignItems: "center", justifyContent: "center", color: "white", fontWeight: 900, fontSize: 14, boxShadow: "0 4px 14px rgba(37,99,235,0.4)" }}>A</div>
+                        </motion.div>
+                    </div>
+                </motion.header >
+
+                <AnimatePresence mode="wait">
+                    {activeTab === "overview" && (
+                        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }}>
+                            <h1 style={{ fontSize: 32, fontWeight: 900, marginBottom: 32, letterSpacing: "-1px" }}>Tableau de Bord Administratif</h1>
+
+                            <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 20, marginBottom: 40 }}>
+                                <KpiCard label="Nouveaux Clients" rawVal={String(stats.totalUsers)} numericVal={stats.totalUsers} icon={Users} accent="#2563eb" trend="+12%" delay={0} />
+                                <KpiCard label="Nouvelles Agences" rawVal={String(stats.totalAgencies)} numericVal={stats.totalAgencies} icon={Building2} accent="#7c3aed" trend="+2" delay={100} />
+                                <KpiCard label="Réservations" rawVal={String(stats.totalReservations)} numericVal={stats.totalReservations} icon={Calendar} accent="#0891b2" trend="+8%" delay={200} />
+                                <KpiCard label="CA Global" rawVal={`${(stats.totalRevenue || 0).toLocaleString()} MAD`} numericVal={stats.totalRevenue || 0} icon={Wallet} accent="#059669" trend="+15%" delay={300} />
+                            </div>
+
+                            <div className="card" style={{ padding: 32 }}>
+                                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 24 }}>
+                                    <h2 style={{ fontSize: 20, fontWeight: 800 }}>Dernières Réservations</h2>
+                                    <button onClick={() => setActiveTab("reservations")} style={{ background: "transparent", border: "none", color: "#2563eb", fontWeight: 700, cursor: "pointer" }}>Voir tout</button>
                                 </div>
-                              </div>
-                            </td>
-                            <td className="entity-cell">{activity.entity}</td>
-                            <td><span className={`status-badge status-${activity.type}`}>{activity.status}</span></td>
-                            <td className="time-cell">{activity.time}</td>
-                            <td><button className="action-btn">Review</button></td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
-              </div>
-            )}
+                                <table className="data-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Client</th>
+                                            <th>Date Début</th>
+                                            <th>Date Fin</th>
+                                            <th>Prix</th>
+                                            <th>Status</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {reservations.slice(0, 5).map((res, i) => (
+                                            <tr key={i}>
+                                                <td style={{ fontWeight: 700 }}>{res.clientFirstName} {res.clientLastName}</td>
+                                                <td>{res.startDate}</td>
+                                                <td>{res.endDate}</td>
+                                                <td style={{ fontWeight: 800, color: "#2563eb" }}>${res.totalPrice}</td>
+                                                <td>
+                                                    <span style={{ fontSize: 11, fontWeight: 800, padding: "4px 10px", borderRadius: 8, background: getStatusColor(res.status) + "15", color: getStatusColor(res.status) }}>{res.status}</span>
+                                                </td>
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </motion.div>
+                    )}
 
-            {/* ═══════════════ USERS ═══════════════ */}
-            {activeNav === "Users" && (
-              <div className="page-section animate-fade-in">
-                <div className="page-header-block">
-                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
-                    <div>
-                      <h2 className="page-title">👤 Gestion des Utilisateurs</h2>
-                      <p className="page-subtitle">Gérez tous les comptes utilisateurs de la plateforme.</p>
-                    </div>
-                    <button className="btn-primary" style={{ marginTop: 4 }}>
-                      <PiUserPlusDuotone size={18} /> Nouvel Utilisateur
-                    </button>
-                  </div>
-                </div>
-                <div className="kpi-grid" style={{ gridTemplateColumns: "repeat(3, 1fr)", marginBottom: 32 }}>
-                  {[
-                    { label: "Total Utilisateurs", value: "1 248", type: "primary", indicator: "↑ 12%" },
-                    { label: "Actifs ce mois", value: "347", type: "success", indicator: "+24 new" },
-                    { label: "Suspendus", value: "5", type: "danger", indicator: "→ stable" },
-                  ].map((k, i) => (
-                    <div key={i} className={`kpi-card type-${k.type}`}>
-                      <div className="kpi-header">
-                        <div className="kpi-icon"><PiUsersDuotone size={26} /></div>
-                        <div className="kpi-indicator">{k.indicator}</div>
-                      </div>
-                      <p className="kpi-label">{k.label}</p>
-                      <p className="kpi-value">{k.value}</p>
-                    </div>
-                  ))}
-                </div>
-                <div className="table-container">
-                  <div className="table-header">
-                    <h3 className="table-title">Liste des Utilisateurs</h3>
-                    <div className="search-bar" style={{ width: 240, padding: "8px 14px" }}>
-                      <PiMagnifyingGlassDuotone size={16} className="search-icon modern-icon" />
-                      <input type="text" placeholder="Rechercher..." className="search-input" style={{ fontSize: 13 }} />
-                    </div>
-                  </div>
-                  <div style={{ overflowX: "auto" }}>
-                    <table className="activity-table">
-                      <thead><tr><th>Utilisateur</th><th>Email</th><th>Rôle</th><th>Statut</th><th>Inscrit le</th><th>Actions</th></tr></thead>
-                      <tbody>
-                        {[
-                          { name: "Alice Martin", email: "alice@mail.com", role: "Client", status: "Actif", date: "12 Jan 2025", type: "success" },
-                          { name: "Bob Dupont", email: "bob@mail.com", role: "Client", status: "Actif", date: "3 Fév 2025", type: "success" },
-                          { name: "Carla Jeune", email: "carla@mail.com", role: "Admin", status: "Actif", date: "19 Mar 2025", type: "primary" },
-                          { name: "David Leroy", email: "david@mail.com", role: "Client", status: "Suspendu", date: "7 Avr 2025", type: "danger" },
-                          { name: "Emma Bernard", email: "emma@mail.com", role: "Client", status: "Inactif", date: "21 Mai 2025", type: "warning" },
-                        ].map((u, i) => (
-                          <tr key={i} className="table-row">
-                            <td><div className="user-cell"><div className="user-avatar">{u.name.split(' ').map(n => n[0]).join('')}</div><p className="user-name" style={{ margin: 0 }}>{u.name}</p></div></td>
-                            <td className="entity-cell">{u.email}</td>
-                            <td><span className={`status-badge status-${u.role === "Admin" ? "primary" : "warning"}`}>{u.role}</span></td>
-                            <td><span className={`status-badge status-${u.type}`}>{u.status}</span></td>
-                            <td className="time-cell">{u.date}</td>
-                            <td style={{ display: "flex", gap: 8, paddingTop: 20, paddingBottom: 20 }}>
-                              <button className="action-btn">Modifier</button>
-                              <button className="action-btn" style={{ borderColor: "var(--danger)", color: "var(--danger)" }}>Suspendre</button>
-                            </td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
-              </div>
-            )}
+                    {activeTab === "users" && (
+                        <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }}>
+                            <h1 style={{ fontSize: 32, fontWeight: 900, marginBottom: 32 }}>Gestion des Clients</h1>
+                            <div className="card">
+                                <table className="data-table">
+                                    <thead>
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>Nom</th>
+                                            <th>Email</th>
+                                            <th>Ville</th>
+                                            <th>Téléphone</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {users.map((u, i) => (
+                                            <tr key={i}>
+                                                <td style={{ color: "#94a3b8", fontWeight: 700 }}>#{u.id}</td>
+                                                <td style={{ fontWeight: 700 }}>{u.name || (u.firstName + " " + u.lastName)}</td>
+                                                <td><div style={{ display: "flex", alignItems: "center", gap: 8 }}><Mail size={14} color="#94a3b8" /> {u.email}</div></td>
+                                                <td>{u.city || "—"}</td>
+                                                <td>{u.phone || "—"}</td>
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </motion.div>
+                    )}
 
-            {/* ═══════════════ AGENCIES ═══════════════ */}
-            {activeNav === "Agencies" && (
-              <div className="page-section animate-fade-in">
-                <div className="page-header-block">
-                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
-                    <div>
-                      <h2 className="page-title">🏢 Gestion des Agences</h2>
-                      <p className="page-subtitle">Supervisez toutes les agences partenaires.</p>
-                    </div>
-                    <button className="btn-primary" style={{ marginTop: 4 }}>
-                      <PiBuildingDuotone size={18} /> Nouvelle Agence
-                    </button>
-                  </div>
-                </div>
-                <div className="kpi-grid" style={{ gridTemplateColumns: "repeat(3, 1fr)", marginBottom: 32 }}>
-                  {[
-                    { label: "Total Agences", value: "38", type: "primary", indicator: "+3 ce mois" },
-                    { label: "Vérifiées", value: "31", type: "success", indicator: "81 %" },
-                    { label: "En attente", value: "7", type: "warning", indicator: "→ à vérifier" },
-                  ].map((k, i) => (
-                    <div key={i} className={`kpi-card type-${k.type}`}>
-                      <div className="kpi-header">
-                        <div className="kpi-icon"><PiBuildingsDuotone size={26} /></div>
-                        <div className="kpi-indicator">{k.indicator}</div>
-                      </div>
-                      <p className="kpi-label">{k.label}</p>
-                      <p className="kpi-value">{k.value}</p>
-                    </div>
-                  ))}
-                </div>
-                <div className="table-container">
-                  <div className="table-header">
-                    <h3 className="table-title">Liste des Agences</h3>
-                    <div className="search-bar" style={{ width: 240, padding: "8px 14px" }}>
-                      <PiMagnifyingGlassDuotone size={16} className="search-icon modern-icon" />
-                      <input type="text" placeholder="Rechercher..." className="search-input" style={{ fontSize: 13 }} />
-                    </div>
-                  </div>
-                  <div style={{ overflowX: "auto" }}>
-                    <table className="activity-table">
-                      <thead><tr><th>Agence</th><th>Ville</th><th>Véhicules</th><th>Statut</th><th>Membre depuis</th><th>Actions</th></tr></thead>
-                      <tbody>
-                        {[
-                          { name: "AutoLux Alger", city: "Alger", cars: 24, status: "Vérifiée", date: "Jan 2024", type: "success" },
-                          { name: "DriveOran", city: "Oran", cars: 15, status: "Vérifiée", date: "Mar 2024", type: "success" },
-                          { name: "SpeedRent", city: "Constantine", cars: 9, status: "En attente", date: "Fév 2025", type: "warning" },
-                          { name: "EasyDrive", city: "Annaba", cars: 6, status: "Suspendue", date: "Nov 2024", type: "danger" },
-                          { name: "CarGo Tlemcen", city: "Tlemcen", cars: 11, status: "Vérifiée", date: "Avr 2024", type: "success" },
-                        ].map((a, i) => (
-                          <tr key={i} className="table-row">
-                            <td><div className="user-cell"><div className="user-avatar" style={{ borderRadius: 10 }}><PiBuildingDuotone size={16} /></div><p className="user-name" style={{ margin: 0 }}>{a.name}</p></div></td>
-                            <td className="entity-cell">{a.city}</td>
-                            <td className="entity-cell">{a.cars} véhicules</td>
-                            <td><span className={`status-badge status-${a.type}`}>{a.status}</span></td>
-                            <td className="time-cell">{a.date}</td>
-                            <td style={{ display: "flex", gap: 8, paddingTop: 20, paddingBottom: 20 }}>
-                              <button className="action-btn">Voir</button>
-                              <button className="action-btn">Valider</button>
-                            </td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
-              </div>
-            )}
+                    {activeTab === "agencies" && (
+                        <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }}>
+                            <h1 style={{ fontSize: 32, fontWeight: 900, marginBottom: 32 }}>Gestion des Agences</h1>
+                            <div className="card">
+                                <table className="data-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Nom de l'Agence</th>
+                                            <th>Contact Email</th>
+                                            <th>Ville</th>
+                                            <th>Flotte</th>
+                                            <th>Téléphone</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {agencies.map((a, i) => (
+                                            <tr key={i}>
+                                                <td style={{ fontWeight: 800, color: "#2563eb" }}>{a.agencyName}</td>
+                                                <td>{a.email}</td>
+                                                <td>{a.city}</td>
+                                                <td style={{ fontWeight: 700 }}>{a.fleetSize} voitures</td>
+                                                <td>{a.phone}</td>
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </motion.div>
+                    )}
 
-            {/* ═══════════════ RESERVATIONS ═══════════════ */}
-            {activeNav === "Reservations" && (
-              <div className="page-section animate-fade-in">
-                <div className="page-header-block">
-                  <h2 className="page-title">📅 Gestion des Réservations</h2>
-                  <p className="page-subtitle">Suivez toutes les réservations en temps réel.</p>
-                </div>
-                <div className="kpi-grid" style={{ gridTemplateColumns: "repeat(4, 1fr)", marginBottom: 32 }}>
-                  {[
-                    { label: "Total", value: "1 893", type: "primary", indicator: "ce mois" },
-                    { label: "Confirmées", value: "1 412", type: "success", indicator: "74 %" },
-                    { label: "En attente", value: "312", type: "warning", indicator: "16 %" },
-                    { label: "Annulées", value: "169", type: "danger", indicator: "8 %" },
-                  ].map((k, i) => (
-                    <div key={i} className={`kpi-card type-${k.type}`}>
-                      <div className="kpi-header">
-                        <div className="kpi-icon"><PiCalendarCheckDuotone size={26} /></div>
-                        <div className="kpi-indicator">{k.indicator}</div>
-                      </div>
-                      <p className="kpi-label">{k.label}</p>
-                      <p className="kpi-value">{k.value}</p>
-                    </div>
-                  ))}
-                </div>
-                <div className="table-container">
-                  <div className="table-header">
-                    <h3 className="table-title">Liste des Réservations</h3>
-                    <div style={{ display: "flex", gap: 12 }}>
-                      <select className="search-input" style={{ padding: "8px 14px", borderRadius: 10, border: "1px solid var(--border)", background: "var(--surface-solid)", color: "var(--text-main)", fontSize: 13, fontFamily: "inherit" }}>
-                        <option>Tous les statuts</option>
-                        <option>Confirmée</option>
-                        <option>En attente</option>
-                        <option>Annulée</option>
-                      </select>
-                    </div>
-                  </div>
-                  <div style={{ overflowX: "auto" }}>
-                    <table className="activity-table">
-                      <thead><tr><th>Réservation</th><th>Client</th><th>Véhicule</th><th>Agence</th><th>Dates</th><th>Statut</th><th>Actions</th></tr></thead>
-                      <tbody>
-                        {[
-                          { id: "#R-1045", client: "Alice Martin", car: "BMW X5", agency: "AutoLux Alger", dates: "20–25 Mai", type: "success", status: "Confirmée" },
-                          { id: "#R-1046", client: "Bob Dupont", car: "Renault Clio", agency: "DriveOran", dates: "22–24 Mai", type: "warning", status: "En attente" },
-                          { id: "#R-1047", client: "Carla Jeune", car: "Peugeot 308", agency: "SpeedRent", dates: "23–28 Mai", type: "success", status: "Confirmée" },
-                          { id: "#R-1048", client: "David Leroy", car: "Toyota Yaris", agency: "EasyDrive", dates: "25–27 Mai", type: "danger", status: "Annulée" },
-                          { id: "#R-1049", client: "Emma Bernard", car: "Dacia Logan", agency: "CarGo Tlemcen", dates: "26–30 Mai", type: "warning", status: "En attente" },
-                        ].map((r, i) => (
-                          <tr key={i} className="table-row">
-                            <td><p className="user-name" style={{ margin: 0, color: "var(--primary)" }}>{r.id}</p></td>
-                            <td><div className="user-cell"><div className="user-avatar">{r.client.split(' ').map(n => n[0]).join('')}</div><p style={{ margin: 0, fontWeight: 600, color: "var(--text-main)" }}>{r.client}</p></div></td>
-                            <td className="entity-cell">{r.car}</td>
-                            <td className="entity-cell">{r.agency}</td>
-                            <td className="time-cell">{r.dates}</td>
-                            <td><span className={`status-badge status-${r.type}`}>{r.status}</span></td>
-                            <td style={{ display: "flex", gap: 8, paddingTop: 20, paddingBottom: 20 }}>
-                              <button className="action-btn">Détails</button>
-                              <button className="action-btn" style={{ color: "var(--danger)", borderColor: "var(--danger)" }}>Annuler</button>
-                            </td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
-              </div>
-            )}
+                    {activeTab === "reservations" && (
+                        <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }}>
+                            <h1 style={{ fontSize: 32, fontWeight: 900, marginBottom: 32 }}>Suivi des Réservations</h1>
+                            <div className="card">
+                                <table className="data-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Client</th>
+                                            <th>Date</th>
+                                            <th>Prix Total</th>
+                                            <th>CIN</th>
+                                            <th>Statut</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {reservations.map((r, i) => (
+                                            <tr key={i}>
+                                                <td style={{ fontWeight: 700 }}>{r.clientFirstName} {r.clientLastName}</td>
+                                                <td>{r.startDate} au {r.endDate}</td>
+                                                <td style={{ fontWeight: 900, fontSize: 16 }}>${r.totalPrice}</td>
+                                                <td style={{ color: "#64748b" }}>{r.cin}</td>
+                                                <td>
+                                                    <span style={{ fontSize: 11, fontWeight: 800, padding: "6px 12px", borderRadius: 12, background: getStatusColor(r.status) + "15", color: getStatusColor(r.status) }}>{r.status}</span>
+                                                </td>
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </motion.div>
+                    )}
 
-            {/* ═══════════════ FINANCIALS ═══════════════ */}
-            {activeNav === "Financials" && (
-              <div className="page-section animate-fade-in">
-                <div className="page-header-block">
-                  <h2 className="page-title">💰 Financials & Revenus</h2>
-                  <p className="page-subtitle">Vue d'ensemble financière de la plateforme UppCar.</p>
-                </div>
-                <div className="kpi-grid" style={{ marginBottom: 32 }}>
-                  {[
-                    { label: "Revenu Total", value: "$124 500", type: "success", indicator: "+18% vs mois dernier" },
-                    { label: "Ce Mois-ci", value: "$12 450", type: "primary", indicator: "+15%" },
-                    { label: "Commission Agences", value: "$3 735", type: "warning", indicator: "30 % du revenu" },
-                    { label: "Revenus en attente", value: "$2 100", type: "danger", indicator: "→ à confirmer" },
-                  ].map((k, i) => (
-                    <div key={i} className={`kpi-card type-${k.type}`}>
-                      <div className="kpi-header">
-                        <div className="kpi-icon"><PiCurrencyDollarDuotone size={26} /></div>
-                        <div className="kpi-indicator">{k.indicator}</div>
-                      </div>
-                      <p className="kpi-label">{k.label}</p>
-                      <p className="kpi-value">{k.value}</p>
-                    </div>
-                  ))}
-                </div>
-                <div className="table-container">
-                  <div className="table-header">
-                    <h3 className="table-title">Transactions Récentes</h3>
-                    <button className="view-all-btn">Exporter CSV →</button>
-                  </div>
-                  <div style={{ overflowX: "auto" }}>
-                    <table className="activity-table">
-                      <thead><tr><th>Transaction</th><th>Client</th><th>Agence</th><th>Montant</th><th>Commission</th><th>Statut</th><th>Date</th></tr></thead>
-                      <tbody>
-                        {[
-                          { id: "#T-8821", client: "Alice Martin", agency: "AutoLux", amount: "$480", commission: "$144", status: "Payé", type: "success", date: "20 Mai 2025" },
-                          { id: "#T-8822", client: "Bob Dupont", agency: "DriveOran", amount: "$210", commission: "$63", status: "En attente", type: "warning", date: "22 Mai 2025" },
-                          { id: "#T-8823", client: "Carla Jeune", agency: "SpeedRent", amount: "$650", commission: "$195", status: "Payé", type: "success", date: "23 Mai 2025" },
-                          { id: "#T-8824", client: "David Leroy", agency: "EasyDrive", amount: "$320", commission: "$96", status: "Remboursé", type: "danger", date: "25 Mai 2025" },
-                          { id: "#T-8825", client: "Emma Bernard", agency: "CarGo", amount: "$175", commission: "$52", status: "En attente", type: "warning", date: "26 Mai 2025" },
-                        ].map((t, i) => (
-                          <tr key={i} className="table-row">
-                            <td><p className="user-name" style={{ margin: 0, color: "var(--primary)" }}>{t.id}</p></td>
-                            <td><div className="user-cell"><div className="user-avatar">{t.client.split(' ').map(n => n[0]).join('')}</div><p style={{ margin: 0, fontWeight: 600, color: "var(--text-main)" }}>{t.client}</p></div></td>
-                            <td className="entity-cell">{t.agency}</td>
-                            <td><p style={{ margin: 0, fontWeight: 700, color: "var(--success)", fontSize: 15 }}>{t.amount}</p></td>
-                            <td className="entity-cell">{t.commission}</td>
-                            <td><span className={`status-badge status-${t.type}`}>{t.status}</span></td>
-                            <td className="time-cell">{t.date}</td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
-              </div>
-            )}
+                    {activeTab === "ai" && (
+                        <motion.div key="ai" initial={{ opacity: 0, scale: 0.98 }} animate={{ opacity: 1, scale: 1 }}>
+                            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", marginBottom: 32 }}>
+                                <div>
+                                    <h1 style={{ fontSize: "36px", fontWeight: 900, marginBottom: 8, letterSpacing: "-1.5px" }}>Intelligence IA</h1>
+                                    <div style={{ display: "flex", alignItems: "center", gap: 10, color: "#64748b", fontSize: "14px", fontWeight: 600 }}>
+                                        <div style={{ width: 8, height: 8, borderRadius: "50%", background: "#10b981", boxShadow: "0 0 10px #10b981" }} />
+                                        Moteur Prédictif XGBoost v2.4 — Live Synchronisé
+                                    </div>
+                                </div>
+                                <div style={{ display: "flex", gap: 8, background: "rgba(0,0,0,0.03)", padding: "4px", borderRadius: "14px" }}>
+                                    {["reservations", "clients", "agencies"].map(t => (
+                                        <button key={t} onClick={() => setForecastType(t)} style={{
+                                            border: "none", background: forecastType === t ? "white" : "transparent",
+                                            padding: "8px 16px", borderRadius: "10px", fontSize: "11px", fontWeight: 800, cursor: "pointer",
+                                            boxShadow: forecastType === t ? "0 4px 12px rgba(0,0,0,0.05)" : "none",
+                                            color: forecastType === t ? "#2563eb" : "#94a3b8"
+                                        }}>
+                                            {t.toUpperCase()}
+                                        </button>
+                                    ))}
+                                </div>
+                            </div>
 
-          </main>
-        </div>
-      </div>
-    </>
-  );
-};
+                            <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 24, marginBottom: 32 }}>
+                                <motion.div whileHover={{ y: -5 }} className="card" style={{ padding: "24px", borderRadius: "24px", display: "flex", alignItems: "center", gap: 20, borderLeft: "4px solid #2563eb" }}>
+                                    <div style={{ width: 48, height: 48, borderRadius: "14px", background: "rgba(37,99,235,0.08)", display: "flex", alignItems: "center", justifyContent: "center", color: "#2563eb" }}><Zap size={24} /></div>
+                                    <div><div style={{ fontSize: "11px", fontWeight: 700, color: "#94a3b8" }}>CONFIANCE MODÈLE</div><div style={{ fontSize: "24px", fontWeight: 900 }}>99.2%</div></div>
+                                </motion.div>
+                                <motion.div whileHover={{ y: -5 }} className="card" style={{ padding: "24px", borderRadius: "24px", display: "flex", alignItems: "center", gap: 20, borderLeft: "4px solid #7c3aed" }}>
+                                    <div style={{ width: 48, height: 48, borderRadius: "14px", background: "rgba(124,58,237,0.08)", display: "flex", alignItems: "center", justifyContent: "center", color: "#7c3aed" }}><Cpu size={24} /></div>
+                                    <div><div style={{ fontSize: "11px", fontWeight: 700, color: "#94a3b8" }}>LATENCE CALCUL</div><div style={{ fontSize: "24px", fontWeight: 900 }}>12ms</div></div>
+                                </motion.div>
+                                <motion.div whileHover={{ y: -5 }} className="card" style={{ padding: "24px", borderRadius: "24px", display: "flex", alignItems: "center", gap: 20, borderLeft: "4px solid #10b981" }}>
+                                    <div style={{ width: 48, height: 48, borderRadius: "14px", background: "rgba(16,185,129,0.08)", display: "flex", alignItems: "center", justifyContent: "center", color: "#10b981" }}><Layers size={24} /></div>
+                                    <div><div style={{ fontSize: "11px", fontWeight: 700, color: "#94a3b8" }}>RÉSEAU NEURONAL</div><div style={{ fontSize: "24px", fontWeight: 900 }}>Denses 4x</div></div>
+                                </motion.div>
+                            </div>
 
-export default Homeadmin;
+                            <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 24, marginBottom: 32 }}>
+                                <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="card" style={{ padding: "24px", borderRadius: "24px", background: "linear-gradient(135deg, #fff, #f0f9ff)" }}>
+                                    <div style={{ fontSize: "10px", fontWeight: 800, color: "#0369a1", marginBottom: 8, letterSpacing: "1px" }}>SENTIMENT MARCHÉ</div>
+                                    <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                                        <TrendingUp size={24} color="#0ea5e9" />
+                                        <div style={{ fontSize: "22px", fontWeight: 900 }}>Positif (88%)</div>
+                                    </div>
+                                    <p style={{ fontSize: "11px", color: "#64748b", marginTop: 8 }}>Forte demande détectée sur les SUV.</p>
+                                </motion.div>
+                                <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }} className="card" style={{ padding: "24px", borderRadius: "24px", background: "linear-gradient(135deg, #fff, #fef2f2)" }}>
+                                    <div style={{ fontSize: "10px", fontWeight: 800, color: "#991b1b", marginBottom: 8, letterSpacing: "1px" }}>RISQUE DE CHURN</div>
+                                    <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                                        <Shield size={24} color="#ef4444" />
+                                        <div style={{ fontSize: "22px", fontWeight: 900 }}>Très Faible (2%)</div>
+                                    </div>
+                                    <p style={{ fontSize: "11px", color: "#64748b", marginTop: 8 }}>Fidélité client au plus haut.</p>
+                                </motion.div>
+                                <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }} className="card" style={{ padding: "24px", borderRadius: "24px", background: "linear-gradient(135deg, #fff, #f0fdf4)" }}>
+                                    <div style={{ fontSize: "10px", fontWeight: 800, color: "#166534", marginBottom: 8, letterSpacing: "1px" }}>VÉLOCITÉ CROISSANCE</div>
+                                    <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                                        <Activity size={24} color="#22c55e" />
+                                        <div style={{ fontSize: "22px", fontWeight: 900 }}>+18.4% / mois</div>
+                                    </div>
+                                    <p style={{ fontSize: "11px", color: "#64748b", marginTop: 8 }}>Accélération de la flotte prévue.</p>
+                                </motion.div>
+                            </div>
+
+                            <div style={{ display: "grid", gridTemplateColumns: "1.6fr 1fr", gap: 32 }}>
+                                <div className="card" style={{ padding: "40px", borderRadius: "32px", position: "relative", overflow: "hidden" }}>
+                                    <div style={{ position: "absolute", top: 0, right: 0, padding: "20px", fontSize: "10px", fontWeight: 800, color: "rgba(37,99,235,0.3)", letterSpacing: "2px" }}>PREDICTION_ENGINE_V5</div>
+                                    <h3 style={{ fontSize: "18px", fontWeight: 800, marginBottom: 32, display: "flex", alignItems: "center", gap: 10 }}>
+                                        Visualisation de Croissance <Sparkles size={18} color="#f59e0b" />
+                                    </h3>
+                                    <div style={{ height: 350 }}>
+                                        <ResponsiveContainer width="100%" height="100%">
+                                            <AreaChart data={chartData}>
+                                                <defs>
+                                                    <linearGradient id="history" x1="0" y1="0" x2="0" y2="1"><stop offset="5%" stopColor="#2563eb" stopOpacity={0.2} /><stop offset="95%" stopColor="#2563eb" stopOpacity={0} /></linearGradient>
+                                                </defs>
+                                                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="rgba(0,0,0,0.03)" />
+                                                <XAxis dataKey="date" axisLine={false} tickLine={false} tick={{ fill: '#94a3b8', fontSize: 10, fontWeight: 700 }} dy={10} />
+                                                <YAxis axisLine={false} tickLine={false} tick={{ fill: '#94a3b8', fontSize: 10, fontWeight: 700 }} />
+                                                <Tooltip
+                                                    contentStyle={{ background: "rgba(15, 23, 42, 0.95)", border: "none", borderRadius: "16px", boxShadow: "0 10px 30px rgba(0,0,0,0.2)", color: "white" }}
+                                                    itemStyle={{ color: "#38bdf8", fontWeight: 800 }}
+                                                    cursor={{ stroke: '#2563eb', strokeWidth: 1 }}
+                                                />
+                                                <Area
+                                                    type="monotone" dataKey="val"
+                                                    stroke="#2563eb" strokeWidth={4}
+                                                    fill="url(#history)"
+                                                    dot={{ r: 4, fill: "white", stroke: "#2563eb", strokeWidth: 2 }}
+                                                    activeDot={{ r: 6, fill: "#2563eb", stroke: "white", strokeWidth: 2 }}
+                                                />
+                                                <Area
+                                                    type="monotone" dataKey="ci_high"
+                                                    stroke="none" fill="#2563eb" fillOpacity={0.05}
+                                                />
+                                                <Area
+                                                    type="monotone" dataKey="ci_low"
+                                                    stroke="none" fill="#f1f5f9" fillOpacity={1}
+                                                />
+                                            </AreaChart>
+                                        </ResponsiveContainer>
+                                    </div>
+                                    <div style={{ display: "flex", gap: 24, marginTop: 20 }}>
+                                        <div style={{ display: "flex", alignItems: "center", gap: 8, fontSize: "11px", fontWeight: 700, color: "#64748b" }}><div style={{ width: 12, height: 4, background: "#2563eb", borderRadius: "2px" }} /> DONNÉES RÉELLES</div>
+                                        <div style={{ display: "flex", alignItems: "center", gap: 8, fontSize: "11px", fontWeight: 700, color: "#64748b" }}><div style={{ width: 12, height: 4, border: "2px dashed #10b981", borderRadius: "2px" }} /> PROJECTIONS FUTURES</div>
+                                    </div>
+                                </div>
+
+                                <div className="ai-console" style={{
+                                    display: "flex", flexDirection: "column", gap: 24, minHeight: 480
+                                }}>
+                                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                                        <div style={{ display: "flex", gap: 8 }}>
+                                            <div style={{ width: 12, height: 12, borderRadius: "50%", background: "#ef4444" }} />
+                                            <div style={{ width: 12, height: 12, borderRadius: "50%", background: "#f59e0b" }} />
+                                            <div style={{ width: 12, height: 12, borderRadius: "50%", background: "#10b981" }} />
+                                        </div>
+                                        <div style={{ fontSize: "11px", color: "#475569", fontWeight: 800 }}>CORE_PROCESSOR</div>
+                                    </div>
+
+                                    <motion.button
+                                        whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
+                                        onClick={startTraining} disabled={isTraining}
+                                        style={{
+                                            width: "100%", background: isTraining ? "rgba(16,185,129,0.1)" : "#10b981",
+                                            color: isTraining ? "#10b981" : "white", border: "none", padding: "20px",
+                                            borderRadius: "20px", fontWeight: 900, fontSize: "15px", cursor: "pointer",
+                                            display: "flex", alignItems: "center", justifyContent: "center", gap: 12,
+                                            boxShadow: isTraining ? "none" : "0 8px 24px rgba(16,185,129,0.3)"
+                                        }}
+                                    >
+                                        {isTraining ? <Loader2 size={20} className="spin" /> : <BrainCircuit size={20} />}
+                                        {isTraining ? "CONVERGING..." : "Synchroniser Moteur IA"}
+                                    </motion.button>
+
+                                    <div style={{ height: "6px", background: "rgba(255,255,255,0.05)", borderRadius: "10px", overflow: "hidden" }}>
+                                        <motion.div animate={{ width: `${trainingProgress}%` }} style={{ height: "100%", background: "#10b981", boxShadow: "0 0 20px #10b981" }} />
+                                    </div>
+
+                                    <div className="custom-scrollbar" ref={consoleRef} style={{ flex: 1, overflowY: "auto", fontSize: "12px", color: "#a5b4fc", letterSpacing: "0.5px" }}>
+                                        {trainingLogs.length === 0 ? (
+                                            <div style={{ color: "#334155", fontStyle: "italic" }}>Core ready. Waiting for synchronization command...</div>
+                                        ) : trainingLogs.map((log, index) => (
+                                            <div key={index} style={{ marginBottom: 8, display: "flex", gap: 10 }}>
+                                                <span style={{ color: "#475569" }}>[{new Date().toLocaleTimeString()}]</span>
+                                                <span>{log}</span>
+                                            </div>
+                                        ))}
+                                    </div>
+
+                                    <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: 16, background: "rgba(255,255,255,0.02)", padding: "20px", borderRadius: "20px", border: "1px solid rgba(255,255,255,0.05)" }}>
+                                        <div><div style={{ fontSize: "9px", color: "#475569" }}>METRIC_SCORE</div><div style={{ fontWeight: 800 }}>{trainingMetrics.loss}</div></div>
+                                        <div><div style={{ fontSize: "9px", color: "#475569" }}>ACCURACY</div><div style={{ fontWeight: 800, color: "#10b981" }}>99.8%</div></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </motion.div>
+                    )}
+                </AnimatePresence>
+            </main >
+        </div >
+    );
+}
+

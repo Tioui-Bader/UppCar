@@ -6,21 +6,14 @@ import { logActivity } from "../../utils/activity";
 function MapPinIcon({ size = 16, color = "currentColor" }) {
     return <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" /><circle cx="12" cy="10" r="3" /></svg>;
 }
+function CalendarIcon({ size = 16, color = "currentColor" }) {
+    return <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2" /><line x1="16" y1="2" x2="16" y2="6" /><line x1="8" y1="2" x2="8" y2="6" /><line x1="3" y1="10" x2="21" y2="10" /></svg>;
+}
 function ZapIcon({ size = 16, color = "currentColor" }) {
     return <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" /></svg>;
 }
 function UsersIcon({ size = 16, color = "currentColor" }) {
     return <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" /><circle cx="9" cy="7" r="4" /><path d="M23 21v-2a4 4 0 0 0-3-3.87" /><path d="M16 3.13a4 4 0 0 1 0 7.75" /></svg>;
-}
-function HeartIcon({ filled = false, size = 16 }) {
-    return (
-        <svg width={size} height={size} viewBox="0 0 24 24" fill={filled ? "#ef4444" : "none"} stroke={filled ? "#ef4444" : "currentColor"} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
-        </svg>
-    );
-}
-function ArrowLeftIcon({ size = 16 }) {
-    return <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><line x1="19" y1="12" x2="5" y2="12" /><polyline points="12 19 5 12 12 5" /></svg>;
 }
 function SunIcon() {
     return <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="5" /><line x1="12" y1="1" x2="12" y2="3" /><line x1="12" y1="21" x2="12" y2="23" /><line x1="4.22" y1="4.22" x2="5.64" y2="5.64" /><line x1="18.36" y1="18.36" x2="19.78" y2="19.78" /><line x1="1" y1="12" x2="3" y2="12" /><line x1="21" y1="12" x2="23" y2="12" /><line x1="4.22" y1="19.78" x2="5.64" y2="18.36" /><line x1="18.36" y1="5.64" x2="19.78" y2="4.22" /></svg>;
@@ -100,22 +93,8 @@ body { transition: background 0.3s; overflow-x: hidden; }
 
 body { background: var(--bg-color); color: var(--text-main); position: relative; }
 
-/* ── BASE DARK/LIGHT BACKGROUND ── */
-.home-base-bg {
-  position: fixed;
-  inset: 0;
-  z-index: -10;
-  background: var(--bg-color);
-}
-
-/* ── ULTRA-MODERN CORNER GLOW ── */
-.home-mesh-bg {
-  position: fixed;
-  inset: 0;
-  z-index: 0;
-  pointer-events: none;
-  filter: blur(50px) contrast(110%);
-}
+.home-base-bg { position: fixed; inset: 0; z-index: -10; background: var(--bg-color); }
+.home-mesh-bg { position: fixed; inset: 0; z-index: 0; pointer-events: none; filter: blur(50px) contrast(110%); }
 [data-theme='dark'] .home-mesh-bg {
   background: 
     radial-gradient(at 0% 0%, rgba(16, 185, 129, 0.4) 0, transparent 45%),
@@ -124,20 +103,11 @@ body { background: var(--bg-color); color: var(--text-main); position: relative;
     radial-gradient(at 0% 100%, rgba(59, 130, 246, 0.25) 0, transparent 40%);
 }
 
-.home-noise-bg {
-  position: fixed;
-  inset: 0;
-  z-index: 5;
-  pointer-events: none;
-}
+.home-noise-bg { position: fixed; inset: 0; z-index: 5; pointer-events: none; }
 [data-theme='dark'] .home-noise-bg { opacity: 0.04; }
 :root .home-noise-bg { opacity: 0.07; }
 
-.home-blob{
-  position:fixed;border-radius:50%;
-  filter:blur(100px);pointer-events:none;z-index:1;
-  animation:homeDrift 18s ease-in-out infinite;
-}
+.home-blob{ position:fixed;border-radius:50%; filter:blur(100px);pointer-events:none;z-index:1; animation:homeDrift 18s ease-in-out infinite; }
 .home-blob1{ width:600px;height:400px;top:-150px; left:-150px; background:rgba(16,185,129,.15); }
 .home-blob2{ width:450px;height:550px;bottom:-150px; right:-100px; background:rgba(99,102,241,.12); }
 .home-blob3{ width:320px;height:320px;top:40%; left:30%; background:rgba(245,158,11,.08); }
@@ -152,88 +122,71 @@ body { background: var(--bg-color); color: var(--text-main); position: relative;
 @keyframes pulse { 0%,100%{transform:scale(1);opacity:1;} 50%{transform:scale(0.75);opacity:0.5;} }
 @keyframes blink { 0%,100%{opacity:1;} 50%{opacity:0;} }
 @keyframes fadeUp { from{opacity:0;transform:translateY(16px);} to{opacity:1;transform:translateY(0);} }
-@keyframes breathe { 0%,100%{transform:translate(-50%,-50%) scale(1);opacity:0.6;} 50%{transform:translate(-50%,-50%) scale(1.12);opacity:1;} }
 @keyframes spinWheel { 100%{transform:rotate(360deg);} }
 @keyframes driveBumps { 0%,100%{transform:translateY(0);} 50%{transform:translateY(-1.5px);} }
 @keyframes btnGradientMove { 0%{background-position:0% 50%;} 50%{background-position:100% 50%;} 100%{background-position:0% 50%;} }
 @keyframes shineSweep { 0%{left:-100%;opacity:0;} 20%{opacity:1;} 60%{left:150%;opacity:0;} 100%{left:150%;opacity:0;} }
-@keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-14px)} }
 
 .nav-wrapper { position: sticky; top: 10px; z-index: 100; margin: 0 20px; transition: all 0.3s ease; }
-.nav-glass { display: flex; align-items: center; justify-content: space-between; padding: 7px 20px; backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid var(--nav-border); border-radius: 24px; box-shadow: 0 8px 32px rgba(0,0,0,0.05); animation: fadeUp 0.6s ease-out; }
+.nav-glass { display: flex; align-items: center; justify-content: space-between; padding: 7px 20px;backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid var(--nav-border); border-radius: 24px; box-shadow: 0 8px 32px rgba(0,0,0,0.05); animation: fadeUp 0.6s ease-out; }
 
 .icon-btn { background:rgba(255,255,255,0.05); border:1px solid var(--nav-border); color:var(--text-main); cursor:pointer; padding:10px; border-radius:50%; display:flex; align-items:center; justify-content:center; transition:all 0.3s cubic-bezier(0.4,0,0.2,1);position:relative;left: 10px; }
 .icon-btn:hover { background:var(--text-main); color:var(--bg-color); transform:scale(1.1) rotate(5deg); box-shadow:0 4px 12px rgba(0,0,0,0.1); }
 
+.primary-btnE:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(16, 185, 129, 0.3); }
+
+@keyframes shineSweep { from { left: -100%; opacity: 0; } 20% { opacity: 1; } 60% { left: 150%; opacity: 0; } to { left: 150%; opacity: 0; } }
+
 .primary-btnDE {
-  position:relative; background:linear-gradient(135deg,#1e3a8a 0%,#2563eb 50%,#0ea5e9 100%); background-size:200% 200%;
+  position:relative; background: var(--accent-gradient); background-size:200% 200%;
   color:#ffffff; border:none; border-radius:16px; font-family:'Syne',sans-serif; font-weight:800; cursor:pointer;
-  display:flex; align-items:center; justify-content:center; gap:10px; letter-spacing:0.3px; overflow:hidden;
-  transition:transform 0.3s cubic-bezier(0.34,1.56,0.64,1); animation:btnGradientMove 4s ease infinite;
-  box-shadow:0 0 0 1px rgba(37,99,235,0.3),0 4px 15px rgba(37,99,235,0.3),0 0 40px rgba(14,165,233,0.15);
-  font-family: 'DM Sans', 'Syne', sans-serif;
+  display:flex; align-items:center; justify-content:center; gap:12px; letter-spacing:0.3px; overflow:hidden;
+  transition:all 0.3s cubic-bezier(0.34,1.56,0.64,1); animation:btnGradientMove 4s ease infinite;
+  box-shadow:0 0 0 1px rgba(16, 185, 129, 0.3), 0 10px 20px rgba(16, 185, 129, 0.2);
 }
 .primary-btnDE::before { content:''; position:absolute; top:0; left:-100%; width:60%; height:100%; background:linear-gradient(120deg,transparent 0%,rgba(255,255,255,0.25) 50%,transparent 100%); animation:shineSweep 3s ease-in-out infinite; pointer-events:none; }
-.primary-btnDE::after { content:''; position:absolute; inset:-3px; border-radius:19px; background:var(--accent-gradient); background-size:300% 300%; z-index:-1; opacity:0.6; filter:blur(6px); animation:btnGradientMove 4s ease infinite; }
-.primary-btnDE:hover { transform:translateY(-1px) scale(1.01); box-shadow:0 0 0 1px rgba(14,165,233,0.5),0 8px 30px rgba(37,99,235,0.5),0 0 60px rgba(14,165,233,0.3); }
-
-.primary-btnE {
-  background: var(--accent-gradient);
-  color: #fff;
-  border: none;
-  border-radius: 14px;
-  padding: 10px 20px;
-  font-family: 'Syne', sans-serif;
-  font-weight: 800;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-  box-shadow: 0 4px 15px rgba(16, 185, 129, 0.2);
-}
-.primary-btnE:hover {
-  transform: translateY(-2px);    
-  box-shadow: 0 8px 25px rgba(16, 185, 129, 0.3);
-}
+.primary-btnDE:hover { transform:translateY(-2px) scale(1.02); box-shadow: 0 15px 30px rgba(16, 185, 129, 0.4); }
+.primary-btnDE:active { transform:translateY(1px) scale(0.98); }
 
 .fav-card {
-  background:var(--card-bg); border:1px solid var(--card-border); border-radius:24px;
-  overflow:hidden; transition:all 0.4s cubic-bezier(0.2,0.8,0.2,1);
+  background:var(--card-bg); border:1px solid var(--card-border); border-radius:32px;
+  overflow:hidden; transition:all 0.4s cubic-bezier(0.175,0.885,0.32,1.275);
+  cursor: pointer; position: relative;
 }
-.fav-card:hover { transform:translateY(-10px); border-color:var(--accent-color); box-shadow:0 24px 48px rgba(0,0,0,0.1); }
+.fav-card:hover { transform:translateY(-10px) scale(1.02); border-color:var(--accent-color); box-shadow:0 24px 48px rgba(0,0,0,0.1); }
 .car-img { transition:transform 0.6s cubic-bezier(0.16,1,0.3,1); }
 .fav-card:hover .car-img { transform:scale(1.08); }
-.gradient-text { background: var(--accent-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-.title-gradient-text { 
-    background: var(--title-gradient); 
-    background-size: 200% auto;
-    -webkit-background-clip: text; 
-    -webkit-text-fill-color: transparent;
-    animation: btnGradientMove 4s linear infinite;
+.title-gradient-text { background: var(--title-gradient); background-size: 200% auto; -webkit-background-clip: text; -webkit-text-fill-color: transparent; animation: btnGradientMove 4s linear infinite; }
+
+.status-badge {
+    position: absolute; top: 16px; right: 16px;
+    padding: 6px 14px; border-radius: 12px;
+    font-size: 11px; font-weight: 900;
+    text-transform: uppercase; letter-spacing: 0.1em;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    backdrop-filter: blur(8px);
+    z-index: 10;
+    display: flex; align-items: center; gap: 8px;
+    border: 1px solid rgba(255,255,255,0.1);
 }
-  /* === MOBILE === */
+.status-dot { width: 6px; height: 6px; border-radius: 50%; }
+
+.res-details {
+    display: grid; gridTemplateColumns: "1fr 1fr"; gap: 16px;
+    margin-top: 24px; padding-top: 24px;
+    border-top: 1px solid var(--card-border);
+}
+.detail-row { display: flex; align-items: center; gap: 10px; font-size: 14px; color: var(--text-main); fontWeight: 600; }
+
   @media (max-width: 768px) {
-    html, body { overflow-x: hidden !important; max-width: 100vw !important; }
-    * { max-width: 100%; }
     .nav-wrapper { margin: 8px 10px !important; top: 8px !important; }
     .nav-glass { padding: 8px 12px !important; border-radius: 20px !important; }
     .icon-btn { position: static !important; left: auto !important; padding: 8px !important; }
     .fav-card:hover { transform: translateY(-4px) !important; }
-    .primary-btnDE { font-size: 14px !important; padding: 14px 20px !important; }
-
-    /* mobile menu */
-    .mob-menu-panel { position: fixed; inset: 0; z-index: 9999; display: flex; flex-direction: column; pointer-events: none; }
-    .mob-menu-backdrop { position: absolute; inset: 0; background: rgba(0,0,0,0.55); backdrop-filter: blur(6px); pointer-events: all; }
-    .mob-menu-sheet { position: absolute; top: 68px; left: 10px; right: 10px; border-radius: 24px; overflow: hidden; pointer-events: all; animation: mobileMenuSlideDown 0.35s cubic-bezier(0.16,1,0.3,1) both; }
-    @keyframes mobileMenuSlideDown {
-      from { opacity: 0; transform: translateY(-16px) scale(0.96); }
-      to   { opacity: 1; transform: translateY(0) scale(1); }
-    }
   }
 `;
 
-export default function Favorites() {
+export default function Myreservation() {
     const navigate = useNavigate();
     const canvasRef = useRef(null);
     const [isDarkMode, setIsDarkMode] = useState(() => localStorage.getItem("appTheme") === "dark");
@@ -241,8 +194,8 @@ export default function Favorites() {
     const [selectedLang, setSelectedLang] = useState(localStorage.getItem("appLang") || "FR");
     const [langMenuOpen, setLangMenuOpen] = useState(false);
     const [userMenuOpen, setUserMenuOpen] = useState(false);
-    const [menuOpen, setMenuOpen] = useState(false);
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+    const [menuOpen, setMenuOpen] = useState(false);
 
     const [currentUser, setCurrentUser] = useState(() => {
         const saved = localStorage.getItem("user");
@@ -250,7 +203,7 @@ export default function Favorites() {
     });
     const [profileImage] = useState(localStorage.getItem("profileImage") || null);
 
-    const [favoriteCars, setFavoriteCars] = useState([]);
+    const [reservations, setReservations] = useState([]);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
@@ -265,20 +218,10 @@ export default function Favorites() {
     }, [isDarkMode]);
 
     useEffect(() => {
-        const handleClickOutside = (e) => {
-            if (!e.target.closest(".lang-menu-wrap")) {
-                setLangMenuOpen(false);
-            }
-        };
-        document.addEventListener("mousedown", handleClickOutside);
-        return () => document.removeEventListener("mousedown", handleClickOutside);
-    }, []);
-
-    useEffect(() => {
         localStorage.setItem("appLang", selectedLang);
     }, [selectedLang]);
 
-    /* Particle Background Logic */
+    /* Background Logic */
     useEffect(() => {
         const canvas = canvasRef.current;
         if (!canvas) return;
@@ -287,81 +230,75 @@ export default function Favorites() {
         let parts = [];
         const resize = () => { W = canvas.width = window.innerWidth; H = canvas.height = window.innerHeight; parts = Array.from({ length: 90 }, () => new Particle(W, H)); };
         const loop = () => {
-            ctx.clearRect(0, 0, W, H);
-            tt += .0025;
+            ctx.clearRect(0, 0, W, H); tt += .0025;
             const g1 = ctx.createRadialGradient(W * .22 + Math.sin(tt) * 70, H * .28 + Math.cos(tt * .7) * 45, 0, W * .3, H * .3, W * .52);
-            g1.addColorStop(0, isDarkMode ? 'rgba(99,102,241,.07)' : 'rgba(99,102,241,.05)');
+            g1.addColorStop(0, isDarkMode ? 'rgba(110,110,250,.07)' : 'rgba(99,102,241,.05)');
             g1.addColorStop(1, 'transparent');
-            ctx.globalAlpha = 1; ctx.fillStyle = g1; ctx.fillRect(0, 0, W, H);
+            ctx.fillStyle = g1; ctx.fillRect(0, 0, W, H);
             const g2 = ctx.createRadialGradient(W * .78 + Math.cos(tt * .6) * 55, H * .65 + Math.sin(tt) * 38, 0, W * .68, H * .6, W * .42);
-            g2.addColorStop(0, isDarkMode ? 'rgba(16,185,129,.05)' : 'rgba(16,185,129,.04)');
+            g2.addColorStop(0, isDarkMode ? 'rgba(50,200,150,.05)' : 'rgba(16,185,129,.04)');
             g2.addColorStop(1, 'transparent');
             ctx.fillStyle = g2; ctx.fillRect(0, 0, W, H);
             if (isDarkMode) {
-                parts.forEach(p => {
-                    p.update();
-                    ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-                    ctx.fillStyle = p.color; ctx.globalAlpha = p.alpha; ctx.fill();
-                });
+                parts.forEach(p => { p.update(); ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2); ctx.fillStyle = p.color; ctx.globalAlpha = p.alpha; ctx.fill(); });
             }
             id = requestAnimationFrame(loop);
         };
         resize(); window.addEventListener("resize", resize); loop();
-        return () => { cancelAnimationFrame(id); window.removeEventListener("resize", resize); };
+        return () => { cancelAnimationFrame(id); window.removeResizeListener && window.removeResizeListener(); };
     }, [isDarkMode]);
 
-    /* Load favorites from localStorage + fetch details */
+    /* Load Reservations */
     useEffect(() => {
         const userStr = localStorage.getItem("user");
-        if (!userStr) {
-            setLoading(false);
-            return;
-        }
+        if (!userStr) { navigate("/login"); return; }
         const user = JSON.parse(userStr);
-        const key = `favoriteCars_${user.id || user.email}`;
-        const ids = JSON.parse(localStorage.getItem(key) || "[]");
+        setCurrentUser(user);
 
-        if (ids.length === 0) { setLoading(false); return; }
-        fetch(`http://localhost:8080/api/cars`)
-            .then(r => r.json())
-            .then(all => {
-                setFavoriteCars(all.filter(c => ids.includes(c.id)));
+        const fetchReservations = async () => {
+            try {
+                const token = localStorage.getItem("token");
+                const res = await fetch(`http://localhost:8080/api/reservations/user/${user.id}`, { headers: { 'Authorization': `Bearer ${token}` } });
+                if (!res.ok) throw new Error();
+                const data = await res.json();
+
+                const enriched = await Promise.all(data.map(async (r) => {
+                    const carRes = await fetch(`http://localhost:8080/api/cars/${r.carId}`);
+                    const carData = carRes.ok ? await carRes.json() : null;
+                    return { ...r, car: carData };
+                }));
+                setReservations(enriched);
+                logActivity('view_reservations', { count: enriched.length });
+            } catch (e) {
+                console.error(e);
+            } finally {
                 setLoading(false);
-            })
-            .catch(() => setLoading(false));
-    }, []);
+            }
+        };
+        fetchReservations();
+    }, [navigate]);
 
-    const removeFavorite = (carId) => {
-        const userStr = localStorage.getItem("user");
-        if (!userStr) return;
-        const user = JSON.parse(userStr);
-        const key = `favoriteCars_${user.id || user.email}`;
-
-        const ids = JSON.parse(localStorage.getItem(key) || "[]");
-        const updated = ids.filter(id => id !== carId);
-        localStorage.setItem(key, JSON.stringify(updated));
-        setFavoriteCars(prev => prev.filter(c => c.id !== carId));
-        logActivity('favorite_remove', { carId });
+    const getStatusColor = (status) => {
+        switch (status) {
+            case "PENDING": return "#fbbf24";
+            case "CONFIRMED": return "#10b981";
+            case "CANCELLED": return "#ef4444";
+            default: return "#9ca3af";
+        }
     };
 
     const T = {
-        title: { FR: "Mes Favoris", EN: "My Favorites", AR: "المفضلة" },
-        subtitle: { FR: "Vos voitures sauvegardées", EN: "Your saved cars", AR: "سياراتك المحفوظة" },
-        empty: { FR: "Aucun favori pour l'instant", EN: "No favorites yet", AR: "لا توجد مفضلة بعد" },
-        emptyDesc: { FR: "Explorez notre flotte et cliquez sur ❤ pour sauvegarder une voiture.", EN: "Browse our fleet and click ❤ to save a car.", AR: "تصفح أسطولنا وانقر على ❤ لحفظ سيارة." },
-        browse: { FR: "Explorer la flotte", EN: "Browse Fleet", AR: "تصفح الأسطول" },
-        book: { FR: "Louer maintenant", EN: "Book Now", AR: "احجز الآن" },
-        remove: { FR: "Retirer", EN: "Remove", AR: "إزالة" },
-        back: { FR: "Retour", EN: "Back", AR: "رجوع" },
-        day: { FR: "jour", EN: "day", AR: "يوم" },
-        seats: { FR: "Sièges", EN: "Seats", AR: "مقاعد" },
-        found: { FR: "voiture(s) sauvegardée(s)", EN: "saved car(s)", AR: "سيارة محفوظة" },
-        book: { FR: "Louer maintenant", EN: "Book Now", AR: "احجز الآن" },
-        perDay: { FR: "/ jour", EN: "/ day", AR: "/ يوم" },
-        location: { FR: "Localisation disponible", EN: "Location available", AR: "الموقع متاح" },
+        title: { FR: "Mes Réservations", EN: "My Reservations", AR: "حجوزاتي" },
+        subtitle: { FR: "Gérez vos locations en cours et passées", EN: "Manage your current and past rentals", AR: "إدارة إيجاراتك الحالية والسابقة" },
+        found: { FR: "réservation(s)", EN: "reservation(s)", AR: "حجوزات" },
+        empty: { FR: "Aucune voiture réservée", EN: "No cars reserved yet", AR: "لا يوجد سيارات محجوزة بعد" },
+        emptyDesc: { FR: "Il semble que vous n'ayez pas encore effectué de réservation.", EN: "It seems you haven't made any reservations yet.", AR: "يبدو أنك لم تقم بأي حجز بعد." },
+        browse: { FR: "Découvrir la flotte", EN: "Explore Fleet", AR: "اكتشف الأسطول" },
+        total: { FR: "Total", EN: "Total", AR: "الإجمالي" },
+        from: { FR: "Du", EN: "From", AR: "من" },
+        to: { FR: "Au", EN: "To", AR: "إلى" },
         "nav.logout": { FR: "Déconnexion", EN: "Log out", AR: " تسجيل الخروج" },
         "nav.myProfile": { FR: "Mon profil", EN: "My Profile", AR: "ملفي الشخصي" },
-        "nav.myReservations": { FR: "Mes Réservations", EN: "My Reservations", AR: "حجوزاتي" },
         "nav.favorites": { FR: "Favoris", EN: "Favorites", AR: "المفضلة" },
     };
     const t = (key) => T[key]?.[selectedLang] || T[key]?.FR || "";
@@ -370,17 +307,13 @@ export default function Favorites() {
         <div data-theme={isDarkMode ? "dark" : "light"} style={{ minHeight: "100vh", overflowX: "hidden", maxWidth: "100vw" }}>
             <style>{css}</style>
 
-            {/* ── BACKGROUND SYSTEM ── */}
             <div className="home-base-bg" />
             <div className="home-mesh-bg" />
             <canvas ref={canvasRef} style={{ position: "fixed", top: 0, left: 0, width: "100%", height: "100%", zIndex: 0, pointerEvents: "none" }} />
             <div className="home-noise-bg" />
-            <div className="home-blob home-blob1" />
-            <div className="home-blob home-blob2" />
-            <div className="home-blob home-blob3" />
-            <div className="home-blob home-blob4" />
+            <div className="home-blob home-blob1" /><div className="home-blob home-blob2" />
 
-            <div style={{ position: "relative", zIndex: 1, overflowX: "hidden", width: "100%" }}>
+            <div style={{ position: "relative", zIndex: 1 }}>
 
                 {/* ══ NAV ══ */}
                 <div className="nav-wrapper" dir="ltr">
@@ -654,13 +587,12 @@ export default function Favorites() {
                                                 {/* Menu items */}
                                                 {[
                                                     { id: "profile", label: t("nav.myProfile", "Mon profil"), icon: <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" /><circle cx="12" cy="7" r="4" /></svg>, color: isDarkMode ? "#a855f7" : "#7c3aed" },
-                                                    { id: "reservations", label: t("nav.myReservations", "Mes Réservations"), icon: <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" /><line x1="16" y1="2" x2="16" y2="6" /><line x1="8" y1="2" x2="8" y2="6" /><line x1="3" y1="10" x2="21" y2="10" /></svg>, color: isDarkMode ? "#60a5fa" : "#2563eb" },
+                                                    { id: "favorites", label: t("nav.favorites", "Favoris"), icon: <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l8.72-8.72 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" /></svg>, color: isDarkMode ? "#ff4d4d" : "#ef4444" },
                                                 ].map(({ id, label, icon, color }) => (
                                                     <div key={id} style={{ padding: "11px 18px", cursor: "pointer", display: "flex", alignItems: "center", gap: 12, transition: "all 0.2s ease", color: "var(--text-main)" }}
                                                         onClick={() => {
                                                             if (id === "profile") navigate("/profile");
-                                                            if (id === "reservations") navigate("/my-reservations");
-                                                            setMenuOpen(false);
+                                                            if (id === "favorites") navigate("/favorites");
                                                         }}
                                                         onMouseEnter={e => { e.currentTarget.style.background = isDarkMode ? "rgba(255,255,255,0.04)" : "rgba(0,0,0,0.03)"; e.currentTarget.style.paddingLeft = "22px"; }}
                                                         onMouseLeave={e => { e.currentTarget.style.background = "transparent"; e.currentTarget.style.paddingLeft = "18px"; }}>
@@ -671,7 +603,6 @@ export default function Favorites() {
                                                         <svg style={{ marginLeft: "auto", opacity: 0.4 }} width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><line x1="5" y1="12" x2="19" y2="12" /><polyline points="12 5 19 12 12 19" /></svg>
                                                     </div>
                                                 ))}
-
 
                                                 {/* Divider */}
                                                 <div style={{ height: 1, background: isDarkMode ? "rgba(255,255,255,0.06)" : "rgba(0,0,0,0.06)", margin: "4px 0" }} />
@@ -781,192 +712,195 @@ export default function Favorites() {
                         </div>
                     )}
                 </div>
-
-                {/* ══ BACK BUTTON ALIGNED WITH LOGO ══ */}
-
                 {/* ── CONTENT ── */}
-                <div style={{ width: "100%", padding: isMobile ? "0 16px 80px" : "0 0 100px", position: "relative", zIndex: 1 }}>
+                <div style={{ width: "100%", padding: isMobile ? "0 16px 80px" : "0 80px 100px", marginTop: 60 }}>
 
-                    {/* Header */}
-                    {!loading && favoriteCars.length > 0 && (
-                        <div style={{ marginBottom: 99, animation: "fadeUp 0.6s ease both", textAlign: "center", position: "relative", top: "45px" }}>
-                            <div style={{
-                                display: "inline-flex", alignItems: "center", gap: 8,
-                                background: "var(--card-bg)", border: "1px solid rgba(239,68,68,0.25)",
-                                borderRadius: 20, padding: "6px 16px", marginBottom: 16,
-                            }}>
-                                <span style={{ width: 8, height: 8, borderRadius: "50%", background: "#ef4444", animation: "pulse 2s infinite" }} />
-                                <span style={{ fontSize: 13, fontWeight: 700, color: "#ef4444" }}>
-                                    {favoriteCars.length} {t("found")}
-                                </span>
+                    {!loading && reservations.length > 0 && (
+                        <div style={{ marginBottom: 60, textAlign: "center", animation: "fadeUp 0.6s ease both" }}>
+                            <div style={{ display: "flex", justifyContent: "center", alignItems: "center", gap: 12, marginBottom: 16 }}>
+                                <div style={{ display: "inline-flex", alignItems: "center", gap: 8, background: "var(--card-bg)", border: "1px solid rgba(16,185,129,0.2)", borderRadius: 20, padding: "6px 16px" }}>
+                                    <span style={{ width: 8, height: 8, borderRadius: "50%", background: "#10b981", animation: "pulse 2s infinite" }} />
+                                    <span style={{ fontSize: 13, fontWeight: 700, color: "var(--accent-color)" }}>{reservations.length} {t("found")}</span>
+                                </div>
+                                <button
+                                    onClick={() => {
+                                        localStorage.removeItem("reservations");
+                                        localStorage.removeItem("lastReservationFetch");
+                                        window.location.reload();
+                                    }}
+                                    style={{
+                                        background: "rgba(239, 68, 68, 0.1)",
+                                        border: "1px solid rgba(239, 68, 68, 0.2)",
+                                        color: "#ef4444",
+                                        borderRadius: 20,
+                                        padding: "6px 16px",
+                                        fontSize: 12,
+                                        fontWeight: 700,
+                                        cursor: "pointer",
+                                        transition: "all 0.2s"
+                                    }}
+                                    onMouseEnter={e => { e.currentTarget.style.background = "rgba(239, 68, 68, 0.2)"; }}
+                                    onMouseLeave={e => { e.currentTarget.style.background = "rgba(239, 68, 68, 0.1)"; }}
+                                >
+                                    Vider le cache
+                                </button>
                             </div>
-                            <h1 className="title-gradient-text" style={{ fontFamily: "'Syne',sans-serif", fontSize: isMobile ? 32 : 48, fontWeight: 900, letterSpacing: -1 }}>
-                                {t("title")}
-                            </h1>
+                            <h1 className="title-gradient-text" style={{ fontFamily: "'Syne',sans-serif", fontSize: isMobile ? 36 : 56, fontWeight: 900, letterSpacing: -1 }}>{t("title")}</h1>
                             <p style={{ color: "var(--text-muted)", fontSize: 16, marginTop: 8 }}>{t("subtitle")}</p>
                         </div>
                     )}
 
-                    {/* Loading */}
-                    {loading && (
-                        <div style={{ display: "flex", justifyContent: "center", alignItems: "center", minHeight: 300 }}>
-                            <div style={{ width: 48, height: 48, borderRadius: "50%", border: "3px solid var(--card-border)", borderTopColor: "var(--accent-color)", animation: "spinWheel 0.8s linear infinite" }} />
-                        </div>
-                    )}
-
-                    {/* Empty state */}
-                    {!loading && favoriteCars.length === 0 && (
+                    {loading ? (
+                        <div style={{ display: "flex", justifyContent: "center", padding: 100 }}><div style={{ width: 48, height: 48, borderRadius: "50%", border: "3px solid var(--card-border)", borderTopColor: "var(--accent-color)", animation: "spinWheel 0.8s linear infinite" }} /></div>
+                    ) : reservations.length === 0 ? (
                         <div style={{
                             display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center",
-                            minHeight: 744, textAlign: "center", animation: "fadeUp 0.6s ease both",
+                            minHeight: 500, animation: "fadeUp 1.2s cubic-bezier(0.16, 1, 0.3, 1) both",
+                            position: "relative", zIndex: 1
                         }}>
-                            <div style={{ fontSize: 80, marginBottom: 24, animation: "float 3s ease-in-out infinite" }}>❤️</div>
-                            <h2 style={{ fontFamily: "'Syne',sans-serif", fontSize: 28, fontWeight: 800, color: "var(--text-main)", marginBottom: 12 }}>
-                                {t("empty")}
-                            </h2>
-                            <p style={{ color: "var(--text-muted)", fontSize: 16, maxWidth: 380, lineHeight: 1.6, marginBottom: 32 }}>
-                                {t("emptyDesc")}
-                            </p>
-                            <button
-                                className="primary-btnDE"
-                                style={{ padding: "14px 32px", fontSize: 16 }}
-                                onClick={() => navigate("/homeConnect")}
-                            >
-                                {t("browse")}
-                            </button>
-                        </div>
-                    )}
-
-                    {/* Grid */}
-                    {!loading && favoriteCars.length > 0 && (
-                        <div style={{
-                            maxWidth: 1820,
-                            margin: isMobile ? "0 auto" : "0 46px",
-                            padding: isMobile ? "0" : "0"
-                        }}>
+                            {/* Modern Animated SVG Background Glow */}
                             <div style={{
-                                display: "grid",
-                                gridTemplateColumns: isMobile ? "1fr" : "repeat(4, 1fr)",
-                                gap: isMobile ? 20 : 32,
+                                position: "absolute", width: 400, height: 400, borderRadius: "50%",
+                                background: "radial-gradient(circle, var(--accent-gradient) 0%, transparent 70%)",
+                                opacity: 0.08, filter: "blur(60px)", pointerEvents: "none",
+                                animation: "breathe 1.2s infinite alternate ease-in-out"
+                            }} />
+
+                            {/* Ultra-Modern Car SVG */}
+                            <div style={{
+                                position: "relative", width: 140, height: 140, marginBottom: 40,
+                                transformStyle: "preserve-3d", animation: "float 6s infinite ease-in-out"
                             }}>
-                                {favoriteCars.map((car, idx) => (
-                                    <div key={car.id || idx} style={{
-                                        background: "var(--card-bg)",
-                                        borderRadius: 32,
-                                        border: "1px solid var(--card-border)",
-                                        overflow: "hidden",
-                                        transition: "all 0.4s cubic-bezier(0.175,0.885,0.32,1.275)",
-                                        cursor: "pointer",
-                                        animation: `fadeUp 0.6s ${0.2 + idx * 0.1}s ease both`
-                                    }}
-                                        onMouseEnter={e => {
-                                            e.currentTarget.style.transform = "translateY(-10px) scale(1.02)";
-                                            e.currentTarget.style.borderColor = "var(--accent-color)";
-                                            e.currentTarget.style.boxShadow = "0 20px 40px rgba(0,0,0,0.1)";
-                                        }}
-                                        onMouseLeave={e => {
-                                            e.currentTarget.style.transform = "none";
-                                            e.currentTarget.style.borderColor = "var(--card-border)";
-                                            e.currentTarget.style.boxShadow = "none";
-                                        }}>
-
-                                        <div style={{ position: "relative", height: 260, overflow: "hidden" }}>
-                                            <img
-                                                src={car.photos && car.photos.length > 0 ? car.photos[0] : "https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&q=80"}
-                                                alt={car.name}
-                                                style={{ width: "100%", height: "100%", objectFit: "cover", transition: "transform 0.6s cubic-bezier(0.16,1,0.3,1)" }}
-                                                className="car-img"
-                                            />
-                                            <div style={{ position: "absolute", inset: 0, background: "linear-gradient(180deg, transparent 60%, rgba(0,0,0,0.4) 100%)", pointerEvents: "none" }} />
-
-                                            {/* ❤ Remove Toggle button */}
-                                            <button
-                                                onClick={(e) => { e.stopPropagation(); removeFavorite(car.id); }}
-                                                title={t("remove")}
-                                                style={{
-                                                    position: "absolute", top: 16, left: 16,
-                                                    width: 42, height: 42, borderRadius: "14px",
-                                                    background: "rgba(255,255,255,0.1)",
-                                                    backdropFilter: "blur(12px)",
-                                                    border: "1px solid rgba(255,255,255,0.2)",
-                                                    display: "flex", alignItems: "center", justifyContent: "center",
-                                                    cursor: "pointer",
-                                                    transition: "all 0.3s cubic-bezier(0.16,1,0.3,1)",
-                                                    boxShadow: "0 8px 32px rgba(0,0,0,0.2)",
-                                                }}
-                                                onMouseEnter={e => { e.currentTarget.style.background = "rgba(239,68,68,0.2)"; e.currentTarget.style.borderColor = "rgba(239,68,68,0.4)"; e.currentTarget.style.transform = "scale(1.1)"; }}
-                                                onMouseLeave={e => { e.currentTarget.style.background = "rgba(255,255,255,0.1)"; e.currentTarget.style.borderColor = "rgba(255,255,255,0.2)"; e.currentTarget.style.transform = "scale(1)"; }}
-                                            >
-                                                <HeartIcon filled size={20} />
-                                            </button>
-
-                                            {/* Category badge */}
-                                            <div style={{
-                                                position: "absolute", top: 16, right: 16,
-                                                background: "var(--accent-gradient)",
-                                                color: "#fff", padding: "6px 14px", borderRadius: 12,
-                                                fontSize: 11, fontWeight: 900, textTransform: "uppercase", letterSpacing: "0.1em",
-                                                boxShadow: "0 4px 12px rgba(0,0,0,0.2)",
-                                                backdropFilter: "blur(4px)"
-                                            }}>
-                                                {car.category}
-                                            </div>
-                                        </div>
-
-                                        <div style={{ padding: isMobile ? 20 : 32, textAlign: selectedLang === "AR" ? "right" : "left" }}>
-                                            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", marginBottom: isMobile ? 16 : 24 }}>
-                                                <div style={{ minWidth: 0, flex: 1, paddingRight: 12 }}>
-                                                    <h3 style={{ fontFamily: "'Syne',sans-serif", fontSize: isMobile ? 18 : 24, fontWeight: 900, color: "var(--text-main)", marginBottom: 8, letterSpacing: "-0.5px", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{car.name}</h3>
-                                                    <div style={{ fontSize: 14, color: "var(--text-muted)", display: "flex", alignItems: "center", gap: 8, justifyContent: selectedLang === "AR" ? "flex-end" : "flex-start" }}>
-                                                        <MapPinIcon size={14} color="var(--accent-color)" /> {car.city || car.plate || t("location")}
-                                                    </div>
-                                                </div>
-                                                <div style={{ textAlign: selectedLang === "AR" ? "left" : "right" }}>
-                                                    <div style={{ fontSize: 28, fontWeight: 900, color: "var(--accent-color)", fontFamily: "'Syne',sans-serif", letterSpacing: "-1px", lineHeight: 1 }}>
-                                                        {car.prix || car.price}
-                                                        <span style={{ fontSize: 13, marginLeft: 4 }}>MAD</span>
-                                                    </div>
-                                                    <div style={{ fontSize: 12, color: "var(--text-muted)", fontWeight: 700, marginTop: 4 }}>{t("perDay")}</div>
-                                                </div>
-                                            </div>
-
-                                            <div style={{
-                                                display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16,
-                                                marginBottom: 32, borderTop: "1px solid var(--card-border)", paddingTop: 24
-                                            }}>
-                                                <div style={{ fontSize: 14, display: "flex", alignItems: "center", gap: 10, color: "var(--text-main)", fontWeight: 600, justifyContent: selectedLang === "AR" ? "flex-end" : "flex-start" }}>
-                                                    <div style={{ width: 32, height: 32, borderRadius: 10, background: "rgba(16,185,129,0.1)", display: "flex", alignItems: "center", justifyContent: "center" }}>
-                                                        <ZapIcon size={16} color="var(--accent-color)" />
-                                                    </div>
-                                                    {car.fuel}
-                                                </div>
-                                                <div style={{ fontSize: 14, display: "flex", alignItems: "center", gap: 10, color: "var(--text-main)", fontWeight: 600, justifyContent: selectedLang === "AR" ? "flex-end" : "flex-start" }}>
-                                                    <div style={{ width: 32, height: 32, borderRadius: 10, background: "rgba(16,185,129,0.1)", display: "flex", alignItems: "center", justifyContent: "center" }}>
-                                                        <UsersIcon size={16} color="var(--accent-color)" />
-                                                    </div>
-                                                    {car.seats} {t("seats")}
-                                                </div>
-                                            </div>
-
-                                            <button
-                                                className="primary-btnDE"
-                                                style={{
-                                                    width: "100%", padding: isMobile ? "14px" : "18px", borderRadius: 20, fontSize: isMobile ? 14 : 16,
-                                                    fontWeight: 800, textTransform: "uppercase", letterSpacing: isMobile ? "0.5px" : "1px",
-                                                    boxShadow: "0 10px 25px rgba(59,130,246,0.3)"
-                                                }}
-                                                onClick={() => navigate(`/booking/${car.id}`)}
-                                            >
-                                                {t("book")}
-                                            </button>
-                                        </div>
-                                    </div>
+                                <div style={{
+                                    position: "absolute", inset: 0, borderRadius: 40,
+                                    background: isDarkMode ? "rgba(255,255,255,0.03)" : "rgba(0,0,0,0.02)",
+                                    border: `1px solid ${isDarkMode ? "rgba(255,255,255,0.08)" : "rgba(0,0,0,0.05)"}`,
+                                    backdropFilter: "blur(12px)", display: "flex", alignItems: "center", justifyContent: "center",
+                                    boxShadow: isDarkMode ? "0 20px 40px rgba(0,0,0,0.3)" : "0 20px 40px rgba(0,0,0,0.05)"
+                                }}>
+                                    <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="var(--accent-color)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" style={{ filter: `drop-shadow(0 0 12px var(--accent-color))` }}>
+                                        <path d="M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.4-1.1-.7-1.8-.7H5c-.6 0-1.1.4-1.4.9l-1.4 2.9A3.7 3.7 0 0 0 2 13.1V16c0 .6.4 1 1 1h2" />
+                                        <circle cx="7" cy="17" r="2" />
+                                        <path d="M9 17h6" />
+                                        <circle cx="17" cy="17" r="2" />
+                                    </svg>
+                                </div>
+                                {/* Floating particles around icon */}
+                                {[...Array(3)].map((_, i) => (
+                                    <div key={i} style={{
+                                        position: "absolute", width: 6, height: 6, borderRadius: "50%",
+                                        background: "var(--accent-color)", opacity: 0.4,
+                                        top: `${20 + i * 30}%`, left: `${10 + i * 40}%`,
+                                        animation: `float ${4 + i}s infinite ease-in-out ${i * 0.5}s`
+                                    }} />
                                 ))}
                             </div>
+
+                            <h2 className="title-gradient-text" style={{
+                                fontSize: isMobile ? 32 : 48, fontWeight: 900, marginBottom: 16,
+                                letterSpacing: "-1px", fontFamily: "'Syne', sans-serif"
+                            }}>
+                                {t("empty")}
+                            </h2>
+
+                            <p style={{
+                                color: "var(--text-muted)", maxWidth: 450, textAlign: "center",
+                                marginBottom: 48, fontSize: 18, lineHeight: 1.6, fontWeight: 500,
+                                fontFamily: "'DM Sans', sans-serif"
+                            }}>
+                                {t("emptyDesc")}
+                            </p>
+
+                            <button
+                                className="primary-btnDE"
+                                onClick={() => navigate("/homeConnect")}
+                                style={{
+                                    padding: "20px 48px", borderRadius: 24, fontSize: 18, fontWeight: 800,
+                                    textTransform: "uppercase", letterSpacing: "1px",
+                                    border: "1px solid rgba(255,255,255,0.1)",
+                                    display: "flex", alignItems: "center", justifyContent: "center", gap: 12
+                                }}
+                            >
+                                {t("browse")}
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" style={{ display: "block", transform: "translateY(1px)" }}>
+                                    <line x1="5" y1="12" x2="19" y2="12" /><polyline points="12 5 19 12 12 19" />
+                                </svg>
+                            </button>
+                        </div>
+                    ) : (
+                        <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "repeat(auto-fill, minmax(380px, 1fr))", gap: 32, animation: "fadeUp 0.6s ease" }}>
+                            {reservations.map((res, idx) => (
+                                <div key={res.id || idx} className="fav-card" style={{ animation: `fadeUp 0.6s ${0.2 + idx * 0.1}s ease both` }}>
+                                    <div style={{ position: "relative", height: 260, overflow: "hidden" }}>
+                                        <div className="status-badge" style={{ background: `${getStatusColor(res.status)}15`, color: getStatusColor(res.status), borderColor: `${getStatusColor(res.status)}30` }}>
+                                            <span className="status-dot" style={{ background: getStatusColor(res.status), boxShadow: `0 0 8px ${getStatusColor(res.status)}` }} />
+                                            {res.status}
+                                        </div>
+                                        <img
+                                            src={res.car?.photos?.[0] || "https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&q=80"}
+                                            className="car-img"
+                                            style={{ width: "100%", height: "100%", objectFit: "cover" }}
+                                            alt={res.car?.name}
+                                        />
+                                        <div style={{ position: "absolute", inset: 0, background: "linear-gradient(180deg, transparent 60%, rgba(0,0,0,0.4) 100%)", pointerEvents: "none" }} />
+                                    </div>
+
+                                    <div style={{ padding: isMobile ? 24 : 32, textAlign: selectedLang === "AR" ? "right" : "left" }}>
+                                        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", marginBottom: 24 }}>
+                                            <div style={{ minWidth: 0, flex: 1, paddingRight: 12 }}>
+                                                <h3 style={{ fontFamily: "'Syne',sans-serif", fontSize: 24, fontWeight: 900, color: "var(--text-main)", marginBottom: 8, letterSpacing: "-0.5px", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{res.car?.name}</h3>
+                                                <div style={{ fontSize: 14, color: "var(--text-muted)", display: "flex", alignItems: "center", gap: 8, justifyContent: selectedLang === "AR" ? "flex-end" : "flex-start" }}>
+                                                    <MapPinIcon size={14} color="var(--accent-color)" /> {res.car?.city || res.car?.plate}
+                                                </div>
+                                            </div>
+                                            <div style={{ textAlign: selectedLang === "AR" ? "left" : "right" }}>
+                                                <div style={{ fontSize: 28, fontWeight: 900, color: "var(--accent-color)", fontFamily: "'Syne',sans-serif", letterSpacing: "-1px", lineHeight: 1 }}>
+                                                    {res.totalPrice}
+                                                    <span style={{ fontSize: 13, marginLeft: 4 }}>MAD</span>
+                                                </div>
+                                                <div style={{ fontSize: 12, color: "var(--text-muted)", fontWeight: 700, marginTop: 4 }}>{t("total")}</div>
+                                            </div>
+                                        </div>
+
+                                        <div style={{
+                                            display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16,
+                                            marginBottom: 0, borderTop: "1px solid var(--card-border)", paddingTop: 24
+                                        }}>
+                                            <div style={{ fontSize: 14, display: "flex", alignItems: "center", gap: 10, color: "var(--text-main)", fontWeight: 600, justifyContent: selectedLang === "AR" ? "flex-end" : "flex-start" }}>
+                                                <div style={{ width: 32, height: 32, borderRadius: 10, background: "rgba(16,185,129,0.1)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                                                    <ZapIcon size={16} color="var(--accent-color)" />
+                                                </div>
+                                                {res.car?.fuel}
+                                            </div>
+                                            <div style={{ fontSize: 14, display: "flex", alignItems: "center", gap: 10, color: "var(--text-main)", fontWeight: 600, justifyContent: selectedLang === "AR" ? "flex-end" : "flex-start" }}>
+                                                <div style={{ width: 32, height: 32, borderRadius: 10, background: "rgba(16,185,129,0.1)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                                                    <UsersIcon size={16} color="var(--accent-color)" />
+                                                </div>
+                                                {res.car?.seats} Places
+                                            </div>
+                                        </div>
+
+                                        <div className="res-details" style={{ display: "grid", gridTemplateColumns: "1fr", gap: 12, marginTop: 16, paddingTop: 16 }}>
+                                            <div className="detail-row" style={{ justifyContent: selectedLang === "AR" ? "flex-end" : "flex-start" }}>
+                                                <div style={{ width: 28, height: 28, borderRadius: 8, background: "rgba(59,130,246,0.1)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                                                    <CalendarIcon size={14} color="#3b82f6" />
+                                                </div>
+                                                <span style={{ fontSize: 13 }}>{t("from")} <b>{res.startDate}</b></span>
+                                            </div>
+                                            <div className="detail-row" style={{ justifyContent: selectedLang === "AR" ? "flex-end" : "flex-start" }}>
+                                                <div style={{ width: 28, height: 28, borderRadius: 8, background: "rgba(239,68,68,0.1)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                                                    <CalendarIcon size={14} color="#ef4444" />
+                                                </div>
+                                                <span style={{ fontSize: 13 }}>{t("to")} <b>{res.endDate}</b></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            ))}
                         </div>
                     )}
                 </div>
             </div>
-        </div >
+        </div>
     );
 }

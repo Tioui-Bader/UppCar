@@ -6,7 +6,6 @@ import { FR } from "./fr";
 import heroBg from "../../asset/hero_pg.png";
 import lightBg from "../../asset/home_light_bg.png";
 import lightBg2 from "../../asset/image copy 2.png";
-import lightBg3 from "../../asset/image copy 3.png";
 import darkBg2 from "../../asset/image copy 4.png";
 import darkBg3 from "../../asset/image copy.png";
 import darkBg4 from "../../asset/image copy 5.png";
@@ -128,7 +127,7 @@ body { background: var(--bg-color); color: var(--text-main); position: relative;
 
 .nav-wrapper { position: sticky; top: 10px; z-index: 100; margin: 0 20px; transition: all 0.3s ease; }
 .nav-glass { display: flex; align-items: center; justify-content: space-between; padding: 5px 20px; background: inherit; backdrop-filter: blur(2px); -webkit-backdrop-filter: blur(20px); border: 1px solid var(--nav-border); border-radius: 24px; box-shadow: 0 8px 32px rgba(0,0,0,0.05); animation: fadeUp 0.6s ease-out; }
-.nav-link { position: relative; color: var(--text-muted); text-decoration: none; font-family: 'Syne', sans-serif; font-size: 14px; font-weight: 700; padding: 8px 16px; border-radius: 12px; transition: all 0.3s cubic-bezier(0.4,0,0.2,1); overflow: hidden; }
+.nav-link { position: relative; color: #fff; text-decoration: none; font-family: 'Syne', sans-serif; font-size: 14px; font-weight: 700; padding: 8px 16px; border-radius: 12px; transition: all 0.3s cubic-bezier(0.4,0,0.2,1); overflow: hidden; }
 .nav-link::before { content:''; position:absolute; top:0; left:0; width:100%; height:100%; background:var(--text-main); opacity:0; z-index:-1; transition:opacity 0.3s ease; border-radius:12px; }
 .nav-link:hover { color:var(--bg-color); transform:translateY(-2px); }
 .nav-link:hover::before { opacity:1; }
@@ -389,8 +388,152 @@ body { background: var(--bg-color); color: var(--text-main); position: relative;
 }
 @keyframes floatIcon { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-12px); } }
 @keyframes scanLens { 0% { left: -100%; top: -100%; } 100% { left: 100%; top: 100%; } }
+
+/* ── WhatsApp Widget ── */
+.wa-widget-container { position: fixed; bottom: 28px; right: 28px; z-index: 9999; display: flex; flex-direction: column; align-items: flex-end; gap: 12px; }
+.wa-button { position: relative; }
+.wa-menu { background: white; border-radius: 24px; box-shadow: 0 20px 60px rgba(0,0,0,0.18), 0 4px 20px rgba(0,0,0,0.1); overflow: hidden; width: 360px; animation: fadeUp 0.35s cubic-bezier(0.16,1,0.3,1);    border: 1px solid rgba(0, 0, 0, 0.05); border-radius: 28px;overflow: hidden;}
+.wa-header { background: linear-gradient(135deg, #25D366 0%, #128C7E 100%); padding: 24px; color: white; transition: background 0.3s; }
+.wa-status { display: flex; align-items: center; gap: 8px; margin-top: 8px; font-size: 13px; opacity: 0.9; }
+.wa-dot { width: 8px; height: 8px; border-radius: 50%; background: #4ade80; box-shadow: 0 0 8px #4ade80; animation: pulse 2s infinite; display: inline-block; }
+.wa-option { display: flex; align-items: center; gap: 14px; padding: 14px 24px; text-decoration: none; color: #1e293b; transition: background 0.2s; cursor: pointer; }
+.wa-option:hover { background: #f8fafc; }
+.wa-option-icon { width: 44px; height: 44px; border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0; }
+.wa-option-text { flex: 1; }
+.wa-option-title { font-weight: 700; font-size: 14px; margin-bottom: 2px; }
+.wa-option-desc { font-size: 12px; color: #64748b; line-height: 1.4; }
+@media (max-width: 768px) { .wa-widget-container { bottom: 18px; right: 14px; } .wa-menu { width: calc(100vw - 28px); } }
 `;
 
+
+function WhatsAppIcon({ size = 28 }) {
+    return <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" /></svg>;
+}
+
+function WhatsAppWidget({ selectedLang }) {
+    const [isOpen, setIsOpen] = useState(false);
+    const phone = "212661754896";
+    const isAr = selectedLang === "AR";
+    const isFr = selectedLang === "FR";
+
+    const content = isAr ? {
+        title: "تواصل عبر واتساب",
+        subtitle: "رد سريع",
+        chooseLabel: "اختر طلبك",
+        options: [
+            { title: "أريد استئجار سيارة 🚗", desc: "تحدث مع فريقنا للعثور على السيارة المثالية", msg: "مرحبا، أريد استئجار سيارة من UppCar.", icon: "🚗", bg: "rgba(37, 211, 102, 0.15)" },
+            { title: "سؤال عن الحجز 📝", desc: "مشكلة أو تعديل في رحلتك؟", msg: "مرحبا، لدي سؤال بخصوص حجزي.", icon: "📝", bg: "rgba(255, 181, 71, 0.15)" },
+            { title: "أحتاج مساعدة 🆘", desc: "سؤال تقني؟ سنرد عليك فورًا", msg: "مرحبا، أحتاج مساعدة تقنية في الموقع.", icon: "🆘", bg: "rgba(239, 68, 68, 0.15)" },
+            { title: "طلب مخصص ✨", desc: "صف احتياجك الخاص لمستشارينا", msg: "مرحبا، لدي طلب خاص أريد تقديمه.", icon: "✨", bg: "rgba(0, 229, 160, 0.15)" }
+        ]
+    } : isFr ? {
+        title: "Contact WhatsApp",
+        subtitle: "Réponse Rapide",
+        chooseLabel: "Choisissez votre demande",
+        options: [
+            { title: "Je veux louer une voiture 🚗", desc: "Discutez avec notre équipe pour trouver le véhicule idéal", msg: "Bonjour, je souhaite louer une voiture sur UppCar.", icon: "🚗", bg: "rgba(37, 211, 102, 0.15)" },
+            { title: "Question réservation 📝", desc: "Un problème ou une modification sur votre voyage ?", msg: "Bonjour, j'ai une question concernant ma réservation.", icon: "📝", bg: "rgba(255, 181, 71, 0.15)" },
+            { title: "J'ai besoin d'aide 🆘", desc: "Une question technique ? On vous répond immédiatement", msg: "Bonjour, j'ai besoin d'aide technique sur le site.", icon: "🆘", bg: "rgba(239, 68, 68, 0.15)" },
+            { title: "Demande personnalisée ✨", desc: "Décrivez votre besoin spécifique à nos conseillers", msg: "Bonjour, j'ai une demande particulière à vous soumettre.", icon: "✨", bg: "rgba(0, 229, 160, 0.15)" }
+        ]
+    } : {
+        title: "Contact WhatsApp",
+        subtitle: "Quick Response",
+        chooseLabel: "Choose your request",
+        options: [
+            { title: "I want to rent a car 🚗", desc: "Chat with our team to find the ideal vehicle", msg: "Hello, I'd like to rent a car on UppCar.", icon: "🚗", bg: "rgba(37, 211, 102, 0.15)" },
+            { title: "Reservation question 📝", desc: "A problem or change to your trip?", msg: "Hello, I have a question about my reservation.", icon: "📝", bg: "rgba(255, 181, 71, 0.15)" },
+            { title: "I need help 🆘", desc: "A technical question? We'll answer immediately", msg: "Hello, I need technical help on the site.", icon: "🆘", bg: "rgba(239, 68, 68, 0.15)" },
+            { title: "Custom request ✨", desc: "Describe your specific need to our advisors", msg: "Hello, I have a special request to submit.", icon: "✨", bg: "rgba(0, 229, 160, 0.15)" }
+        ]
+    };
+
+    return (
+        <div className="wa-widget-container" dir="ltr">
+            {isOpen && (
+                <div className="wa-menu" dir={isAr ? "rtl" : "ltr"}>
+                    <div className="wa-header" style={{ background: isOpen ? 'linear-gradient(135deg, #1e3a8a 0%, #2563eb 100%)' : 'linear-gradient(135deg, #25D366 0%, #128C7E 100%)' }}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                            <div>
+                                <h3 style={{ fontSize: 22, fontWeight: 900, fontFamily: "'Syne', sans-serif" }}>{content.title}</h3>
+                                <div className="wa-status">
+                                    <span className="wa-dot" />
+                                    {content.subtitle}
+                                </div>
+                            </div>
+                            <div style={{ width: 44, height: 44, background: 'rgba(255,255,255,0.2)', borderRadius: 12, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 24 }}>📱</div>
+                        </div>
+                    </div>
+                    <div style={{ padding: '20px 0', background: 'white' }}>
+                        <div style={{ fontSize: 11, fontWeight: 800, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.1em', padding: '0 24px 16px', textAlign: isAr ? 'right' : 'left' }}>{content.chooseLabel}</div>
+                        {content.options.map((opt, i) => (
+                            <a
+                                key={i}
+                                href={`https://wa.me/${phone}?text=${encodeURIComponent(opt.msg)}`}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="wa-option"
+                                style={{ flexDirection: isAr ? 'row-reverse' : 'row' }}
+                            >
+                                <div className="wa-option-icon" style={{ background: opt.bg }}>{opt.icon}</div>
+                                <div className="wa-option-text" style={{ textAlign: isAr ? 'right' : 'left' }}>
+                                    <div className="wa-option-title">{opt.title}</div>
+                                    <div className="wa-option-desc">{opt.desc}</div>
+                                </div>
+                                <div style={{ color: '#cbd5e1' }}>
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points={isAr ? "15 18 9 12 15 6" : "9 18 15 12 9 6"} /></svg>
+                                </div>
+                            </a>
+                        ))}
+                    </div>
+                    <div style={{ padding: '16px 24px', borderTop: '1px solid #f1f5f9', background: '#f8fafc', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10, color: '#64748b', fontSize: 14, fontWeight: 700 }}>
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" /></svg>
+                         <span dir="ltr">+212 621358566</span>
+                    </div>
+                </div>
+            )}
+            <button
+                className="wa-button"
+                onClick={() => setIsOpen(!isOpen)}
+                style={{
+                    width: 63,
+                    height: 63,
+                    borderRadius: '50%',
+                    background: isOpen ? 'linear-gradient(135deg, #1e3a8a 0%, #2563eb 100%)' : 'rgb(25 173 81)',
+                    border: 'none',
+                    cursor: 'pointer',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    color: 'white',
+                    boxShadow: isOpen ? '0 8px 24px rgba(37, 99, 235, 0.4)' : '0 4px 16px rgba(37,211,102,0.35)',
+                    transition: 'transform 0.2s, box-shadow 0.2s',
+                    position: 'relative',
+                    top: '10px',
+                    left: '10px'
+                }}
+                onMouseEnter={e => {
+                    e.currentTarget.style.transform = 'scale(1.08)';
+                    e.currentTarget.style.boxShadow = isOpen ? '0 12px 32px rgba(37, 99, 235, 0.5)' : '0 6px 24px rgba(37,211,102,0.5)';
+                }}
+                onMouseLeave={e => {
+                    e.currentTarget.style.transform = 'scale(1)';
+                    e.currentTarget.style.boxShadow = isOpen ? '0 8px 24px rgba(37, 99, 235, 0.4)' : '0 4px 16px rgba(37,211,102,0.35)';
+                }}
+            >
+                {isOpen ? (
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none"
+                        stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                        <line x1="18" y1="6" x2="6" y2="18" />
+                        <line x1="6" y1="6" x2="18" y2="18" />
+                    </svg>
+                ) : (
+                    <WhatsAppIcon size={28} />
+                )}
+            </button>
+        </div>
+    );
+}
 
 function SearchIcon() {
     return <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="11" cy="11" r="8" /><path d="m21 21-4.35-4.35" /></svg>;
@@ -739,7 +882,7 @@ export default function UppCarLanding() {
     const [isMobile, setIsMobile] = useState(false);
     const [userMenuOpen, setUserMenuOpen] = useState(false);
     const [selectedLang, setSelectedLang] = useState(localStorage.getItem("appLang") || "FR");
-    const [langMenuOpen, setLangMenuOpen] = useState(false);
+    const [langMenuOpen, setLangMenuOpen] = useState(true);
     const [profileImage, setProfileImage] = useState(
         localStorage.getItem("profileImage") || null
     );
@@ -756,10 +899,48 @@ export default function UppCarLanding() {
     const [showCityDropdown, setShowCityDropdown] = useState(false);
     const startDateRef = useRef(null);
     const endDateRef = useRef(null);
-    const [favorites, setFavorites] = useState(() => {
-        const saved = localStorage.getItem("favoriteCars");
-        return saved ? new Set(JSON.parse(saved)) : new Set();
-    });
+    const [favorites, setFavorites] = useState(new Set());
+    const [showProfileReminder, setShowProfileReminder] = useState(false);
+
+
+    // Effet pour charger les favoris dès que l'utilisateur est identifié
+    useEffect(() => {
+        const userStr = localStorage.getItem("user");
+        if (userStr) {
+            const user = JSON.parse(userStr);
+            const key = `favoriteCars_${user.id || user.email}`;
+            const saved = localStorage.getItem(key);
+            if (saved) {
+                setFavorites(new Set(JSON.parse(saved)));
+            }
+        }
+    }, []);
+
+    // Helper to check if user profile is incomplete
+    const isProfileIncomplete = (user) => {
+        if (!user) return true;
+        const requiredFields = ["firstName", "lastName", "phone", "address", "city", "country"];
+        return requiredFields.some(field => !user[field] || user[field].toString().trim() === "");
+    };
+
+    // Effet pour afficher le rappel de profil pendant 5 secondes
+    useEffect(() => {
+        const userStr = localStorage.getItem("user");
+        if (userStr) {
+            try {
+                const user = JSON.parse(userStr);
+                if (isProfileIncomplete(user)) {
+                    setShowProfileReminder(true);
+                    const timer = setTimeout(() => setShowProfileReminder(false), 15000);
+                    return () => clearTimeout(timer);
+                }
+            } catch (e) {
+                console.error("Error parsing user data for profile reminder:", e);
+                // If it's corrupted or old, maybe show it anyway or ignore
+            }
+        }
+    }, []);
+
 
     useEffect(() => {
         const timer = setInterval(() => {
@@ -769,6 +950,14 @@ export default function UppCarLanding() {
     }, []);
 
     const toggleFavorite = (carId) => {
+        const userStr = localStorage.getItem("user");
+        if (!userStr) {
+            alert(selectedLang === "AR" ? "يرجى تسجيل الدخول لحفظ المفضلات" : "Veuillez vous connecter pour enregistrer des favoris");
+            return;
+        }
+        const user = JSON.parse(userStr);
+        const key = `favoriteCars_${user.id || user.email}`;
+
         setFavorites(prev => {
             const next = new Set(prev);
             const isAdding = !next.has(carId);
@@ -779,7 +968,7 @@ export default function UppCarLanding() {
                 next.add(carId);
                 logActivity('favorite_add', { carId });
             }
-            localStorage.setItem("favoriteCars", JSON.stringify(Array.from(next)));
+            localStorage.setItem(key, JSON.stringify(Array.from(next)));
             return next;
         });
     };
@@ -846,7 +1035,7 @@ export default function UppCarLanding() {
     useEffect(() => {
         const handler = (e) => {
             if (!e.target.closest(".login-menu-wrap")) setMenuOpen(false);
-            if (!e.target.closest(".lang-menu-wrap")) setLangMenuOpen(false);
+            if (!e.target.closest(".mobile-menu-wrap")) setMobileMenuOpen(false);
         };
         document.addEventListener("click", handler);
         return () => document.removeEventListener("click", handler);
@@ -1347,7 +1536,7 @@ Réponds UNIQUEMENT au format JSON strict, sans aucun texte autour :
             }}>
                 {/* ── Cinematic Car Background Layers (Pure Cross-fade) ── */}
                 {(() => {
-                    const activeImages = isDarkMode ? [heroBg, darkBg2, darkBg3, darkBg4] : [lightBg, lightBg2, lightBg3, lightBg4];
+                    const activeImages = isDarkMode ? [heroBg, darkBg2, darkBg3, darkBg4] : [lightBg, lightBg2, lightBg4];
                     const currentIdx = lightBgIndex % activeImages.length;
                     return activeImages.map((img, idx) => {
                         const isActive = idx === currentIdx;
@@ -1427,9 +1616,14 @@ Réponds UNIQUEMENT au format JSON strict, sans aucun texte autour :
                                             } else if (l === t("nav.vehicles", "Profil")) {
                                                 e.preventDefault();
                                                 navigate("/profile");
-                                            } else if (l === t("nav.pricing", "Favoris")) {
+                                            }
+                                            else if (l === t("nav.pricing", "Favoris")) {
                                                 e.preventDefault();
                                                 navigate("/favorites");
+                                            }
+                                            else if (l === t("nav.services", "Réservations")) {
+                                                e.preventDefault();
+                                                navigate("/my-reservations");
                                             }
                                         }} className="nav-link" style={{
                                             display: "flex", alignItems: "center", gap: 8, cursor: "pointer"
@@ -1528,7 +1722,7 @@ Réponds UNIQUEMENT au format JSON strict, sans aucun texte autour :
                                                     ].map(lang => (
                                                         <button
                                                             key={lang.code}
-                                                            onClick={() => { setSelectedLang(lang.code); setLangMenuOpen(false); }}
+                                                            onClick={() => { setSelectedLang(lang.code); localStorage.setItem("appLang", lang.code); window.location.reload(); }}
                                                             style={{
                                                                 display: "flex", alignItems: "center", gap: "6px",
                                                                 background: selectedLang === lang.code ? "var(--text-main)" : "transparent",
@@ -1720,6 +1914,7 @@ Réponds UNIQUEMENT au format JSON strict, sans aucun texte autour :
                                                         <div key={id} style={{ padding: "11px 18px", cursor: "pointer", display: "flex", alignItems: "center", gap: 12, transition: "all 0.2s ease", color: "var(--text-main)" }}
                                                             onClick={() => {
                                                                 if (id === "profile") navigate("/profile");
+                                                                if (id === "reservations") navigate("/my-reservations");
                                                                 if (id === "favorites") navigate("/favorites");
                                                             }}
                                                             onMouseEnter={e => { e.currentTarget.style.background = isDarkMode ? "rgba(255,255,255,0.04)" : "rgba(0,0,0,0.03)"; e.currentTarget.style.paddingLeft = "22px"; }}
@@ -1895,7 +2090,7 @@ Réponds UNIQUEMENT au format JSON strict, sans aucun texte autour :
                                             sub: selectedLang === "AR" ? "حجوزاتي" : selectedLang === "FR" ? "Historique & actives" : "History & active",
                                             color: isDarkMode ? "#60a5fa" : "#2563eb",
                                             icon: (<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" /><line x1="16" y1="2" x2="16" y2="6" /><line x1="8" y1="2" x2="8" y2="6" /><line x1="3" y1="10" x2="21" y2="10" /></svg>),
-                                            action: () => { navigate("/reservations"); setMobileMenuOpen(false); },
+                                            action: () => { navigate("/my-reservations"); setMobileMenuOpen(false); },
                                         },
                                         {
                                             id: "favorites",
@@ -1956,7 +2151,7 @@ Réponds UNIQUEMENT au format JSON strict, sans aucun texte autour :
                                             ].map(lang => (
                                                 <button
                                                     key={lang.code}
-                                                    onClick={() => { setSelectedLang(lang.code); }}
+                                                    onClick={() => { setSelectedLang(lang.code); localStorage.setItem("appLang", lang.code); window.location.reload(); }}
                                                     style={{
                                                         flex: 1, padding: "10px 8px", borderRadius: 14, cursor: "pointer",
                                                         border: `1.5px solid ${selectedLang === lang.code
@@ -2709,11 +2904,29 @@ Réponds UNIQUEMENT au format JSON strict, sans aucun texte autour :
                                                         currentUser.address &&
                                                         currentUser.city;
 
+                                                    const start = new Date(startDate);
+                                                    const end = new Date(endDate);
+                                                    const diffTime = Math.abs(end - start);
+                                                    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) || 1;
+
                                                     if (!isComplete) {
-                                                        // Redirection vers profil avec état "incomplet"
-                                                        navigate('/profile', { state: { incomplete: true } });
+                                                        navigate('/profile', {
+                                                            state: {
+                                                                incomplete: true,
+                                                                returnTo: `/booking/${car.id}`,
+                                                                startDate,
+                                                                endDate,
+                                                                reservationDays: diffDays
+                                                            }
+                                                        });
                                                     } else {
-                                                        navigate(`/booking/${car.id}`);
+                                                        navigate(`/booking/${car.id}`, {
+                                                            state: {
+                                                                startDate,
+                                                                endDate,
+                                                                reservationDays: diffDays
+                                                            }
+                                                        });
                                                     }
                                                 }}
                                             >
@@ -3184,7 +3397,7 @@ Réponds UNIQUEMENT au format JSON strict, sans aucun texte autour :
                             {t("cta.subtitle", "Whether you're booking your next weekend getaway or taking your rental business to the next level, UppCar has everything you need.")}
                         </p>
                         <div style={{ display: "flex", gap: 15, justifyContent: "center", flexWrap: "wrap", flexDirection: isMobile ? "column" : "row", padding: isMobile ? "0 8px" : 0 }}>
-                            <button className="primary-btnDE" style={{ padding: isMobile ? "16px 24px" : "20px 52px", fontSize: 16 }}>
+                            <button className="primary-btnDE" style={{ padding: isMobile ? "16px 24px" : "20px 52px", fontSize: 16 }} onClick={() => navigate('/my-reservations')}>
                                 {t("cta.primaryBtn", "My Reservations")}
                                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><line x1="5" y1="12" x2="19" y2="12" /><polyline points="12 5 19 12 12 19" /></svg>
                             </button>
@@ -3501,6 +3714,106 @@ Réponds UNIQUEMENT au format JSON strict, sans aucun texte autour :
                     `}</style>
                 </div>
             )}
+            {showProfileReminder && (
+                <div style={{
+                    position: "fixed",
+                    bottom: isMobile ? 90 : 40,
+                    left: isMobile ? "20px" : "40px",
+                    right: isMobile ? "20px" : "auto",
+                    zIndex: 20000,
+                    animation: "toastFadeIn 0.6s cubic-bezier(0.16, 1, 0.3, 1) both"
+                }}>
+                    <div style={{
+                        background: isDarkMode ? "rgba(15, 23, 42, 0.85)" : "rgba(255, 255, 255, 0.85)",
+                        backdropFilter: "blur(16px)",
+                        WebkitBackdropFilter: "blur(16px)",
+                        border: `1px solid ${isDarkMode ? "rgba(255,255,255,0.1)" : "rgba(6,78,59,0.1)"}`,
+                        borderLeft: `4px solid ${isDarkMode ? "#60a5fa" : "#10b981"}`,
+                        padding: "16px 24px",
+                        borderRadius: "20px",
+                        boxShadow: "0 20px 50px rgba(0,0,0,0.3)",
+                        display: "flex",
+                        alignItems: "center",
+                        gap: 16,
+                        maxWidth: 409,
+                    }}>
+                        <div style={{
+                            width: 40, height: 40, borderRadius: "50%",
+                            background: isDarkMode ? "rgba(96,165,250,0.1)" : "rgba(16,185,129,0.1)",
+                            display: "flex", alignItems: "center", justifyContent: "center",
+                            color: isDarkMode ? "#60a5fa" : "#10b981",
+                            flexShrink: 0
+                        }}>
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" /><circle cx="12" cy="7" r="4" /></svg>
+                        </div>
+                        <div style={{ flex: 1 }}>
+                            <p style={{
+                                margin: 0,
+                                fontSize: 14,
+                                fontWeight: 700,
+                                color: isDarkMode ? "#f8fafc" : "#064e3b",
+                                lineHeight: 1.4,
+                                fontFamily: "'Syne', sans-serif"
+                            }}>
+                                {(() => {
+                                    const fullText = t("nav.profileReminder", "Important: Please complete your profile information.");
+                                    const parts = fullText.split(":");
+                                    // Robust check for "Important" or Arabic equivalent "هام"
+                                    if (parts.length > 1 && (
+                                        parts[0].trim().toLowerCase().includes("important") ||
+                                        parts[0].trim().includes("هام")
+                                    )) {
+                                        return (
+                                            <>
+                                                <span style={{ color: "#ef4444" }}>{parts[0]}</span> : {parts.slice(1).join(":")}
+                                            </>
+                                        );
+                                    }
+                                    return fullText;
+                                })()}
+                            </p>
+                        </div>
+                        <button
+                            onClick={() => setShowProfileReminder(false)}
+                            style={{
+                                background: "none", border: "none", color: "var(--text-muted)",
+                                cursor: "pointer", padding: 4, display: "flex", opacity: 0.6,
+                                position: "relative", zIndex: 2
+                            }}
+                        >
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" /></svg>
+                        </button>
+
+                        {/* Progress Bar */}
+                        <div style={{
+                            position: "absolute",
+                            bottom: 0,
+                            left: "6px",
+                            height: "3px",
+                            background: "#3b82f6",
+                            width: "calc(100% - 20px)",
+                            transformOrigin: "left",
+                            animation: "toastProgress 15s linear forwards",
+
+                            borderRadius: "2px"
+                        }} />
+
+                    </div>
+                    <style>{`
+                        @keyframes toastFadeIn {
+                            from { opacity: 0; transform: translateY(20px) scale(0.95); }
+                            to { opacity: 1; transform: translateY(0) scale(1); }
+                        }
+                        @keyframes toastProgress {
+                            from { transform: scaleX(1); }
+                            to { transform: scaleX(0); }
+                        }
+                    `}</style>
+                </div>
+
+            )}
+            <WhatsAppWidget selectedLang={selectedLang} />
         </>
     );
 }
+

@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import {
-    ArrowLeft, CreditCard, Lock, ShieldCheck,
-    Calendar, User, CheckCircle2, ChevronRight,
-    Zap, Moon, Sun, Info
+  ArrowLeft, CreditCard, Lock, ShieldCheck,
+  Calendar, User, CheckCircle2, ChevronRight,
+  Zap, Moon, Sun, Info, Star, MessageSquare
 } from 'lucide-react';
 
 /* ──────────────────────────────────────────────────────────────────────────
@@ -70,299 +70,202 @@ const styles = `
 
 @media (max-width: 900px) {
   .payment-grid { grid-template-columns: 1fr; }
+  .review-grid { grid-template-columns: 1fr; }
+}
+
+.review-grid {
+  max-width: 1100px;
+  margin: 40px auto;
+  display: grid;
+  grid-template-columns: 1.2fr 0.8fr;
+  gap: 40px;
+  position: relative;
+  z-index: 10;
+}
+
+.car-image-card {
+  border-radius: 32px;
+  overflow: hidden;
+  min-height: 380px;
+  position: relative;
+  box-shadow: 0 20px 50px rgba(0,0,0,0.1);
+  animation: fadeUp 0.8s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .glass-card {
   background: var(--elite-card-bg);
   backdrop-filter: var(--elite-glass);
   -webkit-backdrop-filter: var(--elite-glass);
-  border: 1px solid var(--elite-card-border);
-  border-radius: 32px;
-  padding: 40px;
-  box-shadow: 0 20px 50px rgba(0,0,0,0.05);
-  animation: fadeUp 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+  grid-template-columns: 1.2fr 0.82fr;
+  gap: 32px;
+  position: relative;
+  z-index: 10;
+  padding-bottom: 60px;
 }
-  .glass-carde {
-  background: var(--elite-card-bg);
-  backdrop-filter: var(--elite-glass);
-  -webkit-backdrop-filter: var(--elite-glass);
-  border: 1px solid var(--elite-card-border);
-  border-radius: 32px;
+
+.checkout-card {
+  background: white;
+  border-radius: 16px;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06);
   padding: 40px;
-  box-shadow: 0 20px 50px rgba(0,0,0,0.05);
-  animation: fadeUp 0.8s cubic-bezier(0.16, 1, 0.3, 1);
-  margin-top: 79px;
+  margin-top: 20px;
+}
+
+[data-theme='dark'] .checkout-card {
+  background: #0f172a;
+  border-color: #1e293b;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+}
+
+.method-selector {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 32px;
+}
+
+.method-tab {
+  flex: 1;
+  padding: 16px;
+  border: 2px solid #e2e8f0;
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  background: transparent;
+}
+
+.method-tab.active {
+  border-color: var(--elite-accent);
+  background: rgba(16, 185, 129, 0.04);
+}
+
+[data-theme='dark'] .method-tab { border-color: #1e293b; }
+[data-theme='dark'] .method-tab.active { background: rgba(52, 211, 153, 0.06); border-color: var(--elite-accent); }
+
+.method-icon {
+  width: 32px; height: 32px;
+  display: flex; align-items: center; justify-content: center;
+  color: #64748b;
+}
+.method-tab.active .method-icon { color: var(--elite-accent); }
+
+.method-label {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #64748b;
+}
+.method-tab.active .method-label { color: var(--elite-accent); }
+
+.form-group-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.field-container {
+  margin-bottom: 24px;
+}
+
+.field-label {
+  font-size: 13px;
+  font-weight: 600;
+  margin-bottom: 8px;
+  color: #64748b;
+}
+
+.field-input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.pro-input {
+  width: 100%;
+  padding: 14px 16px 14px 44px;
+  border-radius: 10px;
+  border: 1px solid #cbd5e1;
+  font-size: 15px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  outline: none;
+  background: white;
+  color: #0f172a;
+}
+
+[data-theme='dark'] .pro-input {
+  background: #1e293b;
+  border-color: #334155;
+  color: white;
+}
+
+.pro-input:focus {
+  border-color: var(--elite-accent);
+  box-shadow: 0 0 0 3px var(--elite-accent-glow);
+}
+
+.field-icon {
+  position: absolute;
+  left: 14px;
+  color: #94a3b8;
+}
+
+.trust-strip {
+  display: flex;
+  justify-content: center;
+  gap: 24px;
+  margin-top: 32px;
+  padding: 20px;
+  background: #f8fafc;
+  border-radius: 12px;
+}
+
+[data-theme='dark'] .trust-strip { background: rgba(255,255,255,0.03); }
+
+.trust-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #64748b;
+}
+
+.confirm-pay-btn {
+  width: 100%;
+  padding: 18px;
+  border-radius: 12px;
+  background: var(--elite-grad);
+  border: none;
+  color: white;
+  font-family: 'Syne', sans-serif;
+  font-weight: 800;
+  font-size: 17px;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  display: flex; align-items: center; justify-content: center; gap: 12px;
+  margin-top: 10px;
+}
+
+.confirm-pay-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px var(--elite-accent-glow);
 }
 
 @keyframes fadeUp {
-  from { opacity: 0; transform: translateY(30px); }
+  from { opacity: 0; transform: translateY(20px); }
   to { opacity: 1; transform: translateY(0); }
 }
 
-.section-title {
-  font-family: 'Syne', sans-serif;
-  font-size: 28px;
-  font-weight: 800;
-  margin-bottom: 24px;
-  letter-spacing: -1px;
-  background: linear-gradient(135deg, #10b981 0%, #3b82f6 50%, #8b5cf6 100%);
-  background-size: 200% auto;
-  color: transparent;
-  -webkit-background-clip: text;
-  background-clip: text;
-  animation: textGlow 5s ease infinite;
+@keyframes popIn { 
+  from { opacity: 0; transform: scale(0.95); } 
+  to { opacity: 1; transform: scale(1); } 
 }
-
-@keyframes textGlow {
-  0% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
-}
-
-.input-group {
-  margin-bottom: 20px;
-}
-
-.input-label {
-  display: block;
-  font-size: 14px;
-  font-weight: 600;
-  margin-bottom: 8px;
-  opacity: 0.8;
-}
-
-.input-wrapper {
-  position: relative;
-  display: flex;
-  align-items: center;
-}
-
-.elite-input {
-  width: 100%;
-  background: var(--elite-input-bg);
-  border: 1px solid var(--elite-accent);
-  box-shadow: 0 0 0 4px var(--elite-accent-glow);
-  border-radius: 16px;
-  padding: 16px 16px 16px 48px;
-  color: var(--elite-text);
-  font-size: 16px;
-  outline: none;
-  transition: all 0.3s ease;
-}
-
-.elite-input:focus {
-  border-color: var(--elite-accent);
-  box-shadow: 0 0 0 4px var(--elite-accent-glow);
-}
-
-.input-icon {
-  position: absolute;
-  left: 16px;
-  color: var(--elite-accent);
-  opacity: 0.7;
-}
-
-.card-brand-icons {
-  position: absolute;
-  right: 16px;
-  display: flex;
-  gap: 8px;
-}
-
-.brand-icon {
-  height: 24px;
-  opacity: 0.5;
-  transition: opacity 0.3s;
-}
-.brand-icon.active { opacity: 1; }
-
-.row-2 {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 20px;
-}
-
-/* 3D Dynamic Card Styles */
-.card-perspective {
-  perspective: 2000px;
-  margin-bottom: 32px;
-  z-index: 20;
-}
-
-.dynamic-card {
-  width: 91%;
-height: 250px;
-  background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
-  border-radius: 24px;
-  padding: 32px;
-  color: white;
-  position: relative;
-  transform-style: preserve-3d;
-  transition: transform 0.1s ease-out;
-  box-shadow: 0 40px 80px rgba(0,0,0,0.3);
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  overflow: hidden;
-  cursor: pointer;
-}
-
-.card-glow {
-  position: absolute; inset: 0;
-  background: radial-gradient(circle at var(--mx, 50%) var(--my, 50%), rgba(16, 185, 129, 0.3) 0%, rgba(59, 130, 246, 0.15) 50%, transparent 80%);
-  pointer-events: none;
-}
-
-.card-hologram {
-  position: absolute; top: 10%; right: 10%; width: 70px; height: 70px;
-  background: conic-gradient(from 0deg, #10b981, #3b82f6, #8b5cf6, #10b981);
-  border-radius: 50%; filter: blur(25px); opacity: 0.3; animation: rotateCard 12s linear infinite;
-}
-
-@keyframes rotateCard { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-
-.card-chip {
-  width: 45px;
-  height: 35px;
-  background: linear-gradient(135deg, #ffd700, #b8860b);
-  border-radius: 6px;
-}
-
-.card-number-display {
-  font-family: 'Syne', sans-serif;
-  font-size: 24px;
-  letter-spacing: 4px;
-  font-weight: 800;
-  text-shadow: 0 4px 8px rgba(0,0,0,0.3);
-}
-
-.card-info-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-end;
-}
-
-.info-label { font-size: 10px; text-transform: uppercase; opacity: 0.6; letter-spacing: 1px; }
-.info-value { font-size: 16px; font-weight: 800; margin-top: 4px; }
-.card-brand-display { font-family: 'Syne', sans-serif; font-weight: 900; font-size: 22px; font-style: italic; opacity: 0.9; }
-
-/* Sidebar Summary */
-.summary-card {
-  padding: 32px;
-}
-
-.summary-item {
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 12px;
-  font-size: 15px;
-}
-
-.summary-total {
-  margin-top: 24px;
-  padding-top: 24px;
-  border-top: 1px solid var(--elite-card-border);
-  display: flex;
-  justify-content: space-between;
-  font-family: 'Syne', sans-serif;
-  font-size: 24px;
-  font-weight: 900;
-  background: linear-gradient(135deg, #10b981 0%, #3b82f6 50%, #8b5cf6 100%);
-  background-size: 200% auto;
-  color: transparent;
-  -webkit-background-clip: text;
-  background-clip: text;
-  animation: textGlow 4s ease infinite;
-}
-
-.pay-button {
-  width: 100%;
-  margin-top: 32px;
-  background: var(--elite-grad);
-  border: none;
-  border-radius: 18px;
-  padding: 20px;
-  color: #fff;
-  font-family: 'Syne', sans-serif;
-  font-weight: 800;
-  font-size: 18px;
-  cursor: pointer;
-  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 12px;
-}
-
-.pay-button:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 20px 40px var(--elite-accent-glow);
-}
-
-.pay-button:active { transform: scale(0.98); }
-
-.security-badge {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  margin-top: 24px;
-  font-size: 13px;
-  opacity: 0.6;
-}
-
-/* Spinner & Success Overlay */
-@keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-
-.spinner {
-  width: 24px; height: 24px;
-  border: 3px solid rgba(255,255,255,0.3);
-  border-top-color: #fff; border-radius: 50%;
-  animation: spin 1s linear infinite;
-}
-
-.success-overlay {
-  position: fixed; inset: 0; z-index: 9999;
-  display: flex; align-items: center; justify-content: center;
-  background: rgba(0, 0, 0, 0.6);
-  backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
-  animation: fadeIn 0.4s ease forwards;
-}
-
-.success-card {
-  background: var(--elite-card-bg);
-  border: 1px solid var(--elite-accent);
-  padding: 50px; border-radius: 32px;
-  text-align: center; color: var(--elite-text);
-  box-shadow: 0 40px 80px rgba(16, 185, 129, 0.15);
-  animation: popIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-  max-width: 420px; width: 90%;
-}
-
-.success-icon-wrapper {
-  width: 90px; height: 90px;
-  background: var(--elite-accent-glow);
-  border-radius: 50%; margin: 0 auto 24px;
-  display: flex; align-items: center; justify-content: center;
-  color: var(--elite-accent);
-  box-shadow: 0 0 40px var(--elite-accent-glow);
-}
-
-.success-btn {
-  background: linear-gradient(135deg, #10b981 0%, #3b82f6 100%);
-  border: none; padding: 18px 32px; border-radius: 20px;
-  color: white; font-family: 'Syne', sans-serif;
-  font-weight: 800; font-size: 16px; cursor: pointer;
-  width: 100%; transition: all 0.3s ease;
-  margin-top: 10px;
-}
-.success-btn:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 15px 30px var(--elite-accent-glow);
-}
-
-@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-@keyframes popIn { from { opacity: 0; transform: scale(0.8) translateY(30px); } to { opacity: 1; transform: scale(1) translateY(0); } }
 
 /* Back button */
 .back-btn {
@@ -400,260 +303,268 @@ height: 250px;
 `;
 
 export default function PaymentPage() {
-    const { id } = useParams();
-    const navigate = useNavigate();
-    const location = useLocation();
+  const { id } = useParams();
+  const navigate = useNavigate();
+  const location = useLocation();
 
-    // Recovery of data from navigation or defaults
-    const carData = location.state?.car || { name: "Premium Vehicle", price: 750 };
-    const days = location.state?.reservationDays || 1;
-    const total = carData.price * days;
+  // Recovery of data from navigation or defaults
+  const carData = location.state?.car || { name: "Premium Vehicle", price: 750 };
+  const days = location.state?.reservationDays || 1;
+  const startDate = location.state?.startDate || "";
+  const endDate = location.state?.endDate || "";
+  const cinNumber = location.state?.cinNumber || "N/A";
+  const permisNumber = location.state?.permisNumber || "N/A";
+  const clientFullName = location.state?.clientName || "Client";
+  const total = carData.price * days;
 
-    const cardRef = useRef(null);
-    const [cardNum, setCardNum] = useState('');
-    const [cardName, setCardName] = useState('');
-    const [expiry, setExpiry] = useState('');
-    const [cvv, setCvv] = useState('');
-    const [cardType, setCardType] = useState('visa'); // Default visual
-    const [isLoading, setIsLoading] = useState(false);
-    const [isSuccess, setIsSuccess] = useState(false);
+  const cardRef = useRef(null);
+  const [cardNum, setCardNum] = useState('');
+  const [cardName, setCardName] = useState('');
+  const [expiry, setExpiry] = useState('');
+  const [cvv, setCvv] = useState('');
+  const [cardType, setCardType] = useState('visa');
+  const [paymentMethod, setPaymentMethod] = useState('card');
+  const [isLoading, setIsLoading] = useState(false);
+  const [isSuccess, setIsSuccess] = useState(false);
 
-    // Preserve and restore the global theme (prevent booking page from staying in light mode)
-    useEffect(() => {
-        const originalTheme = localStorage.getItem('appTheme') || 'dark';
-        // Force light mode for CarDetails as requested
-        document.documentElement.setAttribute('data-theme', 'light');
-
-        return () => {
-            // Restore original theme when going back to Booking
-            document.documentElement.setAttribute('data-theme', originalTheme);
-        };
-    }, []);
-
-    // Simple card detection
-    useEffect(() => {
-        if (cardNum.startsWith('5')) setCardType('mastercard');
-        else if (cardNum.startsWith('4')) setCardType('visa');
-        else setCardType('visa');
-    }, [cardNum]);
-
-    const formatCardNum = (val) => {
-        const v = val.replace(/\D/g, '').substring(0, 16);
-        const parts = v.match(/.{1,4}/g) || [];
-        setCardNum(parts.join(' '));
+  useEffect(() => {
+    const originalTheme = localStorage.getItem('appTheme') || 'dark';
+    document.documentElement.setAttribute('data-theme', 'light');
+    return () => {
+      document.documentElement.setAttribute('data-theme', originalTheme);
     };
+  }, []);
 
-    const formatExpiry = (val) => {
-        const v = val.replace(/\D/g, '').substring(0, 4);
-        if (v.length > 2) {
-            setExpiry(v.substring(0, 2) + '/' + v.substring(2));
-        } else {
-            setExpiry(v);
-        }
-    };
+  useEffect(() => {
+    if (cardNum.startsWith('5')) setCardType('mastercard');
+    else if (cardNum.startsWith('4')) setCardType('visa');
+    else setCardType('visa');
+  }, [cardNum]);
 
-    const handleTilt = (e) => {
-        if (!cardRef.current) return;
-        const rect = cardRef.current.getBoundingClientRect();
-        const x = e.clientX - rect.left - rect.width / 2;
-        const y = e.clientY - rect.top - rect.height / 2;
-        cardRef.current.style.transform = `rotateX(${-y / 15}deg) rotateY(${x / 15}deg)`;
-        cardRef.current.style.setProperty('--mx', `${((e.clientX - rect.left) / rect.width) * 100}%`);
-        cardRef.current.style.setProperty('--my', `${((e.clientY - rect.top) / rect.height) * 100}%`);
-    };
+  const formatCardNum = (val) => {
+    const v = val.replace(/\D/g, '').substring(0, 16);
+    const parts = v.match(/.{1,4}/g) || [];
+    setCardNum(parts.join(' '));
+  };
 
-    const resetTilt = () => { if (cardRef.current) cardRef.current.style.transform = 'rotateX(0deg) rotateY(0deg)'; };
+  const formatExpiry = (val) => {
+    const v = val.replace(/\D/g, '').substring(0, 4);
+    if (v.length > 2) {
+      setExpiry(v.substring(0, 2) + '/' + v.substring(2));
+    } else {
+      setExpiry(v);
+    }
+  };
 
-    const handlePayment = () => {
-        setIsLoading(true);
+  const handlePayment = async () => {
+    setIsLoading(true);
+    try {
+      const user = JSON.parse(localStorage.getItem('user') || '{}');
+      const reservationData = {
+        carId: id,
+        clientId: user.id || null,
+        agencyId: carData.agencyId || carData.agency?.id || (carData.agency && typeof carData.agency === 'object' ? carData.agency.id : carData.agency) || null,
+        clientFirstName: user.firstName || clientFullName.split(' ')[0] || clientFullName,
+        clientLastName: user.lastName || clientFullName.split(' ').slice(1).join(' ') || "",
+        cin: cinNumber,
+        licenseNumber: permisNumber,
+        startDate: startDate,
+        endDate: endDate,
+        totalPrice: total,
+        status: "CONFIRMED"
+      };
+
+      const response = await fetch('http://localhost:8080/api/reservations', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(reservationData)
+      });
+
+      if (response.ok) {
         setTimeout(() => {
-            setIsLoading(false);
-            setIsSuccess(true);
-        }, 5000);
-    };
+          setIsLoading(false);
+          setIsSuccess(true);
+        }, 1500);
+      } else {
+        setIsLoading(false);
+        alert("Erreur lors de l'enregistrement de la réservation.");
+      }
+    } catch (error) {
+      setIsLoading(false);
+      alert("Erreur technique lors de la réservation.");
+    }
+  };
 
-    const handleBack = () => navigate(-1);
+  const handleBack = () => navigate(-1);
 
-    return (
-        <div className="payment-container">
-            <style>{styles}</style>
+  return (
+    <div className="payment-container">
+      <style>{styles}</style>
 
-            {/* Background Effects */}
-            <div className="blob blob-1" />
-            <div className="blob blob-2" />
+      <div className="blob blob-1" style={{ opacity: 0.3 }} />
+      <div className="blob blob-2" style={{ opacity: 0.2 }} />
 
 
-            <button className="back-btn" onClick={handleBack}>
-                <ArrowLeft size={18} /> Retour
-            </button>
+      <div className="payment-grid" style={{ marginTop: 40 }}>
+        <div className="main-content">
+          <h1 style={{ fontFamily: "'Syne', sans-serif", fontSize: 32, fontWeight: 800, marginBottom: 8, letterSpacing: '-1px' }}>
+            Finaliser votre réservation
+          </h1>
+          <p style={{ opacity: 0.6, fontSize: 15, marginBottom: 32 }}>
+            Paiement sécurisé crypté par SSL 256 bits
+          </p>
 
-            <div className="payment-grid" style={{ marginTop: 20 }}>
-                {/* Left Side: Form */}
-                <div className="main-content">
-                    <h1 className="section-title">Paiement Sécurisé</h1>
-
-                    <div className="card-perspective">
-                        <div
-                            ref={cardRef} className="dynamic-card"
-                            onMouseMove={handleTilt} onMouseLeave={resetTilt}
-                        >
-                            <div className="card-glow" />
-                            <div className="card-hologram" />
-
-                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-                                <div className="card-chip" />
-                                <div className="card-brand-display">
-                                    {cardType === 'visa' ? 'VISA' : 'mastercard'}
-                                </div>
-                            </div>
-
-                            <div className="card-number-display">
-                                {cardNum || '•••• •••• •••• ••••'}
-                            </div>
-
-                            <div className="card-info-row">
-                                <div>
-                                    <div className="info-label">Card Holder</div>
-                                    <div className="info-value">{cardName.toUpperCase() || 'YOUR NAME'}</div>
-                                </div>
-                                <div>
-                                    <div className="info-label">Expires</div>
-                                    <div className="info-value">{expiry || 'MM/YY'}</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div className="glass-card">
-                        <div className="input-group">
-                            <label className="input-label">Nom sur la carte</label>
-                            <div className="input-wrapper">
-                                <User className="input-icon" size={18} />
-                                <input
-                                    className="elite-input"
-                                    placeholder="LEANDRE DUPONT"
-                                    value={cardName}
-                                    onChange={e => setCardName(e.target.value)}
-                                />
-                            </div>
-                        </div>
-
-                        <div className="input-group">
-                            <label className="input-label">Numéro de carte</label>
-                            <div className="input-wrapper">
-                                <CreditCard className="input-icon" size={18} />
-                                <input
-                                    className="elite-input"
-                                    placeholder="4000 1234 5678 9012"
-                                    value={cardNum}
-                                    onChange={e => formatCardNum(e.target.value)}
-                                />
-                                <div className="card-brand-icons">
-                                    <ShieldCheck className={`brand-icon ${cardType === 'visa' ? 'active' : ''}`} size={20} />
-                                    <Zap className={`brand-icon ${cardType === 'mastercard' ? 'active' : ''}`} size={20} />
-                                </div>
-                            </div>
-                        </div>
-
-                        <div className="row-2">
-                            <div className="input-group">
-                                <label className="input-label">Date d'expiration</label>
-                                <div className="input-wrapper">
-                                    <Calendar className="input-icon" size={18} />
-                                    <input
-                                        className="elite-input"
-                                        placeholder="MM / YY"
-                                        value={expiry}
-                                        onChange={e => formatExpiry(e.target.value)}
-                                    />
-                                </div>
-                            </div>
-                            <div className="input-group">
-                                <label className="input-label">CVV / CVC</label>
-                                <div className="input-wrapper">
-                                    <Lock className="input-icon" size={18} />
-                                    <input
-                                        className="elite-input"
-                                        placeholder="•••"
-                                        type="password"
-                                        maxLength="3"
-                                        value={cvv}
-                                        onChange={e => setCvv(e.target.value.replace(/\D/g, ''))}
-                                    />
-                                </div>
-                            </div>
-                        </div>
-
-                        <button className="pay-button" onClick={handlePayment} disabled={isLoading} style={{ opacity: isLoading ? 0.8 : 1 }}>
-                            {isLoading ? (
-                                <div className="spinner" />
-                            ) : (
-                                <>Payer {total} MAD <ChevronRight size={20} /></>
-                            )}
-                        </button>
-
-                        <div className="security-badge">
-                            <Lock size={14} />
-                            SSL Secured Connection · 256-bit Encryption
-                        </div>
-                    </div>
-                </div>
-
-                {/* Right Side: Summary */}
-                <div className="sidebar">
-                    <div className="glass-carde summary-card">
-                        <h2 className="section-title" style={{ fontSize: 22 }}>Résumé</h2>
-
-                        <div style={{ background: 'var(--elite-input-bg)', borderRadius: 20, padding: 20, marginBottom: 24 }}>
-                            <div style={{ fontWeight: 800, fontSize: 18, marginBottom: 4 }}>{carData.name}</div>
-                            <div style={{ fontSize: 13, opacity: 0.6 }}>{days} jour(s) de location</div>
-                        </div>
-
-                        <div className="summary-item">
-                            <span>Prix journalier</span>
-                            <span>{carData.price} MAD</span>
-                        </div>
-                        <div className="summary-item">
-                            <span>Frais de service (5%)</span>
-                            <span>{(total * 0.05).toFixed(0)} MAD</span>
-                        </div>
-                        <div className="summary-item">
-                            <span>Taxes</span>
-                            <span>Incluse</span>
-                        </div>
-
-                        <div className="summary-total">
-                            <span>Total</span>
-                            <span>{(total * 1.05).toFixed(0)} MAD</span>
-                        </div>
-
-                        <div style={{ marginTop: 32, padding: 20, background: 'rgba(16, 185, 129, 0.05)', borderRadius: 16, border: '1px solid rgba(16, 185, 129, 0.1)', display: 'flex', gap: 12 }}>
-                            <Info size={18} color="var(--elite-accent)" style={{ flexShrink: 0 }} />
-                            <p style={{ fontSize: 12, lineHeight: 1.5, opacity: 0.8 }}>
-                                Votre transaction est gérée de manière sécurisée par notre partenaire financier agréé.
-                            </p>
-                        </div>
-                    </div>
-                </div>
+          <div className="checkout-card">
+            <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 32, paddingBottom: 16, borderBottom: '1px solid #f1f5f9' }}>
+              <div style={{ width: 40, height: 40, borderRadius: 10, background: 'rgba(16, 185, 129, 0.1)', color: 'var(--elite-accent)', display: 'flex', alignItems: 'center', justifyCenter: 'center', display: 'flex', justifyContent: 'center' }}>
+                <CreditCard size={22} />
+              </div>
+              <div>
+                <div style={{ fontSize: 16, fontWeight: 700 }}>Carte de Crédit</div>
+                <div style={{ fontSize: 12, color: '#64748b' }}>Paiement sécurisé par carte bancaire</div>
+              </div>
             </div>
 
-            {/* Success Overlay */}
-            {isSuccess && (
-                <div className="success-overlay">
-                    <div className="success-card">
-                        <div className="success-icon-wrapper">
-                            <CheckCircle2 size={40} />
-                        </div>
-                        <h2 className="section-title" style={{ marginBottom: 12 }}>Paiement Réussi</h2>
-                        <p style={{ opacity: 0.7, marginBottom: 32, lineHeight: 1.6, fontSize: 16 }}>
-                            Votre transaction a été validée avec succès. Vous allez recevoir un email de confirmation d'ici quelques instants.
-                        </p>
-                        <button className="success-btn" onClick={() => navigate('/')}>
-                            Retour à l'accueil
-                        </button>
-                    </div>
+            <div style={{ animation: 'popIn 0.3s ease' }}>
+              <div className="field-container">
+                <label className="field-label">Nom complet sur la carte</label>
+                <div className="field-input-wrapper">
+                  <User className="field-icon" size={18} />
+                  <input
+                    className="pro-input"
+                    placeholder="Ex: Jean Dupont"
+                    value={cardName}
+                    onChange={e => setCardName(e.target.value)}
+                  />
                 </div>
-            )}
+              </div>
+
+              <div className="field-container">
+                <label className="field-label">Numéro de carte sécurisé</label>
+                <div className="field-input-wrapper">
+                  <CreditCard className="field-icon" size={18} />
+                  <input
+                    className="pro-input"
+                    placeholder="0000 0000 0000 0000"
+                    value={cardNum}
+                    onChange={e => formatCardNum(e.target.value)}
+                  />
+                  <div style={{ position: 'absolute', right: 16, display: 'flex', gap: 6 }}>
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/5/5e/Visa_Inc._logo.svg" alt="Visa" style={{ height: 10, opacity: cardType === 'visa' ? 1 : 0.3 }} />
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/2/2a/Mastercard-logo.svg" alt="MC" style={{ height: 12, opacity: cardType === 'mastercard' ? 1 : 0.3 }} />
+                  </div>
+                </div>
+              </div>
+
+              <div className="form-group-row">
+                <div className="field-container">
+                  <label className="field-label">Expiration (MM/YY)</label>
+                  <div className="field-input-wrapper">
+                    <Calendar className="field-icon" size={18} />
+                    <input
+                      className="pro-input"
+                      placeholder="MM / YY"
+                      value={expiry}
+                      onChange={e => formatExpiry(e.target.value)}
+                    />
+                  </div>
+                </div>
+                <div className="field-container">
+                  <label className="field-label">Code CVV/CVC</label>
+                  <div className="field-input-wrapper">
+                    <Lock className="field-icon" size={18} />
+                    <input
+                      className="pro-input"
+                      placeholder="123"
+                      type="password"
+                      maxLength="3"
+                      value={cvv}
+                      onChange={e => setCvv(e.target.value.replace(/\D/g, ''))}
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <button className="confirm-pay-btn" onClick={handlePayment} disabled={isLoading}>
+                {isLoading ? <div className="spinner" /> : <>Confirmer le paiement de {total} MAD</>}
+              </button>
+            </div>
+
+            <div className="trust-strip">
+              <div className="trust-item"><ShieldCheck size={16} /> 256-bit SSL</div>
+              <div className="trust-item"><Lock size={16} /> PCI DSS</div>
+              <div className="trust-item"><CheckCircle2 size={16} /> Secure Payment</div>
+            </div>
+          </div>
         </div>
-    );
+
+        <div className="sidebar" style={{ marginTop: 20 }}>
+          <div style={{ background: 'white', borderRadius: 20, border: '1px solid #e2e8f0', overflow: 'hidden', position: 'sticky', top: 40 }}>
+            <div style={{ position: 'relative', height: 160 }}>
+              <img
+                src={carData.photos?.[0] || 'https://images.unsplash.com/photo-1544636331-e26879cd4d9b?w=800'}
+                alt={carData.name}
+                style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+              />
+              <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(0,0,0,0.8) 0%, transparent 100%)' }} />
+              <div style={{ position: 'absolute', bottom: 16, left: 20 }}>
+                <div style={{ color: 'white', fontWeight: 700, fontSize: 18 }}>{carData.name}</div>
+                <div style={{ color: 'rgba(255,255,255,0.7)', fontSize: 12 }}>{carData.category} · {carData.agencyName}</div>
+              </div>
+            </div>
+
+            <div style={{ padding: 24 }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 20, paddingBottom: 20, borderBottom: '1px dashed #e2e8f0' }}>
+                <div>
+                  <div style={{ fontSize: 11, color: '#94a3b8', textTransform: 'uppercase', fontWeight: 700 }}>Période</div>
+                  <div style={{ fontSize: 14, fontWeight: 600 }}>{startDate} — {endDate}</div>
+                </div>
+                <div style={{ textAlign: 'right' }}>
+                  <div style={{ fontSize: 11, color: '#94a3b8', textTransform: 'uppercase', fontWeight: 700 }}>Durée</div>
+                  <div style={{ fontSize: 14, fontWeight: 600 }}>{days} jours</div>
+                </div>
+              </div>
+
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+                {[
+                  { label: `Tarif journalier (${carData.price} MAD x ${days})`, val: `${total} MAD` },
+                  { label: "Frais de service (5%)", val: `${(total * 0.05).toFixed(0)} MAD` },
+                  { label: "TVA Incluse", val: "0 MAD", color: '#10b981' }
+                ].map(item => (
+                  <div key={item.label} style={{ display: 'flex', justifyContent: 'space-between', fontSize: 14, color: item.color || 'inherit' }}>
+                    <span style={{ color: item.color ? 'inherit' : '#64748b' }}>{item.label}</span>
+                    <span style={{ fontWeight: 600 }}>{item.val}</span>
+                  </div>
+                ))}
+              </div>
+
+              <div style={{ marginTop: 24, paddingTop: 24, borderTop: '2px solid #f1f5f9', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <span style={{ fontSize: 16, fontWeight: 700, color: '#0f172a' }}>Total TTC</span>
+                <span style={{ fontSize: 24, fontWeight: 900, color: 'var(--elite-accent)', fontFamily: "'Syne', sans-serif" }}>
+                  {(total * 1.05).toFixed(0)} MAD
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {isSuccess && (
+        <div className="success-overlay">
+          <div className="success-card">
+            <div className="success-icon-wrapper">
+              <CheckCircle2 size={40} />
+            </div>
+            <h2 style={{ fontFamily: "'Syne', sans-serif", fontSize: 24, fontWeight: 800, marginBottom: 12 }}>Paiement Réussi</h2>
+            <p style={{ opacity: 0.7, marginBottom: 32, lineHeight: 1.6, fontSize: 16 }}>
+              Votre transaction a été validée avec succès. Vous allez recevoir un email de confirmation d'ici quelques instants.
+            </p>
+            <button className="success-btn" onClick={() => navigate('/')}>
+              Retour à l'accueil
+            </button>
+          </div>
+        </div>
+      )}
+    </div>
+  );
 }

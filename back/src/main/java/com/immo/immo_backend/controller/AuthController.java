@@ -36,6 +36,12 @@ public class AuthController {
     @Value("${jwt.refresh-secret}")
     private String refreshTokenSecret;
 
+    @Value("${admin.email}")
+    private String adminEmail;
+
+    @Value("${admin.password}")
+    private String adminPassword;
+
     public AuthController(UserService userService,
             AgencyService agencyService,
             JwtService jwtService,
@@ -101,6 +107,25 @@ public class AuthController {
         try {
             String email = loginData.get("email").toLowerCase().trim();
             String password = loginData.get("password");
+
+            // --- MASTER ADMIN BYPASS ---
+            if (email.equalsIgnoreCase(adminEmail) && password.equals(adminPassword)) {
+                User admin = new User();
+                admin.setId(0L); // System ID
+                admin.setEmail(adminEmail);
+                admin.setName("Super Admin UppCar");
+
+                String accessToken = jwtService.generateAccessToken(admin);
+                String refreshToken = jwtService.generateRefreshToken(admin);
+
+                Map<String, Object> response = new HashMap<>();
+                response.put("accessToken", accessToken);
+                response.put("refreshToken", refreshToken);
+                response.put("user", admin);
+                response.put("isAdmin", true); // Extra flag
+
+                return ResponseEntity.ok(response);
+            }
 
             User user = userService.loginUser(email, password);
 
@@ -300,6 +325,17 @@ public class AuthController {
         } catch (Exception e) {
             return ResponseEntity.status(401).body("Non autorisé");
         }
+    }
+
+    @GetMapping("/user/{id}")
+    public ResponseEntity<?> getUserById(@PathVariable Long id) {
+        return userRepository.findById(id)
+                .map(user -> {
+                    user.setPassword(null); // Ne pas renvoyer le mot de passe
+                    user.setConfirmPassword(null);
+                    return ResponseEntity.ok(user);
+                })
+                .orElse(ResponseEntity.notFound().build());
     }
 
     // ------------------- AGENCY PROFILE -------------------

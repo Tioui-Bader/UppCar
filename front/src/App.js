@@ -17,7 +17,9 @@ import Profile from './component/profile/Profile';
 import Favorites from './component/favorites/Favorites';
 import CarDetails from './component/carDetails/CarDetails';
 import BookingAgreement from './component/bookingAgreement/BookingAgreement';
-
+import Loginadmin from './component/loginadmin/Loginadmin';
+import Homeadmin from './component/homeadmin/Homeadmin';
+import Myreservation from './component/Reservationns/Myreservation';
 
 function PrivateRoute({ children, role }) {
     const token = localStorage.getItem("token");
@@ -1029,6 +1031,7 @@ function App() {
 
                     <Route path="/loginagence" element={<Loginagence />} />
                     <Route path="/registreagence" element={<Registreagence />} />
+                    <Route path="/loginadmin" element={<Loginadmin />} />
 
                     {/* 👤 USER */}
                     <Route
@@ -1076,6 +1079,15 @@ function App() {
                         }
                     />
 
+                    <Route
+                        path="/my-reservations"
+                        element={
+                            <PrivateRoute role="user">
+                                <Myreservation />
+                            </PrivateRoute>
+                        }
+                    />
+
 
                     {/* 🏢 AGENCE */}
                     <Route
@@ -1083,6 +1095,16 @@ function App() {
                         element={
                             <PrivateRoute role="agence">
                                 <Homeagence />
+                            </PrivateRoute>
+                        }
+                    />
+
+                    {/* 🚫 ADMIN */}
+                    <Route
+                        path="/homeadmin"
+                        element={
+                            <PrivateRoute role="admin">
+                                <Homeadmin />
                             </PrivateRoute>
                         }
                     />

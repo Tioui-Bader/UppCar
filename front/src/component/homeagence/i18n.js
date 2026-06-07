@@ -28,6 +28,7 @@ export const translations = {
     revenueBreakdown: "Détails des revenus",
     baseRental: "Location de base",
     insuranceOptions: "Assurances & Options",
+    lastReservation: "Dernière réservation",
     serviceFees: "Frais de service / Nettoyage",
     netRevenue: "Revenu Net",
     discounts: "Remises",
@@ -183,6 +184,7 @@ export const translations = {
     readyForDeclaration: "Prêt pour déclaration",
     recentInvoices: "Factures Récentes",
     logout: "Se déconnecter",
+    profileReminder: "Important : Veuillez compléter les informations de votre profil.",
   },
   en: {
     // Navigator & Topbar
@@ -213,6 +215,7 @@ export const translations = {
     revenueBreakdown: "Revenue Breakdown",
     baseRental: "Base Rental",
     insuranceOptions: "Insurance & Extras",
+    lastReservation: "Last Reservation",
     serviceFees: "Service / Cleaning Fees",
     netRevenue: "Net Revenue",
     discounts: "Discounts",
@@ -380,14 +383,12 @@ export const translations = {
     lastWeek: "Last Week",
     searchCurrency: "Search for a currency...",
     logout: "Log Out",
+    profileReminder: "Important: Please complete your profile information to fully enjoy UppCar.",
   },
   ar: {
     // Navigator & Topbar
     dashboard: "لوحة القيادة",
     cars: "المركبات",
-    reservations: "الحجوزات",
-    customers: "العملاء",
-    analytics: "التحليلات",
     settings: "الإعدادات",
     navLabel: "التنقل",
     prefLabel: "التفضيلات",
@@ -409,6 +410,7 @@ export const translations = {
     weeklyRevenue: "إيرادات الأسبوع",
     revenueBreakdown: "تفاصيل الإيرادات",
     baseRental: "الإيجار الأساسي",
+    lastReservation: "آخر حجز",
     insuranceOptions: "التأمين والإضافات",
     serviceFees: "رسوم الخدمة / التنظيف",
     netRevenue: "صافي الإيرادات",
@@ -577,5 +579,6 @@ export const translations = {
     lastWeek: "الأسبوع الماضي",
     searchCurrency: "البحث عن عملة...",
     logout: "تسجيل الخروج",
-  }
+    profileReminder: "هام: يرجى استكمال معلومات ملفك الشخصي للاستفادة الكاملة من UppCar.",
+  },
 };
