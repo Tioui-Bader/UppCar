@@ -11,6 +11,8 @@ import Registreagence from './component/registreagence/Registreagence';
 
 import HomeConnect from './component/homeConnected/HomeConnect';
 import Homeagence from './component/homeagence/Homeagence';
+import Homeadmin from './component/homeadmin/Homeadmin';
+import Loginadmin from './component/loginadmin/Loginadmin';
 import Profile from './component/profile/Profile';
 import Favorites from './component/favorites/Favorites';
 import CarDetails from './component/carDetails/CarDetails';
@@ -701,6 +703,321 @@ function App() {
           return () => { observer.disconnect(); clearInterval(interval); };
   
       }, []); */
+        },
+      });
+    `;
+        document.body.appendChild(script);
+
+        // 4. FORCE BRUTALE POUR LE THEME ET LA TAILLE DU TITRE
+        const enforceThemeAndTitle = () => {
+            // --- VISIBILITÉ SELON LA PAGE ---
+            const currentUrl = (window.location.pathname + window.location.hash).toLowerCase();
+            // On cache sur login, registre, et agence
+            const shouldHide = currentUrl.includes('login') || currentUrl.includes('registre') || currentUrl.includes('agence');
+
+            const widget = document.querySelector('#n8n-chat-widget');
+            const btn = document.querySelector('.n8n-chat-button');
+
+            if (shouldHide) {
+                document.body.classList.add('n8n-chat-hidden');
+                if (widget) widget.style.setProperty('display', 'none', 'important');
+                if (btn) btn.style.setProperty('display', 'none', 'important');
+            } else {
+                document.body.classList.remove('n8n-chat-hidden');
+                if (widget) widget.style.removeProperty('display');
+                if (btn) btn.style.removeProperty('display');
+            }
+
+            if (!widget) return;
+            const root = widget.shadowRoot || widget;
+
+            // --- THEME (VERT EN CLAIR/AGENCE, BLEU EN SOMBRE) ---
+            const isAgencyNow = window.location.pathname.toLowerCase().includes('agence');
+            const isDark = (document.documentElement.getAttribute("data-theme") === "dark" ||
+                document.body.getAttribute("data-theme") === "dark" ||
+                localStorage.getItem("appTheme") === "dark") && !isAgencyNow;
+
+            const currentLang = localStorage.getItem("appLang") || "FR";
+            const isArabicNow = currentLang === "AR";
+            
+            // 1. Trouver le widget par tous les moyens (Tag, ID, ou Class)
+            const chatWidget = document.querySelector('n8n-chat-widget') || 
+                           document.querySelector('#n8n-chat-widget') ||
+                           document.querySelector('[id*="n8n-chat"]');
+
+            if (!chatWidget) return;
+            const shadowRoot = chatWidget.shadowRoot || chatWidget;
+
+            // 2. Trouver le bouton à l'intérieur
+            const button = shadowRoot.querySelector('button') || 
+                           shadowRoot.querySelector('.n8n-chat-button') ||
+                           document.querySelector('.n8n-chat-button');
+
+            const darkHeader = 'linear-gradient(135deg, #1e3a8a 0%, #2563eb 60%, #0ea5e9 100%)';
+            const darkButton = 'linear-gradient(135deg, #0f172a 0%, #001e72ff 100%)';
+            const lightHeader = 'linear-gradient(135deg, #065f46 0%, #10b981 100%)';
+            const lightButton = 'linear-gradient(135deg, #065f46 0%, #10b981 100%)';
+
+            const userMsgBg = isDark ? '#2563eb' : '#10b981';
+
+            // 1. Force Header (Shadow DOM)
+            const header = shadowRoot.querySelector('.chat-window-header') || shadowRoot.querySelector('[class*="header"]');
+            if (header) {
+                header.style.setProperty('background', isDark ? darkHeader : lightHeader, 'important');
+            }
+
+            if (button) {
+                button.style.setProperty('background', isDark ? darkButton : lightButton, 'important');
+                button.style.setProperty('position', 'relative', 'important');
+                button.style.setProperty('overflow', 'hidden', 'important');
+
+                // Injecter le CSS des icônes DIRECTEMENT dans le root et le document
+                if (!shadowRoot.querySelector('#final-chat-style')) {
+                    const style = document.createElement('style');
+                    style.id = 'final-chat-style';
+                    style.textContent = `
+                        button svg, .n8n-chat-button svg { display: none !important; }
+                        button, .n8n-chat-button { 
+                            position: relative !important; 
+                            overflow: hidden !important; 
+                            background: ${isDark ? darkButton : lightButton} !important;
+                            border: none !important;
+                            box-shadow: 0 8px 32px rgba(0,0,0,0.2) !important;
+                        }
+                        
+                        /* Cacher les points rouges ou badges de notification n8n */
+                        [class*="badge"], [class*="notification"], .n8n-chat-button::after:not([content=""]) {
+                            display: none !important;
+                            opacity: 0 !important;
+                        }
+
+                        /* Icône IA */
+                        button::before, .n8n-chat-button::before {
+                            content: "" !important;
+                            position: absolute !important;
+                            inset: 0 !important;
+                            z-index: 10 !important;
+                            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z'%3E%3C/path%3E%3Cpath d='M5 3v4'%3E%3C/path%3E%3Cpath d='M3 5h4'%3E%3C/path%3E%3C/svg%3E") no-repeat center / 24px !important;
+                            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) !important;
+                            opacity: 1 !important;
+                        }
+
+                        /* Icône X */
+                        button::after, .n8n-chat-button::after {
+                            content: "" !important;
+                            position: absolute !important;
+                            inset: 0 !important;
+                            z-index: 11 !important;
+                            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cline x1='18' y1='6' x2='6' y2='18'%3E%3C/line%3E%3Cline x1='6' y1='6' x2='18' y2='18'%3E%3C/line%3E%3C/svg%3E") no-repeat center / 24px !important;
+                            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) !important;
+                            opacity: 0 !important;
+                            transform: scale(0.5) rotate(-90deg) !important;
+                        }
+
+                        /* Switch */
+                        .chat-is-open::before { opacity: 0 !important; transform: scale(0.5) !important; }
+                        .chat-is-open::after { opacity: 1 !important; transform: scale(1) rotate(0deg) !important; }
+                    `;
+                    shadowRoot.appendChild(style);
+                }
+
+                // Détection de l'état ouvert améliorée
+                const isChatOpen = !!shadowRoot.querySelector('.chat-window-header') || 
+                                   !!shadowRoot.querySelector('[class*="header"]') || 
+                                   !!shadowRoot.querySelector('.n8n-chat-widget-window') ||
+                                   !!document.querySelector('.n8n-chat-widget-window');
+
+                if (isChatOpen) {
+                    button.classList.add('chat-is-open');
+                } else {
+                    button.classList.remove('chat-is-open');
+                }
+            }
+
+            // 3. Force User Messages (Shadow DOM)
+            const userMsgs = root.querySelectorAll('.chat-message-from-user .chat-message-bubble');
+            userMsgs.forEach(msg => {
+                msg.style.setProperty('background', userMsgBg, 'important');
+            });
+
+            // 4. Positionnement des messages (Shadow DOM)
+            // 4. Positionnement des messages (Shadow DOM)
+            const messageRows = root.querySelectorAll('[class*="message"]');
+            messageRows.forEach(row => {
+                const isBot = row.classList.contains('chat-message-from-bot') || row.className.includes('bot');
+                const isUser = row.classList.contains('chat-message-from-user') || row.className.includes('user');
+
+                // Force la direction sur chaque ligne pour éviter les héritages cassés
+                row.style.setProperty('direction', isArabicNow ? 'rtl' : 'ltr', 'important');
+
+                if (isArabicNow) {
+                    row.style.setProperty('display', 'flex', 'important');
+                    row.style.setProperty('width', '100%', 'important');
+                    if (isBot) {
+                        row.style.setProperty('justify-content', 'flex-end', 'important'); // GAUCHE en RTL
+                    } else if (isUser) {
+                        row.style.setProperty('justify-content', 'flex-start', 'important'); // DROITE en RTL
+                    }
+                } else {
+                    row.style.setProperty('display', 'flex', 'important');
+                    row.style.setProperty('width', '100%', 'important');
+                    if (isBot) {
+                        row.style.setProperty('justify-content', 'flex-start', 'important'); // GAUCHE en LTR
+                    } else if (isUser) {
+                        row.style.setProperty('justify-content', 'flex-end', 'important'); // DROITE en LTR
+                    }
+                }
+            });
+
+            const bubbles = root.querySelectorAll('.chat-message-bubble');
+            bubbles.forEach(b => {
+                if (isArabicNow) {
+                    b.style.setProperty('direction', 'rtl', 'important');
+                    b.style.setProperty('text-align', 'right', 'important');
+                } else {
+                    b.style.removeProperty('direction');
+                    b.style.removeProperty('text-align');
+                }
+            });
+
+            // 5. Inverser la flèche d'envoi (Force Brutale Shadow DOM)
+            const textarea = root.querySelector('textarea');
+            if (textarea) {
+                // On remonte au conteneur du champ de saisie (le footer)
+                const inputContainer = textarea.closest('div').parentElement;
+                if (inputContainer) {
+                    if (isArabicNow) {
+                        inputContainer.style.setProperty('flex-direction', 'row-reverse', 'important');
+                        const footerIcons = inputContainer.querySelectorAll('svg, button');
+                        footerIcons.forEach(icon => {
+                            icon.style.setProperty('transform', 'rotate(180deg)', 'important');
+                        });
+                    } else {
+                        inputContainer.style.removeProperty('flex-direction');
+                        const footerIcons = inputContainer.querySelectorAll('svg, button');
+                        footerIcons.forEach(icon => {
+                            icon.style.removeProperty('transform');
+                        });
+                    }
+                }
+            }
+
+            const iconsToFlip = root.querySelectorAll('svg, i, .n8n-chat-icon');
+            iconsToFlip.forEach(icon => {
+                if (!icon.closest('[class*="header"]') && !icon.closest('.chat-window-header')) {
+                    if (isArabicNow) {
+                        icon.style.setProperty('transform', 'scaleX(-1)', 'important');
+                    } else {
+                        icon.style.removeProperty('transform');
+                    }
+                }
+            });
+
+            // --- TRADUCTION DYNAMIQUE ET TAILLES ---
+            const translations = {
+                welcome: { AR: 'مرحبًا بك في UppCar ! 🚗', EN: 'Welcome to UppCar! 🚗', FR: 'Bienvenue sur UppCar ! 🚗' },
+                nathan: { AR: "اسمي ناثان. كيف يمكنني مساعدتك اليوم؟", EN: "My name is Nathan. How can I help you today?", FR: "Je m'appelle Nathan. Comment puis-je vous aider aujourd'hui ?" },
+                title: { AR: '🤖 UppCar مساعد', EN: 'UppCar Assistant 🤖', FR: 'UppCar Assistant 🤖' },
+                subtitle: { AR: 'متاح 24/7 لمساعدتك.', EN: 'Available 24/7 to help you.', FR: 'Disponible 24h/24 et 7j/7 pour vous aider.' }
+            };
+
+            const lang = localStorage.getItem("appLang") || "FR";
+            const targetWelcome = translations.welcome[lang] || translations.welcome.FR;
+            const targetNathan = translations.nathan[lang] || translations.nathan.FR;
+            const targetTitle = translations.title[lang] || translations.title.FR;
+            const targetSubtitle = translations.subtitle[lang] || translations.subtitle.FR;
+
+            const walk = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, null, false);
+            let node;
+            while ((node = walk.nextNode())) {
+                // NE PAS traduire les messages envoyés par l'utilisateur
+                if (node.parentElement && (node.parentElement.closest('.chat-message-from-user') || node.parentElement.closest('[class*="user"]'))) {
+                    continue;
+                }
+
+                let text = node.nodeValue;
+                let changed = false;
+
+                // Remplacer n'importe quelle version par la version cible
+                Object.values(translations.welcome).forEach(v => { if (text.includes(v) && text !== targetWelcome) { text = text.replace(v, targetWelcome); changed = true; } });
+                Object.values(translations.nathan).forEach(v => { if (text.includes(v) && text !== targetNathan) { text = text.replace(v, targetNathan); changed = true; } });
+                Object.values(translations.title).forEach(v => { if (text.includes(v) && text !== targetTitle) { text = text.replace(v, targetTitle); changed = true; } });
+                Object.values(translations.subtitle).forEach(v => { if (text.includes(v) && text !== targetSubtitle) { text = text.replace(v, targetSubtitle); changed = true; } });
+
+                if (changed) node.nodeValue = text;
+
+                if (text.includes(targetTitle)) {
+                    if (node.parentElement) {
+                        node.parentElement.style.setProperty('font-size', '15px', 'important');
+                        node.parentElement.style.setProperty('font-weight', '700', 'important');
+                    }
+                }
+                if (text.includes(targetSubtitle)) {
+                    if (node.parentElement) {
+                        node.parentElement.style.setProperty('font-size', '11px', 'important');
+                    }
+                }
+            }
+        };
+
+        // Répéter pour s'assurer que ça s'applique même si le widget se recharge
+        setInterval(enforceThemeAndTitle, 300);
+
+        // 5. MutationObserver: force le thème blanc à l'ouverture du chat
+        const applyWhiteTheme = () => {
+            const widget = document.querySelector('#n8n-chat-widget');
+            if (!widget) return;
+
+            // Inputs et textareas → fond clair
+            widget.querySelectorAll('textarea, input').forEach(el => {
+                el.style.setProperty('background', '#f8fafc', 'important');
+                el.style.setProperty('background-color', '#f8fafc', 'important');
+                el.style.setProperty('color', '#0f172a', 'important');
+                el.style.setProperty('border', '1.5px solid #e2e8f0', 'important');
+                el.style.setProperty('border-radius', '14px', 'important');
+                el.style.setProperty('box-shadow', 'none', 'important');
+            });
+          />
+
+          {/* 🛡️ ADMIN */}
+          <Route path="/admin" element={<Homeadmin />} />
+          <Route path="/loginadmin" element={<Loginadmin />} />
+          
+          {/* 🚫 ROUTE INCONNUE */}
+          <Route path="*" element={<Navigate to="/" replace />} />
+
+            // Éléments avec fond sombre → blanc (sauf le bouton FAB)
+            widget.querySelectorAll('*').forEach(el => {
+                if (el.closest('.n8n-chat-button')) return;
+                try {
+                    const bg = window.getComputedStyle(el).backgroundColor;
+                    if (!bg || bg === 'transparent' || bg === 'rgba(0, 0, 0, 0)') return;
+                    const match = bg.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)/);
+                    if (match) {
+                        const lum = 0.299 * +match[1] + 0.587 * +match[2] + 0.114 * +match[3];
+                        if (lum < 80) {
+                            el.style.setProperty('background', '#ffffff', 'important');
+                            el.style.setProperty('background-color', '#ffffff', 'important');
+                            el.style.setProperty('color', '#1e293b', 'important');
+                        }
+                    }
+                } catch (e) { }
+            });
+        };
+
+        const observer = new MutationObserver(() => applyWhiteTheme());
+        observer.observe(document.body, { childList: true, subtree: true });
+
+        // Fallback toutes les 500ms pendant 15s
+        let attempts = 0;
+        const interval = setInterval(() => {
+            applyWhiteTheme();
+            if (++attempts >= 30) clearInterval(interval);
+        }, 500);
+
+        return () => { observer.disconnect(); clearInterval(interval); };
+
+    }, []);
 
     return (
         <div className="App">
