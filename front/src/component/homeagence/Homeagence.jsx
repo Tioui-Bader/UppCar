@@ -791,12 +791,13 @@ const icons = {
 };
 
 /* ─────────────────────────────── DATA ─────────────────────────────── */
-const IS_MOCK = (() => {
+const isMockUser = () => {
     try {
         const d = JSON.parse(localStorage.getItem("agencyData"));
         return d && d.email === "badrtiwi493@gmail.com";
     } catch (e) { return false; }
-})();
+};
+const IS_MOCK = isMockUser(); // for compatibility with load-time constants
 
 const CARS = [];
 const MOCK_RESERVATIONS = [
@@ -1133,7 +1134,7 @@ function getMonthData(m, y, realResList = []) {
         };
     }
 
-    if (!IS_MOCK) {
+    if (!isMockUser()) {
         return {
             baseRental: 0, discounts: 0, insurance: 0, serviceFees: 0, taxes: 0, netRevenue: 0, totalRevenue: 0,
             reservations: 0, activeClients: 0, revenueChange: "+0%", revenueUp: true,
@@ -1285,7 +1286,7 @@ function RevenueSummary({ dark, t, lang, currency, currentMonth, currentYear, re
         }
         return res;
     };
-    const chartData = IS_MOCK ? getDailyData(currentMonth, currentYear, daysInMonth) : bookingData;
+    const chartData = isMockUser() ? getDailyData(currentMonth, currentYear, daysInMonth) : bookingData;
 
     return (
         <div className="grid-revenue" style={{ animation: "fadeUp .6s ease" }}>
@@ -2490,7 +2491,7 @@ function DashboardPage({ dark, t, lang, cars = [], currency, setCurrency, curren
             ? ["Lun", "Mar", "Mer", "Jeu", "Ven", "Sam", "Dim"]
             : ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 
-    const pending = RESERVATIONS.filter(r => r.status === "pending").length;
+    const pending = reservationsList.filter(r => r.status === "pending" || r.status === "PENDING").length;
     const available = cars.filter(c => c.status === "available").length;
 
     const monthName = MONTHS[currentMonth - 1];
@@ -2789,7 +2790,7 @@ function DashboardPage({ dark, t, lang, cars = [], currency, setCurrency, curren
                             <line x1="9" y1="9" x2="15" y2="15" />
                         </svg>
                     );
-                    const DEMO_ACTIVITY = IS_MOCK ? [
+                    const DEMO_ACTIVITY = isMockUser() ? [
                         { SvgIcon: IconCar, bg: "rgba(59,130,246,0.12)", color: "#3b82f6", text: "Nouvelle réservation — Dacia Logan", sub: "Yassine Benali · il y a 12 min", dot: "#3b82f6" },
                         { SvgIcon: IconCheck, bg: "rgba(16,185,129,0.12)", color: "#10b981", text: "Réservation confirmée — Hyundai Tucson", sub: "Karim Hajji · il y a 35 min", dot: "#10b981" },
                         { SvgIcon: IconCard, bg: "rgba(168,85,247,0.12)", color: "#a855f7", text: "Paiement reçu — 1 200 MAD", sub: "Sara Alami · il y a 1h", dot: "#a855f7" },
@@ -3168,12 +3169,12 @@ function ReservationsPage({ t, currentMonth, currentYear, cars = [], agencyData 
                     }));
                     setReservations(formatted.reverse());
                 } else {
-                    setReservations(getMonthData(currentMonth, currentYear).demoReservations);
+                    setReservations(isMockUser() ? getMonthData(currentMonth, currentYear).demoReservations : []);
                 }
             })
             .catch(err => {
                 console.error("Error fetching reservations:", err);
-                setReservations(getMonthData(currentMonth, currentYear).demoReservations);
+                setReservations(isMockUser() ? getMonthData(currentMonth, currentYear).demoReservations : []);
             });
     }, [currentMonth, currentYear, agencyData?.id]);
 
@@ -3406,7 +3407,7 @@ function CustomersPage({ t, clients = [] }) {
                                 <div style={{ width: 8, height: 8, borderRadius: "50%", background: c, flexShrink: 0 }} />
                                 <span style={{ flex: 1, fontSize: 13, fontWeight: 600 }}>{t}</span>
                                 <div style={{ flex: 3, height: 6, borderRadius: 3, background: "var(--surface2)" }}>
-                                    <div style={{ height: "100%", width: `${CLIENTS.length > 0 ? (n / CLIENTS.length) * 100 : 0}%`, background: c, borderRadius: 3 }} />
+                                    <div style={{ height: "100%", width: `${clients.length > 0 ? (n / clients.length) * 100 : 0}%`, background: c, borderRadius: 3 }} />
                                 </div>
                                 <span style={{ fontSize: 12, fontWeight: 800, color: c }}>{n}</span>
                             </div>
@@ -4298,7 +4299,7 @@ function MessagesPage({ t, dark, lang, reservationsList = [], cars = [], agencyD
         : emojiData[emojiCat];
 
     // State for discussions list
-    const [discussions, setDiscussions] = useState(IS_MOCK ? [
+    const [discussions, setDiscussions] = useState(isMockUser() ? [
         { id: "support", name: "Support UppCar", role: "AI Genius Bot", avatar: "SU", color: dark ? "#6366f1" : "#10b981", unread: 0, online: true, lastMsg: "Bonjour ! Comment puis-je vous aider aujourd'hui ?", time: "09:00" },
         { id: "yassine", name: "Yassine Benali", role: "Client Platinum", avatar: "YB", color: "#bf7fff", unread: 1, online: true, lastMsg: "Bonjour, puis-je prolonger ma location de la Tucson de 3 jours ?", time: "10:32" },
         { id: "sara", name: "Sara Alami", role: "Client Gold", avatar: "SA", color: "#f59e0b", unread: 0, online: false, lastMsg: "J'ai bien déposé le véhicule à l'aéroport de Marrakech.", time: "Hier" },
@@ -4308,7 +4309,7 @@ function MessagesPage({ t, dark, lang, reservationsList = [], cars = [], agencyD
     ]);
 
     // State for messages history
-    const [messages, setMessages] = useState(IS_MOCK ? {
+    const [messages, setMessages] = useState(isMockUser() ? {
         "support": [
             { id: 1, from: "support", text: "Bonjour ! Je suis votre assistant intelligent UppCar Genius. Comment puis-je vous aider aujourd'hui ?", time: "09:00", read: true }
         ],
@@ -5118,7 +5119,7 @@ export default function AgencyDashboard() {
 
     const clientsDerived = useMemo(() => {
         if (!reservationsList || reservationsList.length === 0) {
-            return IS_MOCK ? MOCK_CLIENTS : [];
+            return isMockUser() ? MOCK_CLIENTS : [];
         }
         const grouped = reservationsList.reduce((acc, r) => {
             const key = r.clientId || r.clientEmail || r.clientPhone || `id-${r.id}`;
@@ -5357,8 +5358,8 @@ export default function AgencyDashboard() {
         };
     }, [mobileOpen]);
 
-    const md = getMonthData(currentMonth, currentYear);
-    const pending = md.demoReservations.filter(r => r.status === "pending").length;
+    const md = getMonthData(currentMonth, currentYear, reservationsList);
+    const pending = md.demoReservations.filter(r => r.status === "pending" || r.status === "PENDING").length;
 
     const navItems = [
         { id: "dashboard", label: t.dashboard, icon: icons.dashboard, color: dark ? "#6366f1" : "#10b981" },

@@ -4,7 +4,7 @@ import {
     Moon as MoonIcon, Sun as SunIcon, X, ChevronRight, ChevronLeft,
     CheckCircle2, Camera, Upload, Shield, Car, Building2,
     MapPin, Star, Fuel, Users, Gauge, Hash, Sparkles, AlertCircle,
-    FileText, CreditCard, Eye, Zap, ArrowLeft, XCircle, Loader2, MessageSquare
+    FileText, CreditCard, Eye, Zap, ArrowLeft, XCircle, Loader2, MessageSquare, Calendar
 } from 'lucide-react';
 import whatsappIcon from '../../asset/c49ca2acb2de3f97cab50b6d927244b4-removebg-preview.png';
 
@@ -285,6 +285,18 @@ body { background:var(--bg); color:var(--text); font-family:'DM Sans',sans-serif
 
 .contact-btn.whatsapp { border-color: rgba(34,197,94,0.4); color: #4ade80; background: rgba(34,197,94,0.08); }
 .contact-btn.whatsapp:hover { background: #22c55e; color: #fff; transform: translateY(-2px); box-shadow: 0 8px 24px rgba(34,197,94,0.3); border-color: #22c55e; }
+
+@media (max-width: 768px) {
+  .contact-actions { flex-direction: column; width: 100%; gap: 10px; }
+  .contact-btn { 
+    padding: 12px 24px; 
+    font-size: 13px; 
+    top: 0 !important; 
+    width: 100%; 
+    justify-content: center; 
+    border-radius: 12px;
+  }
+}
 
 /* ─── VERIFICATION SECTION ─── */
 .verify-wrap { animation:cardReveal .65s cubic-bezier(.16,1,.3,1) both; }
@@ -1077,6 +1089,14 @@ export default function BookingAgreement() {
     const [hoverRating, setHoverRating] = useState(0);
     const [reviewText, setReviewText] = useState('');
     const [isReviewSubmitted, setIsReviewSubmitted] = useState(false);
+    const [reviews, setReviews] = useState([]);
+
+    const fetchReviews = async () => {
+        try {
+            const r = await fetch(`http://localhost:8080/api/reviews/car/${id}`);
+            if (r.ok) setReviews(await r.json());
+        } catch (e) { console.error("Error fetching reviews:", e); }
+    };
 
     const changePhase = useCallback((next) => {
         if (next === phase) return;
@@ -1151,6 +1171,8 @@ export default function BookingAgreement() {
                         if (ar.ok) setAgency(await ar.json());
                     }
                 }
+                // Fetch reviews too
+                fetchReviews();
             } catch (e) { console.error(e); } finally { setLoading(false); }
         })();
     }, [id]);
@@ -1960,7 +1982,26 @@ export default function BookingAgreement() {
                                     type="button"
                                     className="btn-primary"
                                     disabled={rating === 0 || !reviewText.trim()}
-                                    onClick={() => setIsReviewSubmitted(true)}
+                                    onClick={async () => {
+                                        const newRev = {
+                                            userName: currentUser?.name || currentUser?.prenom || (currentUser?.email ? currentUser.email.split('@')[0] : 'Client'),
+                                            date: new Date().toLocaleDateString('fr-FR'),
+                                            rating: rating,
+                                            comment: reviewText,
+                                            carId: id
+                                        };
+                                        try {
+                                            const r = await fetch('http://localhost:8080/api/reviews', {
+                                                method: 'POST',
+                                                headers: { 'Content-Type': 'application/json' },
+                                                body: JSON.stringify(newRev)
+                                            });
+                                            if (r.ok) {
+                                                setIsReviewSubmitted(true);
+                                                fetchReviews(); // Refresh list
+                                            }
+                                        } catch (e) { console.error("Error saving review:", e); }
+                                    }}
                                     style={{ padding: '12px 28px', fontSize: '15px' }}
                                 >
                                     {selectedLang === 'AR' ? "إرسال التقييم" : selectedLang === 'EN' ? "Submit review" : "Soumettre l'avis"} <MessageSquare size={18} />
@@ -1969,6 +2010,34 @@ export default function BookingAgreement() {
                         </div>
                     )}
                 </article>
+
+                <div style={{ marginTop: '32px', display: 'flex', flexDirection: 'column', gap: '24px', width: '100%', paddingBottom: '40px' }}>
+                    {reviews.map((rev, idx) => (
+                        <div key={rev.id} className="card card-anim" style={{ animationDelay: `${0.3 + idx * 0.1}s`, padding: '30px', border: '1px solid var(--card-border)', background: 'var(--card)' }}>
+                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'start', marginBottom: '16px' }}>
+                                <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
+                                    <div style={{ width: 44, height: 44, borderRadius: 14, background: 'var(--accent-grad)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', fontWeight: 900, fontFamily: 'Syne', fontSize: 18 }}>
+                                        {rev.userName ? rev.userName[0].toUpperCase() : 'C'}
+                                    </div>
+                                    <div>
+                                        <div style={{ fontSize: 17, fontWeight: 800, color: 'var(--text)', fontFamily: 'Syne' }}>{rev.userName}</div>
+                                        <div style={{ fontSize: 13, color: 'var(--muted)', display: 'flex', alignItems: 'center', gap: 6, marginTop: 2 }}>
+                                            <Calendar size={13} strokeWidth={2.5} /> {rev.date}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div style={{ display: 'flex', gap: '4px', background: 'rgba(255,158,11,0.08)', padding: '6px 10px', borderRadius: '10px' }}>
+                                    {[1, 2, 3, 4, 5].map(s => (
+                                        <Star key={s} size={15} fill={s <= rev.rating ? '#f59e0b' : 'transparent'} stroke={s <= rev.rating ? '#f59e0b' : 'var(--muted)'} strokeWidth={2.5} />
+                                    ))}
+                                </div>
+                            </div>
+                            <p style={{ fontSize: 15, color: 'var(--text)', lineHeight: 1.7, opacity: 0.85, fontWeight: 500, fontFamily: "'DM Sans', sans-serif" }}>
+                                {rev.comment}
+                            </p>
+                        </div>
+                    ))}
+                </div>
             </main>
 
             {/* CAMERA OVERLAY */}
