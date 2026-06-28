@@ -32,7 +32,7 @@ function AnimatedLogo({ onClick, showText = true }) {
                     <circle cx="16.5" cy="16.5" r="2.5" style={{ animation: 'spinWheel 1s linear infinite', transformOrigin: '16.5px 16.5px' }} />
                 </svg>
             </div>
-            {!hideText && (
+            {showText && (
                 <div style={{ position: 'relative', fontFamily: "'Outfit',sans-serif", fontWeight: 900, fontSize: 32, letterSpacing: "-0.5px", margin: 0 }}>
                     <span style={{ color: "#1e293b" }}>Upp</span>
                     <span style={{ color: "#3b82f6" }}>Car</span>
