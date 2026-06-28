@@ -12,13 +12,11 @@ import Registreagence from './component/registreagence/Registreagence';
 import HomeConnect from './component/homeConnected/HomeConnect';
 import Homeagence from './component/homeagence/Homeagence';
 import Homeadmin from './component/homeadmin/Homeadmin';
-import Loginadmin from './component/loginadmin/Loginadmin';
 import Profile from './component/profile/Profile';
 import Favorites from './component/favorites/Favorites';
 import CarDetails from './component/carDetails/CarDetails';
 import BookingAgreement from './component/bookingAgreement/BookingAgreement';
 import Loginadmin from './component/loginadmin/Loginadmin';
-import Homeadmin from './component/homeadmin/Homeadmin';
 import Myreservation from './component/Reservationns/Myreservation';
 
 function PrivateRoute({ children, role }) {
