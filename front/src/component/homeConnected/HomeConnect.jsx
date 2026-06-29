@@ -2794,7 +2794,7 @@ Réponds UNIQUEMENT au format JSON strict, sans aucun texte autour :
                         padding: isMobile ? "0 12px" : "0 40px",
                         position: "relative",
                         top: isMobile ? 0 : 90,
-                        marginTop: isMobile ? 115 : 5
+                        marginTop: isMobile ? 139 : 5
                     }}>
                         <div style={{
                             textAlign: "center", marginBottom: 40,
