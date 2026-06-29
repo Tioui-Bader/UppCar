@@ -1226,7 +1226,7 @@ export default function UppCarLanding() {
                 // 1. Récupération dynamique de la flotte réelle depuis l'API en base de données
                 let dbCarsList = [];
                 try {
-                    const fleetRes = await fetch("http://localhost:8080/api/cars");
+                    const fleetRes = await fetch(`${process.env.REACT_APP_API_URL || `${process.env.REACT_APP_API_URL || 'http://localhost:8080'}`}/api/cars`);
                     if (fleetRes.ok) {
                         const fleetData = await fleetRes.json();
                         dbCarsList = [...new Set(fleetData.map(c => c.name))];

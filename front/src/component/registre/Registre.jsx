@@ -142,7 +142,7 @@ export default function RegisterUser() {
             // Délai artificiel de 4 secondes avant d'exécuter la requête
             await new Promise(resolve => setTimeout(resolve, 4000));
 
-            const response = await fetch("http://localhost:8080/api/auth/register", {
+            const response = await fetch(`${process.env.REACT_APP_API_URL || `${process.env.REACT_APP_API_URL || 'http://localhost:8080'}`}/api/auth/register`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 // Envoi des données vers la table USERS via User.java
@@ -194,7 +194,7 @@ export default function RegisterUser() {
     const loginWithGoogle = useGoogleLogin({
         onSuccess: async (tokenResponse) => {
             try {
-                const res = await fetch("http://localhost:8080/api/auth/google", {
+                const res = await fetch(`${process.env.REACT_APP_API_URL || `${process.env.REACT_APP_API_URL || 'http://localhost:8080'}`}/api/auth/google`, {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({ token: tokenResponse.access_token })

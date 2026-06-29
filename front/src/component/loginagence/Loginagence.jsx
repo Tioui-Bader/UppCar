@@ -192,7 +192,7 @@ export default function LoginAgence() {
       setLoading(true);
       try {
         await new Promise(resolve => setTimeout(resolve, 4000));
-        const res = await fetch("http://localhost:8080/api/auth/google-agency", {
+        const res = await fetch(`${process.env.REACT_APP_API_URL || `${process.env.REACT_APP_API_URL || 'http://localhost:8080'}`}/api/auth/google-agency`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ token: tokenResponse.access_token })
@@ -224,7 +224,7 @@ export default function LoginAgence() {
     setLoading(true);
     try {
       await new Promise(resolve => setTimeout(resolve, 4000));
-      const response = await fetch("http://localhost:8080/api/auth/login-agency", {
+      const response = await fetch(`${process.env.REACT_APP_API_URL || `${process.env.REACT_APP_API_URL || 'http://localhost:8080'}`}/api/auth/login-agency`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password })
