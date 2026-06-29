@@ -2480,11 +2480,14 @@ export default function UppCarLanding() {
                     <section id="search-results" style={{
                         width: "100%", maxWidth: "98vw", margin: "0 auto 34px",
                         animation: "fadeUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) both",
-                        padding: isMobile ? "0 16px" : "0 40px"
+                        padding: isMobile ? "0 16px" : "0 40px",
+                        position: "relative",
+
+                        marginTop: isMobile ? 116 : 5
                     }}>
                         <div style={{
                             textAlign: "center", marginBottom: 40,
-                            display: "flex", flexDirection: "column", alignItems: "center", gap: 12, marginTop: 91
+                            display: "flex", flexDirection: "column", alignItems: "center", gap: 12, marginTop: isMobile ? 0 : 91
                         }}>
                             {searchResults.length > 0 && (
                                 <div style={{
@@ -3161,7 +3164,7 @@ export default function UppCarLanding() {
                             padding: isMobile ? "0 12px" : "0 40px",
                             position: "relative",
                             zIndex: 10,
-                            marginTop: 40
+                            marginTop: isMobile ? 139 : 40
                         }}>
                             <div style={{
                                 textAlign: "center", marginBottom: 40,
