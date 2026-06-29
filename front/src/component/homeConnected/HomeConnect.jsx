@@ -1125,7 +1125,7 @@ export default function UppCarLanding() {
 
             let dbCarsList = [];
             try {
-                const fleetRes = await fetch(`${process.env.REACT_APP_API_URL || `${process.env.REACT_APP_API_URL || 'http://localhost:8080'}`}/api/cars`);
+                const fleetRes = await fetch(`${process.env.REACT_APP_API_URL || 'http://localhost:8080'}/api/cars`);
                 if (fleetRes.ok) {
                     const fleetData = await fleetRes.json();
                     dbCarsList = [...new Set(fleetData.map(c => c.name))];
@@ -1293,7 +1293,7 @@ Réponds UNIQUEMENT au format JSON strict, sans aucun texte autour :
 
         try {
             const finalQuery = searchKeyword ? searchKeyword.trim() : (city ? city : "");
-            const res = await fetch(`http://localhost:8080/api/cars/search?query=${encodeURIComponent(finalQuery)}&category=${category}`);
+            const res = await fetch(`${process.env.REACT_APP_API_URL || 'http://localhost:8080'}/api/cars/search?query=${encodeURIComponent(finalQuery)}&category=${category}`);
             let data = await res.json();
 
             if (city) {
