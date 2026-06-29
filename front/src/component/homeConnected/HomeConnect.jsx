@@ -2734,7 +2734,7 @@ Réponds UNIQUEMENT au format JSON strict, sans aucun texte autour :
                         {true && <div className={isMobile ? "mobile-scroll" : ""} style={{
                             display: "flex",
                             gap: isMobile ? 10 : 28,
-                            flexWrap: "wrap",
+
                             justifyContent: "center",
                             overflowX: isMobile ? "unset" : "visible",
                             width: "100%",
