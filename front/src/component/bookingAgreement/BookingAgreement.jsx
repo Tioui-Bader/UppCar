@@ -1093,7 +1093,7 @@ export default function BookingAgreement() {
 
     const fetchReviews = async () => {
         try {
-            const r = await fetch(`http://localhost:8080/api/reviews/car/${id}`);
+            const r = await fetch(`${process.env.REACT_APP_API_URL || 'http://localhost:8080'}/api/reviews/car/${id}`);
             if (r.ok) setReviews(await r.json());
         } catch (e) { console.error("Error fetching reviews:", e); }
     };
@@ -1162,12 +1162,12 @@ export default function BookingAgreement() {
     useEffect(() => {
         (async () => {
             try {
-                const r = await fetch(`http://localhost:8080/api/cars/${id}`);
+                const r = await fetch(`${process.env.REACT_APP_API_URL || 'http://localhost:8080'}/api/cars/${id}`);
                 if (r.ok) {
                     const d = await r.json();
                     setCar(d);
                     if (d.agencyId) {
-                        const ar = await fetch(`http://localhost:8080/api/cars/agency-details/${d.agencyId}`);
+                        const ar = await fetch(`${process.env.REACT_APP_API_URL || 'http://localhost:8080'}/api/cars/agency-details/${d.agencyId}`);
                         if (ar.ok) setAgency(await ar.json());
                     }
                 }

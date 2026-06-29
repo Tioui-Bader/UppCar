@@ -322,7 +322,7 @@ export default function Favorites() {
         const ids = JSON.parse(localStorage.getItem(key) || "[]");
 
         if (ids.length === 0) { setLoading(false); return; }
-        fetch(`http://localhost:8080/api/cars`)
+        fetch(`${process.env.REACT_APP_API_URL || 'http://localhost:8080'}/api/cars`)
             .then(r => r.json())
             .then(all => {
                 setFavoriteCars(all.filter(c => ids.includes(c.id)));
