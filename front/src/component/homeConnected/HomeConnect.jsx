@@ -424,7 +424,7 @@ function WhatsAppIcon({ size = 28 }) {
 function WhatsAppWidget(props) {
     const { selectedLang, isMobile } = props;
     const [isOpen, setIsOpen] = useState(false);
-    const phone = "212661754896";
+    const phone = process.env.REACT_APP_WHATSAPP_PHONE || "212621358566";
     const isAr = selectedLang === "AR";
     const isFr = selectedLang === "FR";
 
