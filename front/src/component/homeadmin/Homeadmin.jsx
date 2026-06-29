@@ -179,7 +179,7 @@ export default function Homeadmin() {
     const [reservations, setReservations] = useState([]);
     const [stats, setStats] = useState({ totalUsers: 0, totalAgencies: 0, totalReservations: 0, totalRevenue: 0 });
 
-    const API_BASE = "http://localhost:8080/api/admin";
+    const API_BASE = `${process.env.REACT_APP_API_URL || `${process.env.REACT_APP_API_URL || 'http://localhost:8080'}`}/api/admin`;
 
     // Data Fetching
     const fetchData = useCallback(async () => {

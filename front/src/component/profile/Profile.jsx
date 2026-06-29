@@ -463,7 +463,7 @@ export default function Profile() {
             if (!token) return;
 
             try {
-                const response = await fetch("http://localhost:8080/api/auth/me", {
+                const response = await fetch(`${process.env.REACT_APP_API_URL || `${process.env.REACT_APP_API_URL || 'http://localhost:8080'}`}/api/auth/me`, {
                     headers: { "Authorization": `Bearer ${token}` }
                 });
                 if (response.ok) {
@@ -527,7 +527,7 @@ export default function Profile() {
 
         const token = localStorage.getItem("accessToken");
         try {
-            const response = await fetch("http://localhost:8080/api/auth/update-profile", {
+            const response = await fetch(`${process.env.REACT_APP_API_URL || `${process.env.REACT_APP_API_URL || 'http://localhost:8080'}`}/api/auth/update-profile`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",

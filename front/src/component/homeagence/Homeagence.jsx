@@ -3641,7 +3641,7 @@ function SettingsPage({ dark, setDark, t, agencyData, setAgencyData, lang, setLa
         const newData = { ...agencyData, ...formData };
 
         if (token) {
-            fetch("http://localhost:8080/api/auth/agency/update-profile", {
+            fetch(`${process.env.REACT_APP_API_URL || `${process.env.REACT_APP_API_URL || 'http://localhost:8080'}`}/api/auth/agency/update-profile`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -5087,7 +5087,7 @@ export default function AgencyDashboard() {
     useEffect(() => {
         const token = localStorage.getItem("token");
         if (token) {
-            fetch("http://localhost:8080/api/auth/agency/me", {
+            fetch(`${process.env.REACT_APP_API_URL || `${process.env.REACT_APP_API_URL || 'http://localhost:8080'}`}/api/auth/agency/me`, {
                 headers: { "Authorization": `Bearer ${token}` }
             })
                 .then(res => {
@@ -5297,7 +5297,7 @@ export default function AgencyDashboard() {
         const isUpdate = !!form.id;
         const url = isUpdate
             ? `http://localhost:8080/api/cars/${form.id}`
-            : "http://localhost:8080/api/cars";
+            : `${process.env.REACT_APP_API_URL || `${process.env.REACT_APP_API_URL || 'http://localhost:8080'}`}/api/cars`;
         const method = isUpdate ? "PUT" : "POST";
 
         fetch(url, {
