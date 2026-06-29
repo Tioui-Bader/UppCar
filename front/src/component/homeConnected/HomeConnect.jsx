@@ -2733,14 +2733,14 @@ Réponds UNIQUEMENT au format JSON strict, sans aucun texte autour :
                         {/* ── Feature pills ── */}
                         {true && <div className={isMobile ? "mobile-scroll" : ""} style={{
                             display: "flex",
-                            gap: isMobile ? 15 : 28,
-                            flexWrap: isMobile ? "nowrap" : "wrap",
-                            justifyContent: isMobile ? "flex-start" : "center",
-                            overflowX: isMobile ? "auto" : "visible",
-                            width: isMobile ? "calc(100% + 32px)" : "auto",
-                            marginLeft: isMobile ? 36 : 0,
-                            paddingLeft: isMobile ? 16 : 0,
-                            paddingRight: isMobile ? 16 : 0,
+                            gap: isMobile ? 10 : 28,
+                            flexWrap: "wrap",
+                            justifyContent: "center",
+                            overflowX: isMobile ? "unset" : "visible",
+                            width: "100%",
+                            marginLeft: 0,
+                            paddingLeft: isMobile ? 12 : 0,
+                            paddingRight: isMobile ? 12 : 0,
                             paddingBottom: isMobile ? 4 : 0,
                             animation: "fadeUp 0.7s 0.7s ease both",
                             position: "relative",
@@ -3729,11 +3729,12 @@ Réponds UNIQUEMENT au format JSON strict, sans aucun texte autour :
             {showProfileReminder && (
                 <div style={{
                     position: "fixed",
-                    bottom: isMobile ? 90 : 40,
-                    left: isMobile ? "20px" : "40px",
-                    right: isMobile ? "20px" : "auto",
+                    bottom: isMobile ? 80 : 40,
+                    left: isMobile ? "16px" : "40px",
+                    right: isMobile ? "16px" : "auto",
                     zIndex: 20000,
-                    animation: "toastFadeIn 0.6s cubic-bezier(0.16, 1, 0.3, 1) both"
+                    animation: "toastFadeIn 0.6s cubic-bezier(0.16, 1, 0.3, 1) both",
+                    width: isMobile ? "calc(100% - 32px)" : "auto",
                 }}>
                     <div style={{
                         background: isDarkMode ? "rgba(15, 23, 42, 0.85)" : "rgba(255, 255, 255, 0.85)",
@@ -3741,27 +3742,29 @@ Réponds UNIQUEMENT au format JSON strict, sans aucun texte autour :
                         WebkitBackdropFilter: "blur(16px)",
                         border: `1px solid ${isDarkMode ? "rgba(255,255,255,0.1)" : "rgba(6,78,59,0.1)"}`,
                         borderLeft: `4px solid ${isDarkMode ? "#60a5fa" : "#10b981"}`,
-                        padding: "16px 24px",
+                        padding: isMobile ? "12px 16px" : "16px 24px",
                         borderRadius: "20px",
                         boxShadow: "0 20px 50px rgba(0,0,0,0.3)",
                         display: "flex",
                         alignItems: "center",
-                        gap: 16,
+                        gap: isMobile ? 12 : 16,
                         maxWidth: 409,
+                        width: "100%",
+                        boxSizing: "border-box",
                     }}>
                         <div style={{
-                            width: 40, height: 40, borderRadius: "50%",
+                            width: isMobile ? 36 : 40, height: isMobile ? 36 : 40, borderRadius: "50%",
                             background: isDarkMode ? "rgba(96,165,250,0.1)" : "rgba(16,185,129,0.1)",
                             display: "flex", alignItems: "center", justifyContent: "center",
                             color: isDarkMode ? "#60a5fa" : "#10b981",
                             flexShrink: 0
                         }}>
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" /><circle cx="12" cy="7" r="4" /></svg>
+                            <svg width={isMobile ? 18 : 20} height={isMobile ? 18 : 20} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" /><circle cx="12" cy="7" r="4" /></svg>
                         </div>
                         <div style={{ flex: 1 }}>
                             <p style={{
                                 margin: 0,
-                                fontSize: 14,
+                                fontSize: isMobile ? 12.5 : 14,
                                 fontWeight: 700,
                                 color: isDarkMode ? "#f8fafc" : "#064e3b",
                                 lineHeight: 1.4,
