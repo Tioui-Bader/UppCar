@@ -1226,7 +1226,7 @@ export default function UppCarLanding() {
                 // 1. Récupération dynamique de la flotte réelle depuis l'API en base de données
                 let dbCarsList = [];
                 try {
-                    const fleetRes = await fetch(`${process.env.REACT_APP_API_URL || `${process.env.REACT_APP_API_URL || 'http://localhost:8080'}`}/api/cars`);
+                    const fleetRes = await fetch(`${process.env.REACT_APP_API_URL || 'http://localhost:8080'}/api/cars`);
                     if (fleetRes.ok) {
                         const fleetData = await fleetRes.json();
                         dbCarsList = [...new Set(fleetData.map(c => c.name))];
@@ -1403,7 +1403,7 @@ export default function UppCarLanding() {
 
             // 2. Appel au backend Java avec la catégorie et le mot-clé nettoyé (sans concaténer la ville pour éviter le bug SQL)
             const finalQuery = searchKeyword ? searchKeyword.trim() : (city ? city : "");
-            const res = await fetch(`http://localhost:8080/api/cars/search?query=${encodeURIComponent(finalQuery)}&category=${category}`);
+            const res = await fetch(`${process.env.REACT_APP_API_URL || 'http://localhost:8080'}/api/cars/search?query=${encodeURIComponent(finalQuery)}&category=${category}`);
             let data = await res.json();
 
             // 3. Filtrage intelligent côté Frontend (Ville, Budget et Places)
