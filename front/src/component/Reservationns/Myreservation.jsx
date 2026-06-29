@@ -258,12 +258,12 @@ export default function Myreservation() {
         const fetchReservations = async () => {
             try {
                 const token = localStorage.getItem("token");
-                const res = await fetch(`http://localhost:8080/api/reservations/user/${user.id}`, { headers: { 'Authorization': `Bearer ${token}` } });
+                const res = await fetch(`${process.env.REACT_APP_API_URL || 'http://localhost:8080'}/api/reservations/user/${user.id}`, { headers: { 'Authorization': `Bearer ${token}` } });
                 if (!res.ok) throw new Error();
                 const data = await res.json();
 
                 const enriched = await Promise.all(data.map(async (r) => {
-                    const carRes = await fetch(`http://localhost:8080/api/cars/${r.carId}`);
+                    const carRes = await fetch(`${process.env.REACT_APP_API_URL || 'http://localhost:8080'}/api/cars/${r.carId}`);
                     const carData = carRes.ok ? await carRes.json() : null;
                     return { ...r, car: carData };
                 }));
