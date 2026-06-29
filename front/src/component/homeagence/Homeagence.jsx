@@ -5106,7 +5106,7 @@ export default function AgencyDashboard() {
     useEffect(() => {
         if (agencyData && agencyData.id) {
             const token = localStorage.getItem("token");
-            fetch(`http://localhost:8080/api/reservations/agency/${agencyData.id}`, {
+            fetch(`${process.env.REACT_APP_API_URL || 'http://localhost:8080'}/api/reservations/agency/${agencyData.id}`, {
                 headers: token ? { "Authorization": `Bearer ${token}` } : {}
             })
                 .then(res => res.json())
@@ -5158,7 +5158,7 @@ export default function AgencyDashboard() {
             const uniqueClientIds = [...new Set(reservationsList.map(r => r.clientId).filter(id => id))];
             uniqueClientIds.forEach(id => {
                 if (!clientDetailsMap[id]) {
-                    fetch(`http://localhost:8080/api/auth/user/${id}`)
+                    fetch(`${process.env.REACT_APP_API_URL || 'http://localhost:8080'}/api/auth/user/${id}`)
                         .then(res => res.json())
                         .then(userData => {
                             if (userData && userData.id) {
@@ -5191,7 +5191,7 @@ export default function AgencyDashboard() {
     // Fetch cars from backend
     useEffect(() => {
         if (agencyData && agencyData.id) {
-            fetch(`http://localhost:8080/api/cars/agency/${agencyData.id}`)
+            fetch(`${process.env.REACT_APP_API_URL || 'http://localhost:8080'}/api/cars/agency/${agencyData.id}`)
                 .then(res => res.json())
                 .then(data => {
                     // Convert back from simple string array to object array if needed
@@ -5296,8 +5296,8 @@ export default function AgencyDashboard() {
 
         const isUpdate = !!form.id;
         const url = isUpdate
-            ? `http://localhost:8080/api/cars/${form.id}`
-            : `${process.env.REACT_APP_API_URL || `${process.env.REACT_APP_API_URL || 'http://localhost:8080'}`}/api/cars`;
+            ? `${process.env.REACT_APP_API_URL || 'http://localhost:8080'}/api/cars/${form.id}`
+            : `${process.env.REACT_APP_API_URL || 'http://localhost:8080'}/api/cars`;
         const method = isUpdate ? "PUT" : "POST";
 
         fetch(url, {
@@ -5324,7 +5324,7 @@ export default function AgencyDashboard() {
     };
 
     const handleDeleteCar = (id) => {
-        fetch(`http://localhost:8080/api/cars/${id}`, { method: "DELETE" })
+        fetch(`${process.env.REACT_APP_API_URL || 'http://localhost:8080'}/api/cars/${id}`, { method: "DELETE" })
             .then(() => {
                 setCars(cs => cs.filter(c => c.id !== id));
             })
