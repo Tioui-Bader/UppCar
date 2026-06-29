@@ -2739,12 +2739,11 @@ Réponds UNIQUEMENT au format JSON strict, sans aucun texte autour :
                             overflowX: isMobile ? "unset" : "visible",
                             width: "100%",
                             marginLeft: 0,
-                            paddingLeft: isMobile ? 12 : 0,
-                            paddingRight: isMobile ? 12 : 0,
+
                             paddingBottom: isMobile ? 4 : 0,
                             animation: "fadeUp 0.7s 0.7s ease both",
                             position: "relative",
-                            top: selectedLang === "AR" ? (isMobile ? "0px" : "18px") : (isMobile ? "17px" : "56px"),
+                            top: selectedLang === "AR" ? (isMobile ? "10px" : "18px") : (isMobile ? "17px" : "56px"),
                             cursor: "pointer",
 
 
@@ -3726,7 +3725,7 @@ Réponds UNIQUEMENT au format JSON strict, sans aucun texte autour :
                     `}</style>
                 </div>
             )}
-            {showProfileReminder && (
+            {showProfileReminder && !isMobile && (
                 <div style={{
                     position: "fixed",
                     bottom: isMobile ? 80 : 40,
